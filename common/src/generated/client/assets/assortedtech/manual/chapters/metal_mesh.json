@@ -1,0 +1,20 @@
+{
+  "conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "metal_mesh"
+    }
+  ],
+  "pages": [
+    {
+      "type": "assortedlib:recipe",
+      "id": "metal_mesh",
+      "recipes": [
+        "assortedtech:metal_mesh"
+      ],
+      "text": "manual.assortedtech.chapter.metal_mesh.metal_mesh",
+      "title": "manual.assortedtech.chapter.metal_mesh.metal_mesh.title"
+    }
+  ],
+  "sort_order": 60
+}

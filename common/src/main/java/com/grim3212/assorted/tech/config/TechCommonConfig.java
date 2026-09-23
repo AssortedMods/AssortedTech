@@ -14,6 +14,7 @@ public class TechCommonConfig {
     public final Supplier<Boolean> sensorsEnabled;
     public final Supplier<Boolean> fanEnabled;
     public final Supplier<Boolean> alarmEnabled;
+    public final Supplier<Boolean> metalMeshEnabled;
     public final Supplier<Boolean> bridgesEnabled;
     public final Supplier<Boolean> gravityEnabled;
     public final Supplier<Boolean> extruderEnabled;
@@ -49,6 +50,7 @@ public class TechCommonConfig {
         sensorsEnabled = builder.defineBoolean("parts.sensorsEnabled", true, "Set this to true if you would like sensors to be craftable and found in the creative tab.");
         fanEnabled = builder.defineBoolean("parts.fanEnabled", true, "Set this to true if you would like the fan to be craftable and found in the creative tab.");
         alarmEnabled = builder.defineBoolean("parts.alarmEnabled", true, "Set this to true if you would like the alarm to be craftable and found in the creative tab.");
+        metalMeshEnabled = builder.defineBoolean("parts.metalMeshEnabled", true, "Set this to true if you would like the metal mesh to be craftable and found in the creative tab.");
         bridgesEnabled = builder.defineBoolean("parts.bridgesEnabled", true, "Set this to true if you would like the bridges to be craftable and found in the creative tab.");
         gravityEnabled = builder.defineBoolean("parts.gravityEnabled", true, "Set this to true if you would like the gravity blocks and items to be craftable and found in the creative tab.");
         extruderEnabled = builder.defineBoolean("parts.extruderEnabled", true, "Set this to true if you would like the extruder to be craftable and found in the creative tab.");

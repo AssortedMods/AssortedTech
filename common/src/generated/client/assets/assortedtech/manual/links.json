@@ -177,6 +177,12 @@
         "assortedtech:peridot_extruder"
       ],
       "page": "assortedtech:extruder/extruder"
+    },
+    {
+      "blocks": [
+        "assortedtech:metal_mesh"
+      ],
+      "page": "assortedtech:metal_mesh/metal_mesh"
     }
   ]
 }

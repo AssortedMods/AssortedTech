@@ -106,6 +106,8 @@ public class TechBlockstateProvider extends ModelProvider {
         TechBlocks.SENSORS.forEach(sensor -> sensor(blockModels, sensor.get()));
         TechBlocks.SPIKES.forEach(spike -> spike(blockModels, spike.get()));
 
+        blockModels.createTrivialCube(TechBlocks.METAL_MESH.get());
+
         fan(blockModels);
         alarm(blockModels);
         gpsSensor(blockModels, TechBlocks.GPS_SENSOR.get());

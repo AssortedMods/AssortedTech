@@ -33,6 +33,7 @@ public class TechManualProvider extends LibManualProvider {
         this.addSpikes();
         this.addRedstone();
         this.addExtruder();
+        this.addMetalMesh();
     }
 
     private void addExtruder() {
@@ -84,6 +85,11 @@ public class TechManualProvider extends LibManualProvider {
         ChapterBuilder spikes = this.chapter("spikes").whenPartEnabled(TechConditions.Parts.SPIKES);
         spikes.recipes("spikes", all).every(50).opens(all);
         spikes.text("materials");
+    }
+
+    private void addMetalMesh() {
+        ChapterBuilder mesh = this.chapter("metal_mesh").whenPartEnabled(TechConditions.Parts.METAL_MESH);
+        mesh.recipes("metal_mesh", TechBlocks.METAL_MESH.get()).opens(TechBlocks.METAL_MESH.get());
     }
 
     private void addRedstone() {

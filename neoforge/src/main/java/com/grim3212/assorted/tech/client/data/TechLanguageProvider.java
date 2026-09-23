@@ -174,6 +174,15 @@ public class TechLanguageProvider extends LibLanguageProvider {
         this.addSpikesChapter();
         this.addRedstoneChapter();
         this.addExtruderChapter();
+        this.addMetalMeshChapter();
+    }
+
+    private void addMetalMeshChapter() {
+        this.add("manual.assortedtech.chapter.metal_mesh", "Metal Mesh");
+
+        this.add("manual.assortedtech.chapter.metal_mesh.metal_mesh.title", "Metal Mesh");
+        this.add("manual.assortedtech.chapter.metal_mesh.metal_mesh",
+                "A grate you can walk across that items drop straight through. Players and mobs stand on it but any item dropped on it falls through.");
     }
 
     private void addExtruderChapter() {

@@ -61,6 +61,10 @@ public class TechCreativeItems {
             items.add(TechBlocks.ALARM.get());
         }
 
+        if (TechCommonMod.COMMON_CONFIG.metalMeshEnabled.get()) {
+            items.add(TechBlocks.METAL_MESH.get());
+        }
+
         if (TechCommonMod.COMMON_CONFIG.bridgesEnabled.get()) {
             items.add(TechBlocks.BRIDGE_CONTROL_ACCEL.get());
             items.add(TechBlocks.BRIDGE_CONTROL_DEATH.get());

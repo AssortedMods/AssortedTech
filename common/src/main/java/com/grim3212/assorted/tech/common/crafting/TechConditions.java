@@ -15,6 +15,7 @@ public class TechConditions {
         public static final String GRAVITY = "gravity";
         public static final String EXTRUDER = "extruder";
         public static final String GPS = "gps";
+        public static final String METAL_MESH = "metal_mesh";
     }
 
 
@@ -28,6 +29,7 @@ public class TechConditions {
         Services.CONDITIONS.registerPartCondition(Parts.GRAVITY, () -> TechCommonMod.COMMON_CONFIG.gravityEnabled.get());
         Services.CONDITIONS.registerPartCondition(Parts.EXTRUDER, () -> TechCommonMod.COMMON_CONFIG.extruderEnabled.get());
         Services.CONDITIONS.registerPartCondition(Parts.GPS, () -> TechCommonMod.COMMON_CONFIG.gpsEnabled.get());
+        Services.CONDITIONS.registerPartCondition(Parts.METAL_MESH, () -> TechCommonMod.COMMON_CONFIG.metalMeshEnabled.get());
     }
 
 }

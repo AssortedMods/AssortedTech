@@ -43,6 +43,7 @@ public class TechRecipes extends ConditionalRecipeProvider {
     @Override
     public void registerConditions() {
         this.addConditions(partEnabled(TechConditions.Parts.ALARM), TechBlocks.ALARM.getId());
+        this.addConditions(partEnabled(TechConditions.Parts.METAL_MESH), TechBlocks.METAL_MESH.getId());
         // An Assorted Tools material's extruder only once Assorted Tools gives it tools.
         for (ExtruderType type : ExtruderType.values()) {
             Identifier id = TechItems.EXTRUDERS.get(type).getId();
@@ -63,6 +64,9 @@ public class TechRecipes extends ConditionalRecipeProvider {
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.REDSTONE, TechItems.GLOWSTONE_TORCH.get(), 1).define('X', LibCommonTags.Items.RODS_WOODEN).define('R', LibCommonTags.Items.DUSTS_REDSTONE).define('P', LibCommonTags.Items.DUSTS_GLOWSTONE).pattern("P").pattern("X").pattern("R").unlockedBy("has_redstone", has(LibCommonTags.Items.DUSTS_REDSTONE)).save(this.output, recipeKey(TechItems.GLOWSTONE_TORCH.getId()));
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.REDSTONE, TechBlocks.FAN.get(), 1).define('X', ItemTags.PLANKS).define('R', LibCommonTags.Items.DUSTS_REDSTONE).define('I', LibCommonTags.Items.INGOTS_IRON).pattern("XIX").pattern("XRX").pattern("XXX").unlockedBy("has_redstone", has(LibCommonTags.Items.DUSTS_REDSTONE)).save(this.output, recipeKey(TechBlocks.FAN.getId()));
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.REDSTONE, TechBlocks.ALARM.get(), 1).define('X', Items.LEVER).define('R', LibCommonTags.Items.DUSTS_REDSTONE).define('I', LibCommonTags.Items.INGOTS_IRON).pattern("III").pattern("IRI").pattern("IXI").unlockedBy("has_redstone", has(LibCommonTags.Items.DUSTS_REDSTONE)).save(this.output, recipeKey(TechBlocks.ALARM.getId()));
+
+        // Four bars woven into a panel, the 1.12 recipe's shape with iron bars where its iron sticks were.
+        ShapedRecipeBuilder.shaped(this.items, RecipeCategory.BUILDING_BLOCKS, TechBlocks.METAL_MESH.get(), 4).define('B', Items.IRON_BARS).pattern("BB").pattern("BB").unlockedBy("has_iron_bars", has(Items.IRON_BARS)).save(this.output, recipeKey(TechBlocks.METAL_MESH.getId()));
 
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.REDSTONE, TechBlocks.BRIDGE_CONTROL_LASER.get(), 1).define('R', LibCommonTags.Items.SLIMEBALLS).define('I', LibCommonTags.Items.INGOTS_IRON).pattern("III").pattern("IRI").pattern("III").unlockedBy("has_slime", has(LibCommonTags.Items.SLIMEBALLS)).save(this.output, recipeKey(TechBlocks.BRIDGE_CONTROL_LASER.getId()));
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.REDSTONE, TechBlocks.BRIDGE_CONTROL_ACCEL.get(), 1).define('L', TechBlocks.BRIDGE_CONTROL_LASER.get()).define('R', fluid(FluidTags.WATER)).define('I', LibCommonTags.Items.INGOTS_IRON).pattern("III").pattern("ILI").pattern("IRI").unlockedBy("has_laser_bridge", has(TechBlocks.BRIDGE_CONTROL_LASER.get())).save(this.output, recipeKey(TechBlocks.BRIDGE_CONTROL_ACCEL.getId()));

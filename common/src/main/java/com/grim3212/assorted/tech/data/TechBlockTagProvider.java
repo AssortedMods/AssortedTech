@@ -32,7 +32,7 @@ public class TechBlockTagProvider extends LibBlockTagProvider {
         // into something that takes objects so the tag lists below stay readable.
         Function<TagKey<Block>, BlockTagger> tagger = (tag) -> new BlockTagger(appender.apply(tag));
 
-        tagger.apply(BlockTags.MINEABLE_WITH_PICKAXE).add(TechBlocks.FAN.get(), TechBlocks.ALARM.get());
+        tagger.apply(BlockTags.MINEABLE_WITH_PICKAXE).add(TechBlocks.FAN.get(), TechBlocks.ALARM.get(), TechBlocks.METAL_MESH.get());
 
         for (IRegistryObject<SpikeBlock> b : TechBlocks.SPIKES) {
             tagger.apply(TechTags.Blocks.SPIKES).add(b.get());
