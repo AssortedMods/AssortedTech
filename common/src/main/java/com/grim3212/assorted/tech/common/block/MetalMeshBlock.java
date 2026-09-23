@@ -11,10 +11,7 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-/**
- * A grate you can walk on that items drop straight through: a sorting floor, or a way to get
- * whatever a mob drops down to the collection below it without letting the mob follow.
- */
+/** A grate you can walk on that items drop straight through. */
 public class MetalMeshBlock extends Block {
 
     public static final MapCodec<MetalMeshBlock> CODEC = simpleCodec(MetalMeshBlock::new);
