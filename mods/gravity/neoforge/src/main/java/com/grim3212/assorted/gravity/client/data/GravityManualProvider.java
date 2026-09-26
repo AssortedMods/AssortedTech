@@ -9,7 +9,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 
 /**
- * This part's chapters of the Assorted Tech section, which every part shares; the explicit chapter orders keep
+ * This part's chapter of the Assorted Tech section, which every part shares; the explicit chapter orders keep
  * the section's order whichever parts are installed.
  */
 public class GravityManualProvider extends LibManualProvider {
@@ -23,7 +23,6 @@ public class GravityManualProvider extends LibManualProvider {
         this.section(Family.MANUAL_ORDER, Family.ICONS.toArray(Identifier[]::new));
 
         this.addGravity();
-        this.addMetalMesh();
     }
 
     private void addGravity() {
@@ -36,10 +35,5 @@ public class GravityManualProvider extends LibManualProvider {
         gravity.recipes("gravitors", GravityBlocks.GRAVITOR.get(), GravityBlocks.GRAVITOR_DIRECTIONAL.get()).every(60)
                 .opens(GravityBlocks.GRAVITOR.get(), GravityBlocks.GRAVITOR_DIRECTIONAL.get());
         gravity.recipes("boots", GravityItems.GRAVITY_BOOTS.get()).opens(GravityItems.GRAVITY_BOOTS.get());
-    }
-
-    private void addMetalMesh() {
-        ChapterBuilder mesh = this.chapter("metal_mesh", 5);
-        mesh.recipes("metal_mesh", GravityBlocks.METAL_MESH.get()).opens(GravityBlocks.METAL_MESH.get());
     }
 }

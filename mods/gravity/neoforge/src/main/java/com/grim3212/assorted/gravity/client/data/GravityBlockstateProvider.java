@@ -55,8 +55,6 @@ public class GravityBlockstateProvider extends ModelProvider {
         gravityDirectional(blockModels, GravityBlocks.ATTRACTOR_DIRECTIONAL.get(), texture("block/attractor_on"), texture("block/attractor_off"));
         gravityDirectional(blockModels, GravityBlocks.REPULSOR_DIRECTIONAL.get(), texture("block/repulsor_on"), texture("block/repulsor_off"));
         gravityDirectional(blockModels, GravityBlocks.GRAVITOR_DIRECTIONAL.get(), texture("block/gravitor_on"), texture("block/gravitor_off"));
-
-        blockModels.createTrivialCube(GravityBlocks.METAL_MESH.get());
     }
 
     private void genericGravity(BlockModelGenerators blockModels, Block b) {

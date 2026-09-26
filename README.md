@@ -5,7 +5,8 @@ Contains an assorted group of additions based around tech, machines and logic. E
 - [Assorted Tech](mods/tech) has all of them in one download
 - [Assorted Elevators](mods/elevators) adds elevators, instant elevators and their camouflaged versions
 - [Assorted Bridges](mods/bridges) adds the bridge controls
-- [Assorted Gravity](mods/gravity) adds attractors, repulsors, gravitors, gravity boots and the metal mesh
+- [Assorted Gravity](mods/gravity) adds attractors, repulsors, gravitors and gravity boots
+- [Assorted Grates](mods/grates) adds item grates that dropped items fall through, including the old metal mesh
 - [Assorted Extruder](mods/extruder) adds the extruder
 - [Assorted Sensors](mods/sensors) adds sensors, the GPS and GPS sensors
 - [Assorted Redstone](mods/redstone) adds flip flop torches and glowstone torches

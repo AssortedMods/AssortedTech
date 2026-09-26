@@ -1,0 +1,31 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:item_tag_populated",
+      "tag": "c:ingots/tin"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:tags_populated",
+      "registry": "minecraft:item",
+      "values": [
+        "c:ingots/tin"
+      ]
+    }
+  ],
+  "key": {
+    "I": "#c:ingots/tin"
+  },
+  "pattern": [
+    "I I",
+    " I ",
+    "I I"
+  ],
+  "result": {
+    "count": 8,
+    "id": "assortedgrates:tin_item_grate"
+  }
+}

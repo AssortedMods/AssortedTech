@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "waxed_copper_item_grate",
+  "ingredients": [
+    "assortedgrates:oxidized_copper_item_grate",
+    "minecraft:honeycomb"
+  ],
+  "result": {
+    "id": "assortedgrates:waxed_oxidized_copper_item_grate"
+  }
+}

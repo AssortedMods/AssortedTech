@@ -39,9 +39,6 @@ public class GravityRecipes extends ConditionalRecipeProvider {
     public void buildRecipes() {
         super.buildRecipes();
 
-        // Four bars woven into a panel, the 1.12 recipe's shape with iron bars where its iron sticks were.
-        ShapedRecipeBuilder.shaped(this.items, RecipeCategory.BUILDING_BLOCKS, GravityBlocks.METAL_MESH.get(), 4).define('B', Items.IRON_BARS).pattern("BB").pattern("BB").unlockedBy("has_iron_bars", has(Items.IRON_BARS)).save(this.output, recipeKey(GravityBlocks.METAL_MESH.getId()));
-
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.MISC, GravityItems.GRAVITY_BOOTS.get(), 1).define('I', LibCommonTags.Items.INGOTS_IRON).define('A', GravityBlocks.ATTRACTOR.get()).pattern("I I").pattern("A A").unlockedBy("has_attractor", has(GravityBlocks.ATTRACTOR.get())).save(this.output, recipeKey(GravityItems.GRAVITY_BOOTS.getId()));
 
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.REDSTONE, GravityBlocks.ATTRACTOR.get(), 1).define('C', Items.COMPASS).define('R', LibCommonTags.Items.DUSTS_REDSTONE).define('E', LibCommonTags.Items.ENDER_PEARLS).define('I', LibCommonTags.Items.INGOTS_IRON).pattern("IRI").pattern("RCR").pattern("IEI").unlockedBy("has_ender_pearl", has(LibCommonTags.Items.ENDER_PEARLS)).save(this.output, recipeKey(GravityBlocks.ATTRACTOR.getId()));

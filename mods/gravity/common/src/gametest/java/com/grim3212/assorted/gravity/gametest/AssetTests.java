@@ -90,8 +90,8 @@ final class AssetTests {
         }
 
         // Guards against the whole walk passing because the registries came back empty.
-        helper.assertTrue(blocks >= 7, "only " + blocks + " blocks are registered under " + Constants.MOD_ID);
-        helper.assertTrue(items >= 8, "only " + items + " items are registered under " + Constants.MOD_ID);
+        helper.assertTrue(blocks >= 6, "only " + blocks + " blocks are registered under " + Constants.MOD_ID);
+        helper.assertTrue(items >= 7, "only " + items + " items are registered under " + Constants.MOD_ID);
         helper.assertTrue(missing.isEmpty(), missing.size() + " missing asset(s) across " + blocks + " blocks and "
                 + items + " items: " + String.join(", ", missing));
 

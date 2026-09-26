@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "assortedgrates:block/invar_item_grate"
+  }
+}
