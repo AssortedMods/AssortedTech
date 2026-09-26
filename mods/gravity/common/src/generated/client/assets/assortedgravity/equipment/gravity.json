@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "assortedgravity:gravity"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "assortedgravity:gravity"
+      }
+    ]
+  }
+}

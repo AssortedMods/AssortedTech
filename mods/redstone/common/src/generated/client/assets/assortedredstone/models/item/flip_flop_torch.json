@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "assortedredstone:block/flip_flop_torch_off"
+  }
+}

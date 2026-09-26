@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "assortedextruder:item/wood_extruder",
+    "model": {
+      "type": "assortedextruder:extruder",
+      "texture": "assortedextruder:textures/entity/extruders/wood.png"
+    }
+  }
+}

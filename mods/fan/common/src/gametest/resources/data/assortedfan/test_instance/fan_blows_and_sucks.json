@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedfan:fan_blows_and_sucks",
+  "structure": "assortedfan:test_box",
+  "max_ticks": 80,
+  "setup_ticks": 0,
+  "required": true
+}

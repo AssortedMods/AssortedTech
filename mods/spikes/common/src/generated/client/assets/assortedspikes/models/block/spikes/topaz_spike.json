@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "assortedspikes:block/spikes/topaz_spike"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "values": [
+    "assortedextruder:iron_extruder",
+    "assortedextruder:amethyst_extruder",
+    "assortedextruder:nickel_extruder",
+    "assortedextruder:lead_extruder",
+    "assortedextruder:bronze_extruder",
+    "assortedextruder:invar_extruder",
+    "assortedextruder:ruby_extruder",
+    "assortedextruder:sapphire_extruder",
+    "assortedextruder:topaz_extruder",
+    "assortedextruder:peridot_extruder"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "assortedextruder:item/extruder_particle"
+  }
+}

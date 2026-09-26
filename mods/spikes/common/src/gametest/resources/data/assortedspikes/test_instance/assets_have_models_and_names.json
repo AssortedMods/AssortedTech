@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedspikes:assets_have_models_and_names",
+  "structure": "assortedspikes:test_box",
+  "max_ticks": 20,
+  "setup_ticks": 0,
+  "required": true
+}

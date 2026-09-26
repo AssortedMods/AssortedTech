@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "assortedbridges:block/bridge_control_trick_vertical",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "assortedbridges:block/bridge_control_trick_vertical",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "assortedbridges:block/bridge_control_trick_vertical",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "assortedbridges:block/bridge_control_trick_vertical",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "assortedbridges:block/bridge_control_trick_vertical"
+    },
+    "facing=west": {
+      "model": "assortedbridges:block/bridge_control_trick_vertical",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

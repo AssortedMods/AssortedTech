@@ -1,0 +1,14 @@
+{
+  "pages": [
+    {
+      "type": "assortedlib:recipe",
+      "id": "fan",
+      "recipes": [
+        "assortedfan:fan"
+      ],
+      "text": "manual.assortedtech.chapter.fan.fan",
+      "title": "manual.assortedtech.chapter.fan.fan.title"
+    }
+  ],
+  "sort_order": 8
+}

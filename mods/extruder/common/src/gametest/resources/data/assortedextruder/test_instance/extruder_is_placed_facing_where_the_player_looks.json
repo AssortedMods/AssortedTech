@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedextruder:extruder_is_placed_facing_where_the_player_looks",
+  "structure": "assortedextruder:test_box",
+  "max_ticks": 1,
+  "setup_ticks": 0,
+  "required": true
+}

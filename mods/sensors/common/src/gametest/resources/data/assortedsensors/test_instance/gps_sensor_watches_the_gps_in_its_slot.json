@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedsensors:gps_sensor_watches_the_gps_in_its_slot",
+  "structure": "assortedsensors:test_box",
+  "max_ticks": 1,
+  "setup_ticks": 0,
+  "required": true
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "G": "assortedsensors:gps",
+    "L": "minecraft:redstone_lamp",
+    "R": "#c:storage_blocks/redstone"
+  },
+  "pattern": [
+    " R ",
+    "LGL",
+    " R "
+  ],
+  "result": {
+    "id": "assortedsensors:gps_sensor"
+  }
+}

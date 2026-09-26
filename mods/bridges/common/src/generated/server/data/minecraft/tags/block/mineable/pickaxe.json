@@ -1,0 +1,9 @@
+{
+  "values": [
+    "assortedbridges:bridge_control_accel",
+    "assortedbridges:bridge_control_death",
+    "assortedbridges:bridge_control_gravity",
+    "assortedbridges:bridge_control_laser",
+    "assortedbridges:bridge_control_trick"
+  ]
+}

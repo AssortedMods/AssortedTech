@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "assortedredstone:block/glowstone_torch_off"
+    },
+    "lit=true": {
+      "model": "assortedredstone:block/glowstone_torch"
+    }
+  }
+}

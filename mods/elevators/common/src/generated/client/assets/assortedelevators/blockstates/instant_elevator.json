@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "color=black": {
+      "model": "assortedelevators:block/instant_elevator_black"
+    },
+    "color=blue": {
+      "model": "assortedelevators:block/instant_elevator_blue"
+    },
+    "color=brown": {
+      "model": "assortedelevators:block/instant_elevator_brown"
+    },
+    "color=cyan": {
+      "model": "assortedelevators:block/instant_elevator_cyan"
+    },
+    "color=gray": {
+      "model": "assortedelevators:block/instant_elevator_gray"
+    },
+    "color=green": {
+      "model": "assortedelevators:block/instant_elevator_green"
+    },
+    "color=light_blue": {
+      "model": "assortedelevators:block/instant_elevator_light_blue"
+    },
+    "color=light_gray": {
+      "model": "assortedelevators:block/instant_elevator_light_gray"
+    },
+    "color=lime": {
+      "model": "assortedelevators:block/instant_elevator_lime"
+    },
+    "color=magenta": {
+      "model": "assortedelevators:block/instant_elevator_magenta"
+    },
+    "color=orange": {
+      "model": "assortedelevators:block/instant_elevator_orange"
+    },
+    "color=pink": {
+      "model": "assortedelevators:block/instant_elevator_pink"
+    },
+    "color=purple": {
+      "model": "assortedelevators:block/instant_elevator_purple"
+    },
+    "color=red": {
+      "model": "assortedelevators:block/instant_elevator_red"
+    },
+    "color=white": {
+      "model": "assortedelevators:block/instant_elevator_white"
+    },
+    "color=yellow": {
+      "model": "assortedelevators:block/instant_elevator_yellow"
+    }
+  }
+}

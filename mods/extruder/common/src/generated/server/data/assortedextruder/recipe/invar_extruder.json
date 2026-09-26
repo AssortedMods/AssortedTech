@@ -1,0 +1,64 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:pickaxes/invar"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:shovels/invar"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:axes/invar"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:and",
+      "values": [
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:pickaxes/invar"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:shovels/invar"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:axes/invar"
+          ]
+        }
+      ]
+    }
+  ],
+  "key": {
+    "A": "#c:axes/invar",
+    "M": "#assortedextruder:extruders/level_1",
+    "P": "#c:pickaxes/invar",
+    "S": "#c:shovels/invar"
+  },
+  "pattern": [
+    " P ",
+    "AMS"
+  ],
+  "result": {
+    "id": "assortedextruder:invar_extruder"
+  }
+}

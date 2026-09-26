@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedbridges:block_entity_data_survives_reload",
+  "structure": "assortedbridges:test_box",
+  "max_ticks": 20,
+  "setup_ticks": 0,
+  "required": true
+}

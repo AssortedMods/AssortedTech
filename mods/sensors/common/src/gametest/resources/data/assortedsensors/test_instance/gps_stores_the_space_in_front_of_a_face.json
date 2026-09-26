@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedsensors:gps_stores_the_space_in_front_of_a_face",
+  "structure": "assortedsensors:test_box",
+  "max_ticks": 1,
+  "setup_ticks": 0,
+  "required": true
+}

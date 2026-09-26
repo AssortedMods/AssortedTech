@@ -1,0 +1,18 @@
+{
+  "values": [
+    "assortedsensors:wood_sensor",
+    "assortedsensors:stone_sensor",
+    "assortedsensors:iron_sensor",
+    "assortedsensors:mossy_cobblestone_sensor",
+    "assortedsensors:prismarine_sensor",
+    "assortedsensors:gold_sensor",
+    "assortedsensors:emerald_sensor",
+    "assortedsensors:netherrack_sensor",
+    "assortedsensors:cobweb_sensor",
+    "assortedsensors:end_stone_sensor",
+    "assortedsensors:hay_bale_sensor",
+    "assortedsensors:feather_sensor",
+    "assortedsensors:gps_sensor",
+    "assortedsensors:upgraded_gps_sensor"
+  ]
+}

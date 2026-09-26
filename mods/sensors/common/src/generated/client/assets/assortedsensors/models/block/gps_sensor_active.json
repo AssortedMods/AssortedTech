@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "assortedsensors:block/gps_sensor_on"
+  }
+}

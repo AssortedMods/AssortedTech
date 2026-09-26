@@ -1,0 +1,64 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:pickaxes/netherite"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:shovels/netherite"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:axes/netherite"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:and",
+      "values": [
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:pickaxes/netherite"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:shovels/netherite"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:axes/netherite"
+          ]
+        }
+      ]
+    }
+  ],
+  "key": {
+    "A": "#c:axes/netherite",
+    "M": "#assortedextruder:extruders/level_3",
+    "P": "#c:pickaxes/netherite",
+    "S": "#c:shovels/netherite"
+  },
+  "pattern": [
+    " P ",
+    "AMS"
+  ],
+  "result": {
+    "id": "assortedextruder:netherite_extruder"
+  }
+}

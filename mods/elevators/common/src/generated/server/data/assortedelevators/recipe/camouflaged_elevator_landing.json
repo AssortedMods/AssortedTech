@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "assortedelevators:elevator_landing",
+    "minecraft:amethyst_shard",
+    "#c:dyes"
+  ],
+  "result": {
+    "id": "assortedelevators:camouflaged_elevator_landing"
+  }
+}

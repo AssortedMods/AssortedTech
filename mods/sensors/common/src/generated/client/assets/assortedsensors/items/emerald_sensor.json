@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "assortedsensors:block/sensors/emerald_sensor_inventory"
+  }
+}

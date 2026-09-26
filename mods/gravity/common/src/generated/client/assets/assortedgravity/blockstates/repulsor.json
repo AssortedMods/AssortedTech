@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "assortedgravity:block/repulsor_off"
+    },
+    "powered=true": {
+      "model": "assortedgravity:block/repulsor"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedbridges:every_item_tag_has_a_name",
+  "structure": "assortedbridges:test_box",
+  "max_ticks": 1,
+  "setup_ticks": 0,
+  "required": true
+}

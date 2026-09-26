@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedelevators:elevator_carries_a_mob_up",
+  "structure": "assortedelevators:test_box",
+  "max_ticks": 400,
+  "setup_ticks": 0,
+  "required": true
+}

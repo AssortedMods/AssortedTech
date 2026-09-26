@@ -1,0 +1,64 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:pickaxes/topaz"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:shovels/topaz"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:axes/topaz"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:and",
+      "values": [
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:pickaxes/topaz"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:shovels/topaz"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:axes/topaz"
+          ]
+        }
+      ]
+    }
+  ],
+  "key": {
+    "A": "#c:axes/topaz",
+    "M": "#assortedextruder:extruders/level_1",
+    "P": "#c:pickaxes/topaz",
+    "S": "#c:shovels/topaz"
+  },
+  "pattern": [
+    " P ",
+    "AMS"
+  ],
+  "result": {
+    "id": "assortedextruder:topaz_extruder"
+  }
+}

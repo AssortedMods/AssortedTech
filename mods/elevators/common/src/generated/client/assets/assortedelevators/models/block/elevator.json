@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "assortedelevators:block/elevator_top",
+    "side": "assortedelevators:block/elevator_side"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "block": "assortedelevators:camouflaged_instant_elevator",
+              "function": "minecraft:copy_state",
+              "properties": [
+                "color"
+              ]
+            }
+          ],
+          "name": "assortedelevators:camouflaged_instant_elevator"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "assortedelevators:blocks/camouflaged_instant_elevator"
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": "minecraft:compass",
+    "I": "#c:ingots/iron",
+    "M": "minecraft:map"
+  },
+  "pattern": [
+    "ICI",
+    " M "
+  ],
+  "result": {
+    "id": "assortedsensors:gps"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "assortedspikes:block/spikes/bronze_spike_powered"
+  }
+}

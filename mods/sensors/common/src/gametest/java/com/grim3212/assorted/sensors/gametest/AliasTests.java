@@ -1,0 +1,70 @@
+package com.grim3212.assorted.sensors.gametest;
+
+import com.google.gson.JsonParser;
+import com.grim3212.assorted.lib.registry.IRegistryObject;
+import com.grim3212.assorted.sensors.Family;
+import com.grim3212.assorted.sensors.common.block.SensorsBlocks;
+import com.grim3212.assorted.sensors.common.block.blockentity.SensorsBlockEntityTypes;
+import com.grim3212.assorted.sensors.common.item.SensorsDataComponents;
+import com.grim3212.assorted.sensors.common.item.SensorsItems;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+/** A world saved when this was all one mod, Assorted Tech, still has these sensors and GPS positions in it. */
+final class AliasTests {
+
+    private AliasTests() {
+    }
+
+    static void register(BiConsumer<String, Consumer<GameTestHelper>> out) {
+        out.accept("assortedtech_ids_still_load", AliasTests::assortedtechIdsStillLoad);
+    }
+
+    private static void assortedtechIdsStillLoad(GameTestHelper helper) {
+        // Every item, the GPS included, registers through SensorsBlocks.
+        for (IRegistryObject<Item> item : SensorsBlocks.ITEMS.getEntries()) {
+            ItemStack stack = parse(helper, "{\"id\": \"" + old(item.getId()) + "\", \"count\": 1}");
+            helper.assertTrue(stack.is(item.get()), "a stack saved as " + old(item.getId()) + " reads back as " + stack);
+        }
+
+        for (IRegistryObject<Block> block : SensorsBlocks.BLOCKS.getEntries()) {
+            helper.assertValueEqual(BuiltInRegistries.BLOCK.getValue(old(block.getId())), block.get(), "the block saved as " + old(block.getId()));
+        }
+
+        for (IRegistryObject<BlockEntityType<?>> type : SensorsBlockEntityTypes.BLOCK_ENTITIES.getEntries()) {
+            helper.assertValueEqual(BuiltInRegistries.BLOCK_ENTITY_TYPE.getValue(old(type.getId())), type.get(), "the block entity saved as " + old(type.getId()));
+        }
+
+        for (IRegistryObject<DataComponentType<?>> type : SensorsDataComponents.DATA_COMPONENTS.getEntries()) {
+            helper.assertValueEqual(BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(old(type.getId())), type.get(), "the data component saved as " + old(type.getId()));
+        }
+
+        // A GPS saved with its stored position keeps it.
+        Identifier gps = old(SensorsItems.GPS.getId());
+        Identifier target = old(SensorsDataComponents.GPS_TARGET.getId());
+        ItemStack stored = parse(helper, "{\"id\": \"" + gps + "\", \"count\": 1, \"components\": {\"" + target
+                + "\": {\"dimension\": \"minecraft:overworld\", \"pos\": [1, 2, 3]}}}");
+        helper.assertTrue(stored.is(SensorsItems.GPS.get()) && stored.has(SensorsDataComponents.GPS_TARGET.get()),
+                "a GPS saved with a position under " + target + " reads back as " + stored);
+        helper.succeed();
+    }
+
+    private static ItemStack parse(GameTestHelper helper, String json) {
+        return ItemStack.CODEC.parse(helper.getLevel().registryAccess().createSerializationContext(JsonOps.INSTANCE),
+                JsonParser.parseString(json)).getOrThrow();
+    }
+
+    private static Identifier old(Identifier id) {
+        return Identifier.fromNamespaceAndPath(Family.ID, id.getPath());
+    }
+}

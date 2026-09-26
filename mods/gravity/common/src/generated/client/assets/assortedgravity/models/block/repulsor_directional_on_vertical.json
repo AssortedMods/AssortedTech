@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/orientable_vertical",
+  "textures": {
+    "front": "assortedgravity:block/repulsor_on",
+    "side": "assortedgravity:block/gravity_side"
+  }
+}

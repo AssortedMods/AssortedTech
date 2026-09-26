@@ -1,0 +1,18 @@
+{
+  "links": [
+    {
+      "blocks": [
+        "assortedredstone:glowstone_torch",
+        "assortedredstone:glowstone_wall_torch"
+      ],
+      "page": "assortedtech:redstone/glowstone_torch"
+    },
+    {
+      "blocks": [
+        "assortedredstone:flip_flop_torch",
+        "assortedredstone:flip_flop_wall_torch"
+      ],
+      "page": "assortedtech:redstone/flip_flop_torch"
+    }
+  ]
+}

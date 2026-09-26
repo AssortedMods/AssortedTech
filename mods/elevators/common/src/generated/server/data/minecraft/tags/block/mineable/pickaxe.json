@@ -1,0 +1,10 @@
+{
+  "values": [
+    "assortedelevators:elevator",
+    "assortedelevators:camouflaged_elevator",
+    "assortedelevators:elevator_landing",
+    "assortedelevators:camouflaged_elevator_landing",
+    "assortedelevators:instant_elevator",
+    "assortedelevators:camouflaged_instant_elevator"
+  ]
+}

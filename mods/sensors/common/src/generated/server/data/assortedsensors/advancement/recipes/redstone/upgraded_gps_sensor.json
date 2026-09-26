@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_gps_sensor": {
+      "conditions": {
+        "items": [
+          {
+            "items": "assortedsensors:gps_sensor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "assortedsensors:upgraded_gps_sensor"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_gps_sensor"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "assortedsensors:upgraded_gps_sensor"
+    ]
+  }
+}

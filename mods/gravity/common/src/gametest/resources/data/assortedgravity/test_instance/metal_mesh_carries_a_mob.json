@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedgravity:metal_mesh_carries_a_mob",
+  "structure": "assortedgravity:test_box",
+  "max_ticks": 200,
+  "setup_ticks": 0,
+  "required": true
+}

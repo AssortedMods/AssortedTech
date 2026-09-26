@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "assortedelevators:block/elevator"
+    }
+  }
+}

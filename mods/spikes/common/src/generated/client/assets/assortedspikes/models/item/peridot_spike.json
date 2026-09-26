@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "assortedspikes:block/spikes/peridot_spike_powered"
+  }
+}

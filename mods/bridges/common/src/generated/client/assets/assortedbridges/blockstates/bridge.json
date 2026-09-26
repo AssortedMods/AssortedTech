@@ -1,0 +1,29 @@
+{
+  "variants": {
+    "type=accel": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedbridges:block/bridge"
+    },
+    "type=death": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedbridges:block/bridge"
+    },
+    "type=gravity": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedbridges:block/bridge_gravity"
+    },
+    "type=laser": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedbridges:block/bridge"
+    },
+    "type=trick": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedbridges:block/bridge"
+    }
+  }
+}

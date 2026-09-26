@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "assortedspikes:block/spikes/bronze_spike"
+  }
+}

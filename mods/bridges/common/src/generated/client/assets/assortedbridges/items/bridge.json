@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "assortedbridges:bridge",
+    "model": "assortedbridges:block/bridge",
+    "tints": [
+      {
+        "type": "assortedbridges:bridge"
+      }
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "links": [
+    {
+      "blocks": [
+        "assortedgravity:attractor",
+        "assortedgravity:attractor_directional"
+      ],
+      "page": "assortedtech:gravity/attractors"
+    },
+    {
+      "blocks": [
+        "assortedgravity:repulsor",
+        "assortedgravity:repulsor_directional"
+      ],
+      "page": "assortedtech:gravity/repulsors"
+    },
+    {
+      "blocks": [
+        "assortedgravity:gravitor",
+        "assortedgravity:gravitor_directional"
+      ],
+      "page": "assortedtech:gravity/gravitors"
+    },
+    {
+      "items": [
+        "assortedgravity:gravity_boots"
+      ],
+      "page": "assortedtech:gravity/boots"
+    },
+    {
+      "blocks": [
+        "assortedgravity:metal_mesh"
+      ],
+      "page": "assortedtech:metal_mesh/metal_mesh"
+    }
+  ]
+}

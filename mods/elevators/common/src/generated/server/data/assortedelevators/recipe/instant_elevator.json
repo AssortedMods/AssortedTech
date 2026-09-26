@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "#c:ingots/copper",
+    "E": "#c:ender_pearls",
+    "R": "#c:dusts/redstone"
+  },
+  "pattern": [
+    "CRC",
+    "CEC",
+    "CCC"
+  ],
+  "result": {
+    "id": "assortedelevators:instant_elevator"
+  }
+}

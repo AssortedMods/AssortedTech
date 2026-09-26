@@ -1,0 +1,11 @@
+{
+  "values": [
+    "assortedgravity:metal_mesh",
+    "assortedgravity:attractor",
+    "assortedgravity:gravitor",
+    "assortedgravity:repulsor",
+    "assortedgravity:attractor_directional",
+    "assortedgravity:repulsor_directional",
+    "assortedgravity:gravitor_directional"
+  ]
+}

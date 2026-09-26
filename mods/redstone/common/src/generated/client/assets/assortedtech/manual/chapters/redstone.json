@@ -1,0 +1,23 @@
+{
+  "pages": [
+    {
+      "type": "assortedlib:recipe",
+      "id": "glowstone_torch",
+      "recipes": [
+        "assortedredstone:glowstone_torch"
+      ],
+      "text": "manual.assortedtech.chapter.redstone.glowstone_torch",
+      "title": "manual.assortedtech.chapter.redstone.glowstone_torch.title"
+    },
+    {
+      "type": "assortedlib:recipe",
+      "id": "flip_flop_torch",
+      "recipes": [
+        "assortedredstone:flip_flop_torch"
+      ],
+      "text": "manual.assortedtech.chapter.redstone.flip_flop_torch",
+      "title": "manual.assortedtech.chapter.redstone.flip_flop_torch.title"
+    }
+  ],
+  "sort_order": 7
+}

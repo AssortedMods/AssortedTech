@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "assortedspikes:block/spikes/tin_spike_powered"
+  }
+}

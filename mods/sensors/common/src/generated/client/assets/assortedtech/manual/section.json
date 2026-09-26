@@ -1,0 +1,9 @@
+{
+  "icon": [
+    "assortedredstone:flip_flop_torch",
+    "assortedbridges:bridge_control_laser",
+    "assortedelevators:elevator",
+    "assortedgravity:attractor"
+  ],
+  "sort_order": 100
+}

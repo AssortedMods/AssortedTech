@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "#c:ingots/copper",
+    "P": "minecraft:piston",
+    "R": "#c:dusts/redstone"
+  },
+  "pattern": [
+    "CCC",
+    "CPC",
+    "CRC"
+  ],
+  "result": {
+    "id": "assortedelevators:elevator"
+  }
+}

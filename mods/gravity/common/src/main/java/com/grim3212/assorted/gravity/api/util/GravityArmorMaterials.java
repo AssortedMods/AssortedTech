@@ -1,0 +1,70 @@
+package com.grim3212.assorted.gravity.api.util;
+
+import com.grim3212.assorted.lib.util.LibCommonTags;
+import com.grim3212.assorted.gravity.Constants;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.Util;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+import net.minecraft.world.item.equipment.EquipmentAssets;
+
+import java.util.EnumMap;
+import java.util.Map;
+
+/**
+ * The mod's armour materials. Each also needs {@code assets/assortedgravity/equipment/<name>.json}, or
+ * the worn armour renders untextured.
+ */
+public enum GravityArmorMaterials {
+    GRAVITY("gravity", 15, Util.make(new EnumMap<>(ArmorType.class), (map) -> {
+        map.put(ArmorType.BOOTS, 2);
+        map.put(ArmorType.LEGGINGS, 6);
+        map.put(ArmorType.CHESTPLATE, 5);
+        map.put(ArmorType.HELMET, 2);
+    }), 9, SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.0F, LibCommonTags.Items.ENDER_PEARLS);
+
+    private final String name;
+    private final int durabilityMultiplier;
+    private final Map<ArmorType, Integer> defense;
+    private final int enchantmentValue;
+    private final Holder<SoundEvent> equipSound;
+    private final float toughness;
+    private final float knockbackResistance;
+    private final TagKey<Item> repairIngredient;
+    private final ResourceKey<EquipmentAsset> assetId;
+
+    GravityArmorMaterials(String name, int durabilityMultiplier, Map<ArmorType, Integer> defense, int enchantmentValue, Holder<SoundEvent> equipSound, float toughness, float knockbackResistance, TagKey<Item> repairIngredient) {
+        this.name = name;
+        this.durabilityMultiplier = durabilityMultiplier;
+        this.defense = defense;
+        this.enchantmentValue = enchantmentValue;
+        this.equipSound = equipSound;
+        this.toughness = toughness;
+        this.knockbackResistance = knockbackResistance;
+        this.repairIngredient = repairIngredient;
+        this.assetId = ResourceKey.create(EquipmentAssets.ROOT_ID, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
+    }
+
+    /**
+     * This entry as vanilla's armour record. Its durability is a multiplier that
+     * {@code Properties#humanoidArmor} scales per slot with {@link ArmorType#getDurability(int)}.
+     */
+    public ArmorMaterial material() {
+        return new ArmorMaterial(this.durabilityMultiplier, this.defense, this.enchantmentValue, this.equipSound, this.toughness, this.knockbackResistance, this.repairIngredient, this.assetId);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public ResourceKey<EquipmentAsset> assetId() {
+        return this.assetId;
+    }
+}
