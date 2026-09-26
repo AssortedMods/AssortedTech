@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedgrates:item_grates_carry_a_mob",
+  "structure": "assortedgrates:test_box",
+  "max_ticks": 200,
+  "setup_ticks": 0,
+  "required": true
+}

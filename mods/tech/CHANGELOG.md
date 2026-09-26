@@ -2,9 +2,10 @@
 
 ## 10.0.0
 
-- Split into nine mods that can also be installed on their own. Assorted Elevators, Assorted Bridges, Assorted Gravity, Assorted Extruder, Assorted Sensors, Assorted Redstone, Assorted Alarm, Assorted Fan and Assorted Spikes
+- Split into ten mods that can also be installed on their own. Assorted Elevators, Assorted Bridges, Assorted Gravity, Assorted Grates, Assorted Extruder, Assorted Sensors, Assorted Redstone, Assorted Alarm, Assorted Fan and Assorted Spikes
 - Assorted Tech still includes all of them
 - Worlds from 9.x keep all your blocks, items and recipes
+- The metal mesh is the Iron Item Grate now, with new gold, copper and Assorted Core metal grates beside it
 - Removed the config options for turning parts off. Install only the mods you want instead
 - Each mod has its own config file now, so settings from assortedtech-common.toml and assortedtech-client.toml need setting again
 - Requires Assorted Lib 4.3.0

@@ -32,15 +32,8 @@ public class GravityCreativeItems {
         return items.getItems();
     }
 
-    private static List<ItemStack> getMetalMeshItems() {
-        CreativeTabItems items = new CreativeTabItems();
-        items.add(GravityBlocks.METAL_MESH.get());
-        return items.getItems();
-    }
-
     public static void init() {
-        // Two slots, as the tab was when this was all one mod: the gravity blocks first and the mesh after the alarm.
+        // First, as the tab was when this was all one mod.
         SharedCreativeTabs.add(TAB, 100, GravityCreativeItems::getGravityItems);
-        SharedCreativeTabs.add(TAB, 500, GravityCreativeItems::getMetalMeshItems);
     }
 }

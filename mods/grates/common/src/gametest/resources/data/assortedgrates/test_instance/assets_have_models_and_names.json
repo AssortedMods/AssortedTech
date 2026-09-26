@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedgrates:assets_have_models_and_names",
+  "structure": "assortedgrates:test_box",
+  "max_ticks": 20,
+  "setup_ticks": 0,
+  "required": true
+}

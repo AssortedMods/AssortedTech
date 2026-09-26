@@ -25,7 +25,6 @@ public class GravityBlockTagProvider extends LibBlockTagProvider {
         // into something that takes objects so the tag lists below stay readable.
         Function<TagKey<Block>, BlockTagger> tagger = (tag) -> new BlockTagger(appender.apply(tag));
 
-        tagger.apply(BlockTags.MINEABLE_WITH_PICKAXE).add(GravityBlocks.METAL_MESH.get());
         tagger.apply(BlockTags.MINEABLE_WITH_PICKAXE).add(GravityBlocks.ATTRACTOR.get(), GravityBlocks.GRAVITOR.get(), GravityBlocks.REPULSOR.get(), GravityBlocks.ATTRACTOR_DIRECTIONAL.get(), GravityBlocks.REPULSOR_DIRECTIONAL.get(), GravityBlocks.GRAVITOR_DIRECTIONAL.get());
     }
 

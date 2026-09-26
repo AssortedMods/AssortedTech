@@ -17,8 +17,6 @@ public class GravityBlockLoot extends LibBlockLootProvider {
     // Loot sub providers are handed the registry lookup at construction now.
     public GravityBlockLoot(HolderLookup.Provider registries) {
         super(registries, () -> GravityBlocks.BLOCKS.getEntries().stream().map(Supplier::get).collect(Collectors.toList()));
-        this.blocks.add(GravityBlocks.METAL_MESH.get());
-
         this.blocks.add(GravityBlocks.ATTRACTOR.get());
         this.blocks.add(GravityBlocks.REPULSOR.get());
         this.blocks.add(GravityBlocks.GRAVITOR.get());

@@ -30,22 +30,13 @@ public class GravityLanguageProvider extends LibLanguageProvider {
         this.addManual();
     }
 
-    /** This part's chapters of the Assorted Tech section, and the section's own title, which every part writes the same. */
+    /** This part's chapter of the Assorted Tech section, and the section's own title, which every part writes the same. */
     private void addManual() {
         this.add("manual.assortedtech.title", "Assorted Tech");
         this.add("manual.assortedtech.description",
                 "Laser bridges, gravity, sensors, spikes and additional redstone fun.");
 
         this.addGravityChapter();
-        this.addMetalMeshChapter();
-    }
-
-    private void addMetalMeshChapter() {
-        this.add("manual.assortedtech.chapter.metal_mesh", "Metal Mesh");
-
-        this.add("manual.assortedtech.chapter.metal_mesh.metal_mesh.title", "Metal Mesh");
-        this.add("manual.assortedtech.chapter.metal_mesh.metal_mesh",
-                "A grate you can walk across that items drop straight through. Players and mobs stand on it but any item dropped on it falls through.");
     }
 
     private void addGravityChapter() {

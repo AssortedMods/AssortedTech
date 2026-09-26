@@ -26,12 +26,6 @@
         "assortedgravity:gravity_boots"
       ],
       "page": "assortedtech:gravity/boots"
-    },
-    {
-      "blocks": [
-        "assortedgravity:metal_mesh"
-      ],
-      "page": "assortedtech:metal_mesh/metal_mesh"
     }
   ]
 }

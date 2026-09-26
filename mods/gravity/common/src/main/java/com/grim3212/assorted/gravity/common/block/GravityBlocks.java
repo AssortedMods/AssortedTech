@@ -30,8 +30,6 @@ public class GravityBlocks {
     public static final IRegistryObject<GravityDirectionalBlock> REPULSOR_DIRECTIONAL = register("repulsor_directional", props -> new GravityDirectionalBlock(GravityType.REPULSE, props.mapColor(MapColor.METAL).sound(SoundType.METAL).strength(0.3F, 10.0F).requiresCorrectToolForDrops()));
     public static final IRegistryObject<GravityDirectionalBlock> GRAVITOR_DIRECTIONAL = register("gravitor_directional", props -> new GravityDirectionalBlock(GravityType.GRAVITATE, props.mapColor(MapColor.METAL).sound(SoundType.METAL).strength(0.3F, 10.0F).requiresCorrectToolForDrops()));
 
-    public static final IRegistryObject<MetalMeshBlock> METAL_MESH = register("metal_mesh", props -> new MetalMeshBlock(props.mapColor(MapColor.METAL).sound(SoundType.METAL).strength(0.4F, 1.0F).requiresCorrectToolForDrops().noOcclusion().isSuffocating((state, getter, pos) -> false).isViewBlocking((state, getter, pos) -> false).isRedstoneConductor((state, getter, pos) -> false)));
-
     /** A block and its item. */
     private static <T extends Block> IRegistryObject<T> register(String name, Function<BlockBehaviour.Properties, ? extends T> factory) {
         // Since 1.21.2 every block has to know its own id before it is constructed, so the
