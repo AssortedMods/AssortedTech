@@ -9,7 +9,11 @@ import com.grim3212.assorted.tech.client.blockentity.SensorBlockEntityRenderer;
 import com.grim3212.assorted.tech.client.color.BridgeItemTintSource;
 import com.grim3212.assorted.tech.client.model.BridgeItemModel;
 import com.grim3212.assorted.tech.client.model.BridgeUnbakedModel;
+import com.grim3212.assorted.tech.client.model.CamouflageModelLoader;
+import com.grim3212.assorted.tech.client.model.CamouflageUnbakedModel;
+import com.grim3212.assorted.tech.client.color.CamouflageTintSource;
 import com.grim3212.assorted.tech.client.particle.AirParticle;
+import com.grim3212.assorted.tech.client.render.ElevatorCarRenderer;
 import com.grim3212.assorted.tech.client.render.ExtruderModel;
 import com.grim3212.assorted.tech.client.render.ExtruderSpecialRenderer;
 import com.grim3212.assorted.tech.client.render.ExtruderRenderer;
@@ -47,10 +51,13 @@ public class TechClient {
         // The extruder items draw the entity's model; their model json picks this by id.
         ClientServices.CLIENT.registerSpecialModelRenderers(register -> register.registerSpecialModelRenderer(ExtruderSpecialRenderer.ID, ExtruderSpecialRenderer.Unbaked.MAP_CODEC));
         ClientServices.CLIENT.registerEntityRenderer(() -> TechEntities.EXTRUDER.get(), ExtruderRenderer::new);
+        ClientServices.CLIENT.registerEntityRenderer(() -> TechEntities.ELEVATOR_CAR.get(), ElevatorCarRenderer::new);
         ClientServices.CLIENT.registerScreen(TechMenuTypes.EXTRUDER::get, ExtruderScreen::new);
         ClientServices.CLIENT.registerScreen(TechMenuTypes.GPS_SENSOR::get, GpsSensorScreen::new);
 
         ClientServices.CLIENT.registerModelLoader(BridgeUnbakedModel.LOADER_NAME, BridgeUnbakedModel.Loader.INSTANCE);
+        ClientServices.CLIENT.registerModelLoader(CamouflageUnbakedModel.LOADER_NAME, CamouflageModelLoader.INSTANCE);
+        ClientServices.CLIENT.registerBlockColor(new CamouflageTintSource(), () -> ImmutableList.of(TechBlocks.CAMOUFLAGED_INSTANT_ELEVATOR.get(), TechBlocks.CAMOUFLAGED_ELEVATOR.get(), TechBlocks.CAMOUFLAGED_ELEVATOR_LANDING.get()));
 
         // BlockColor became BlockTintSource: color(state) answers the in-hand colour and
         // colorInWorld(state, level, pos) the placed one, so the nullable BlockPos the old lambda

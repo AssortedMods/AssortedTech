@@ -24,6 +24,9 @@ public final class TechGameTests {
         TooltipTests.register(out);
         DeviceTests.register(out);
         MetalMeshTests.register(out);
+        ElevatorTests.register(out);
+        InstantElevatorTests.register(out);
+        CamouflageTests.register(out);
         GpsSensorTests.register(out);
         ExtruderTests.register(out);
         AssetTests.register(out);

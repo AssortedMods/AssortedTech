@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class TechDamageTypes {
 
     public static final ResourceKey<DamageType> SPIKE = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "spike"));
+    public static final ResourceKey<DamageType> ELEVATOR = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "elevator"));
     public static final ResourceKey<DamageType> LASER = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "laser"));
 
     /**

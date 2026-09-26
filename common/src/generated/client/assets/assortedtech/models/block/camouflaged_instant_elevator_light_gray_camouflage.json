@@ -1,0 +1,8 @@
+{
+  "fabric:type": "assortedtech:camouflage",
+  "fallback": "assortedtech:block/camouflaged_instant_elevator_light_gray",
+  "loader": "assortedtech:camouflage",
+  "textures": {
+    "particle": "assortedtech:block/camouflaged_instant_elevator_light_gray_side"
+  }
+}

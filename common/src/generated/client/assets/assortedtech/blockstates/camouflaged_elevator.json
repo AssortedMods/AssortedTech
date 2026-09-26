@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_elevator_camouflage"
+    }
+  }
+}

@@ -62,6 +62,13 @@ public class TechBlocks {
 
     public static final IRegistryObject<MetalMeshBlock> METAL_MESH = register("metal_mesh", props -> new MetalMeshBlock(props.mapColor(MapColor.METAL).sound(SoundType.METAL).strength(0.4F, 1.0F).requiresCorrectToolForDrops().noOcclusion().isSuffocating((state, getter, pos) -> false).isViewBlocking((state, getter, pos) -> false).isRedstoneConductor((state, getter, pos) -> false)));
 
+    public static final IRegistryObject<ElevatorBlock> ELEVATOR = register("elevator", props -> new ElevatorBlock(props.mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER).strength(1.5F, 6.0F).requiresCorrectToolForDrops().pushReaction(PushReaction.BLOCK)));
+    public static final IRegistryObject<CamouflagedElevatorBlock> CAMOUFLAGED_ELEVATOR = register("camouflaged_elevator", props -> new CamouflagedElevatorBlock(props.mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER).strength(1.5F, 6.0F).requiresCorrectToolForDrops().pushReaction(PushReaction.BLOCK)));
+    public static final IRegistryObject<ElevatorLandingBlock> ELEVATOR_LANDING = register("elevator_landing", props -> new ElevatorLandingBlock(props.mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
+    public static final IRegistryObject<CamouflagedElevatorLandingBlock> CAMOUFLAGED_ELEVATOR_LANDING = register("camouflaged_elevator_landing", props -> new CamouflagedElevatorLandingBlock(props.mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
+    public static final IRegistryObject<InstantElevatorBlock> INSTANT_ELEVATOR = register("instant_elevator", props -> new InstantElevatorBlock(props.mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
+    public static final IRegistryObject<CamouflagedInstantElevatorBlock> CAMOUFLAGED_INSTANT_ELEVATOR = register("camouflaged_instant_elevator", props -> new CamouflagedInstantElevatorBlock(props.mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
+
     public static final IRegistryObject<GpsSensorBlock> GPS_SENSOR = register("gps_sensor", props -> new GpsSensorBlock(props.mapColor(MapColor.COLOR_RED).sound(SoundType.STONE).strength(1.5F, 10.0F), false));
     public static final IRegistryObject<GpsSensorBlock> UPGRADED_GPS_SENSOR = register("upgraded_gps_sensor", props -> new GpsSensorBlock(props.mapColor(MapColor.COLOR_RED).sound(SoundType.STONE).strength(3.0F, 12.0F), true));
 

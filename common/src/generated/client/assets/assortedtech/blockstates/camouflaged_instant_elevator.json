@@ -1,0 +1,84 @@
+{
+  "variants": {
+    "color=black": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_black_camouflage"
+    },
+    "color=blue": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_blue_camouflage"
+    },
+    "color=brown": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_brown_camouflage"
+    },
+    "color=cyan": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_cyan_camouflage"
+    },
+    "color=gray": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_gray_camouflage"
+    },
+    "color=green": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_green_camouflage"
+    },
+    "color=light_blue": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_light_blue_camouflage"
+    },
+    "color=light_gray": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_light_gray_camouflage"
+    },
+    "color=lime": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_lime_camouflage"
+    },
+    "color=magenta": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_magenta_camouflage"
+    },
+    "color=orange": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_orange_camouflage"
+    },
+    "color=pink": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_pink_camouflage"
+    },
+    "color=purple": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_purple_camouflage"
+    },
+    "color=red": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_red_camouflage"
+    },
+    "color=white": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_white_camouflage"
+    },
+    "color=yellow": {
+      "type": "assortedlib:specification",
+      "fabric:type": "assortedlib:specification",
+      "model": "assortedtech:block/camouflaged_instant_elevator_yellow_camouflage"
+    }
+  }
+}

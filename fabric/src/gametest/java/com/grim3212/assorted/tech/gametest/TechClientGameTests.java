@@ -21,8 +21,8 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.List;
 
 /**
- * What a headless server cannot see: how a bridge item is drawn, and a spike's tooltip as Fabric
- * builds it. Fabric only, as NeoForge has no client gametest; run with
+ * What a headless server cannot see: how a bridge item is drawn, a spike's tooltip as Fabric
+ * builds it, and riding both elevators. Fabric only, as NeoForge has no client gametest; run with
  * {@code ./gradlew :fabric:runClientGameTest}.
  */
 public class TechClientGameTests implements FabricClientGameTest {
@@ -59,6 +59,8 @@ public class TechClientGameTests implements FabricClientGameTest {
                     throw new AssertionError("a spike's tooltip is " + spikeTooltip);
                 }
             });
+
+            ElevatorClientTests.run(context, world);
         }
     }
 

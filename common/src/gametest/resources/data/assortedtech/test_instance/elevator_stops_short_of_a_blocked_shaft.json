@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedtech:elevator_stops_short_of_a_blocked_shaft",
+  "structure": "assortedtech:test_box",
+  "max_ticks": 400,
+  "setup_ticks": 0,
+  "required": true
+}

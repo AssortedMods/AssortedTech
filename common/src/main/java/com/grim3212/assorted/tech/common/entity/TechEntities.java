@@ -15,6 +15,7 @@ public class TechEntities {
     public static final RegistryProvider<EntityType<?>> ENTITIES = RegistryProvider.create(Registries.ENTITY_TYPE, Constants.MOD_ID);
 
     public static final IRegistryObject<EntityType<ExtruderEntity>> EXTRUDER = register("extruder", EntityType.Builder.<ExtruderEntity>of(ExtruderEntity::new, MobCategory.MISC).sized(0.875F, 0.875F).clientTrackingRange(10).updateInterval(1));
+    public static final IRegistryObject<EntityType<ElevatorCarEntity>> ELEVATOR_CAR = register("elevator_car", EntityType.Builder.<ElevatorCarEntity>of(ElevatorCarEntity::new, MobCategory.MISC).sized(1.0F, 1.0F).clientTrackingRange(10).updateInterval(20));
 
     private static <T extends Entity> IRegistryObject<EntityType<T>> register(final String name, final EntityType.Builder<T> builder) {
         final ResourceKey<EntityType<?>> key = ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));

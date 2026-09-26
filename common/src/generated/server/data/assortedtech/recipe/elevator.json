@@ -1,0 +1,28 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "elevator"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "elevator"
+    }
+  ],
+  "key": {
+    "C": "#c:ingots/copper",
+    "P": "minecraft:piston",
+    "R": "#c:dusts/redstone"
+  },
+  "pattern": [
+    "CCC",
+    "CPC",
+    "CRC"
+  ],
+  "result": {
+    "id": "assortedtech:elevator"
+  }
+}

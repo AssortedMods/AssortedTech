@@ -34,6 +34,7 @@ public class TechManualProvider extends LibManualProvider {
         this.addRedstone();
         this.addExtruder();
         this.addMetalMesh();
+        this.addElevators();
     }
 
     private void addExtruder() {
@@ -90,6 +91,16 @@ public class TechManualProvider extends LibManualProvider {
     private void addMetalMesh() {
         ChapterBuilder mesh = this.chapter("metal_mesh").whenPartEnabled(TechConditions.Parts.METAL_MESH);
         mesh.recipes("metal_mesh", TechBlocks.METAL_MESH.get()).opens(TechBlocks.METAL_MESH.get());
+    }
+
+    private void addElevators() {
+        ChapterBuilder elevators = this.chapter("elevators");
+        elevators.recipes("elevator", TechBlocks.ELEVATOR.get()).whenPartEnabled(TechConditions.Parts.ELEVATOR).opens(TechBlocks.ELEVATOR.get()).opens(TechEntities.ELEVATOR_CAR.get());
+        elevators.recipes("camouflaged_elevator", TechBlocks.CAMOUFLAGED_ELEVATOR.get()).whenPartEnabled(TechConditions.Parts.ELEVATOR).opens(TechBlocks.CAMOUFLAGED_ELEVATOR.get());
+        elevators.recipes("elevator_landing", TechBlocks.ELEVATOR_LANDING.get()).whenPartEnabled(TechConditions.Parts.ELEVATOR).opens(TechBlocks.ELEVATOR_LANDING.get());
+        elevators.recipes("camouflaged_elevator_landing", TechBlocks.CAMOUFLAGED_ELEVATOR_LANDING.get()).whenPartEnabled(TechConditions.Parts.ELEVATOR).opens(TechBlocks.CAMOUFLAGED_ELEVATOR_LANDING.get());
+        elevators.recipes("instant_elevator", TechBlocks.INSTANT_ELEVATOR.get()).whenPartEnabled(TechConditions.Parts.INSTANT_ELEVATOR).opens(TechBlocks.INSTANT_ELEVATOR.get());
+        elevators.recipes("camouflaged_instant_elevator", TechBlocks.CAMOUFLAGED_INSTANT_ELEVATOR.get()).whenPartEnabled(TechConditions.Parts.INSTANT_ELEVATOR).opens(TechBlocks.CAMOUFLAGED_INSTANT_ELEVATOR.get());
     }
 
     private void addRedstone() {

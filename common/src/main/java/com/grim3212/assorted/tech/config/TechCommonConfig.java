@@ -19,6 +19,8 @@ public class TechCommonConfig {
     public final Supplier<Boolean> gravityEnabled;
     public final Supplier<Boolean> extruderEnabled;
     public final Supplier<Boolean> gpsEnabled;
+    public final Supplier<Boolean> elevatorEnabled;
+    public final Supplier<Boolean> instantElevatorEnabled;
 
     public final Supplier<Boolean> hideUncraftableItems;
 
@@ -42,6 +44,10 @@ public class TechCommonConfig {
     public final Supplier<Integer> upgradedGpsSensorRange;
     public final Supplier<Integer> upgradedGpsSensorMaxRadius;
 
+    public final Supplier<Double> elevatorSpeed;
+    public final Supplier<Integer> elevatorMaxTravel;
+    public final Supplier<Integer> instantElevatorRange;
+
     public TechCommonConfig() {
         final IConfigurationBuilder builder = Services.CONFIG.createBuilder(ConfigurationType.NOT_SYNCED, Constants.MOD_ID + "-common");
 
@@ -55,6 +61,8 @@ public class TechCommonConfig {
         gravityEnabled = builder.defineBoolean("parts.gravityEnabled", true, "Set this to true if you would like the gravity blocks and items to be craftable and found in the creative tab.");
         extruderEnabled = builder.defineBoolean("parts.extruderEnabled", true, "Set this to true if you would like the extruder to be craftable and found in the creative tab.");
         gpsEnabled = builder.defineBoolean("parts.gpsEnabled", true, "Set this to true if you would like the GPS and the GPS sensors to be craftable and found in the creative tab.");
+        elevatorEnabled = builder.defineBoolean("parts.elevatorEnabled", true, "Set this to true if you would like the elevator to be craftable and found in the creative tab.");
+        instantElevatorEnabled = builder.defineBoolean("parts.instantElevatorEnabled", true, "Set this to true if you would like the instant elevator to be craftable and found in the creative tab.");
 
         hideUncraftableItems = builder.defineBoolean("general.hideUncraftableItems", false, "For any item that is unobtainable (like missing materials from other mods) hide it from the creative menu / JEI.");
 
@@ -76,6 +84,10 @@ public class TechCommonConfig {
         gpsSensorRange = builder.defineInteger("gps.gpsSensorRange", 7, 1, 64, "How far from a GPS sensor, in blocks, the position it watches can be.");
         upgradedGpsSensorRange = builder.defineInteger("gps.upgradedGpsSensorRange", 11, 1, 64, "How far from an upgraded GPS sensor, in blocks, the position it watches can be.");
         upgradedGpsSensorMaxRadius = builder.defineInteger("gps.upgradedGpsSensorMaxRadius", 4, 0, 16, "How far around its position, in blocks, an upgraded GPS sensor can be set to watch.");
+
+        elevatorSpeed = builder.defineDouble("elevators.elevatorSpeed", 0.2D, 0.01D, 0.4D, "How far the elevator moves each tick, in blocks.");
+        elevatorMaxTravel = builder.defineInteger("elevators.elevatorMaxTravel", 64, 1, 512, "The furthest the elevator travels in one trip, in blocks, when its shaft goes on further than that.");
+        instantElevatorRange = builder.defineInteger("elevators.instantElevatorRange", 64, 1, 512, "How far above or below an instant elevator, in blocks, the next one can be and still be reached.");
 
         builder.setup();
     }

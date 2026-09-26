@@ -65,6 +65,18 @@ public class TechCreativeItems {
             items.add(TechBlocks.METAL_MESH.get());
         }
 
+        if (TechCommonMod.COMMON_CONFIG.elevatorEnabled.get()) {
+            items.add(TechBlocks.ELEVATOR.get());
+            items.add(TechBlocks.CAMOUFLAGED_ELEVATOR.get());
+            items.add(TechBlocks.ELEVATOR_LANDING.get());
+            items.add(TechBlocks.CAMOUFLAGED_ELEVATOR_LANDING.get());
+        }
+
+        if (TechCommonMod.COMMON_CONFIG.instantElevatorEnabled.get()) {
+            items.add(TechBlocks.INSTANT_ELEVATOR.get());
+            items.add(TechBlocks.CAMOUFLAGED_INSTANT_ELEVATOR.get());
+        }
+
         if (TechCommonMod.COMMON_CONFIG.bridgesEnabled.get()) {
             items.add(TechBlocks.BRIDGE_CONTROL_ACCEL.get());
             items.add(TechBlocks.BRIDGE_CONTROL_DEATH.get());

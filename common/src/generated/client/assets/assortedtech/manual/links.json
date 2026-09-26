@@ -183,6 +183,45 @@
         "assortedtech:metal_mesh"
       ],
       "page": "assortedtech:metal_mesh/metal_mesh"
+    },
+    {
+      "blocks": [
+        "assortedtech:elevator"
+      ],
+      "entities": [
+        "assortedtech:elevator_car"
+      ],
+      "page": "assortedtech:elevators/elevator"
+    },
+    {
+      "blocks": [
+        "assortedtech:camouflaged_elevator"
+      ],
+      "page": "assortedtech:elevators/camouflaged_elevator"
+    },
+    {
+      "blocks": [
+        "assortedtech:elevator_landing"
+      ],
+      "page": "assortedtech:elevators/elevator_landing"
+    },
+    {
+      "blocks": [
+        "assortedtech:camouflaged_elevator_landing"
+      ],
+      "page": "assortedtech:elevators/camouflaged_elevator_landing"
+    },
+    {
+      "blocks": [
+        "assortedtech:instant_elevator"
+      ],
+      "page": "assortedtech:elevators/instant_elevator"
+    },
+    {
+      "blocks": [
+        "assortedtech:camouflaged_instant_elevator"
+      ],
+      "page": "assortedtech:elevators/camouflaged_instant_elevator"
     }
   ]
 }

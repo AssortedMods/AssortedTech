@@ -19,6 +19,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.FluidTags;
@@ -44,6 +45,12 @@ public class TechRecipes extends ConditionalRecipeProvider {
     public void registerConditions() {
         this.addConditions(partEnabled(TechConditions.Parts.ALARM), TechBlocks.ALARM.getId());
         this.addConditions(partEnabled(TechConditions.Parts.METAL_MESH), TechBlocks.METAL_MESH.getId());
+        this.addConditions(partEnabled(TechConditions.Parts.ELEVATOR), TechBlocks.ELEVATOR.getId());
+        this.addConditions(partEnabled(TechConditions.Parts.ELEVATOR), TechBlocks.ELEVATOR_LANDING.getId());
+        this.addConditions(partEnabled(TechConditions.Parts.ELEVATOR), TechBlocks.CAMOUFLAGED_ELEVATOR.getId());
+        this.addConditions(partEnabled(TechConditions.Parts.ELEVATOR), TechBlocks.CAMOUFLAGED_ELEVATOR_LANDING.getId());
+        this.addConditions(partEnabled(TechConditions.Parts.INSTANT_ELEVATOR), TechBlocks.INSTANT_ELEVATOR.getId());
+        this.addConditions(partEnabled(TechConditions.Parts.INSTANT_ELEVATOR), TechBlocks.CAMOUFLAGED_INSTANT_ELEVATOR.getId());
         // An Assorted Tools material's extruder only once Assorted Tools gives it tools.
         for (ExtruderType type : ExtruderType.values()) {
             Identifier id = TechItems.EXTRUDERS.get(type).getId();
@@ -67,6 +74,13 @@ public class TechRecipes extends ConditionalRecipeProvider {
 
         // Four bars woven into a panel, the 1.12 recipe's shape with iron bars where its iron sticks were.
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.BUILDING_BLOCKS, TechBlocks.METAL_MESH.get(), 4).define('B', Items.IRON_BARS).pattern("BB").pattern("BB").unlockedBy("has_iron_bars", has(Items.IRON_BARS)).save(this.output, recipeKey(TechBlocks.METAL_MESH.getId()));
+
+        ShapedRecipeBuilder.shaped(this.items, RecipeCategory.TRANSPORTATION, TechBlocks.ELEVATOR.get(), 1).define('C', LibCommonTags.Items.INGOTS_COPPER).define('P', Items.PISTON).define('R', LibCommonTags.Items.DUSTS_REDSTONE).pattern("CCC").pattern("CPC").pattern("CRC").unlockedBy("has_copper", has(LibCommonTags.Items.INGOTS_COPPER)).save(this.output, recipeKey(TechBlocks.ELEVATOR.getId()));
+        ShapedRecipeBuilder.shaped(this.items, RecipeCategory.TRANSPORTATION, TechBlocks.ELEVATOR_LANDING.get(), 1).define('C', LibCommonTags.Items.INGOTS_COPPER).define('R', LibCommonTags.Items.DUSTS_REDSTONE).pattern("C").pattern("R").pattern("C").unlockedBy("has_elevator", has(TechBlocks.ELEVATOR.get())).save(this.output, recipeKey(TechBlocks.ELEVATOR_LANDING.getId()));
+        ShapedRecipeBuilder.shaped(this.items, RecipeCategory.TRANSPORTATION, TechBlocks.INSTANT_ELEVATOR.get(), 1).define('C', LibCommonTags.Items.INGOTS_COPPER).define('E', LibCommonTags.Items.ENDER_PEARLS).define('R', LibCommonTags.Items.DUSTS_REDSTONE).pattern("CRC").pattern("CEC").pattern("CCC").unlockedBy("has_ender_pearl", has(LibCommonTags.Items.ENDER_PEARLS)).save(this.output, recipeKey(TechBlocks.INSTANT_ELEVATOR.getId()));
+        ShapelessRecipeBuilder.shapeless(this.items, RecipeCategory.TRANSPORTATION, TechBlocks.CAMOUFLAGED_ELEVATOR.get()).requires(TechBlocks.ELEVATOR.get()).requires(Items.AMETHYST_SHARD).requires(LibCommonTags.Items.DYES).unlockedBy("has_elevator", has(TechBlocks.ELEVATOR.get())).save(this.output, recipeKey(TechBlocks.CAMOUFLAGED_ELEVATOR.getId()));
+        ShapelessRecipeBuilder.shapeless(this.items, RecipeCategory.TRANSPORTATION, TechBlocks.CAMOUFLAGED_ELEVATOR_LANDING.get()).requires(TechBlocks.ELEVATOR_LANDING.get()).requires(Items.AMETHYST_SHARD).requires(LibCommonTags.Items.DYES).unlockedBy("has_elevator_landing", has(TechBlocks.ELEVATOR_LANDING.get())).save(this.output, recipeKey(TechBlocks.CAMOUFLAGED_ELEVATOR_LANDING.getId()));
+        ShapelessRecipeBuilder.shapeless(this.items, RecipeCategory.TRANSPORTATION, TechBlocks.CAMOUFLAGED_INSTANT_ELEVATOR.get()).requires(TechBlocks.INSTANT_ELEVATOR.get()).requires(Items.AMETHYST_SHARD).requires(LibCommonTags.Items.DYES).unlockedBy("has_instant_elevator", has(TechBlocks.INSTANT_ELEVATOR.get())).save(this.output, recipeKey(TechBlocks.CAMOUFLAGED_INSTANT_ELEVATOR.getId()));
 
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.REDSTONE, TechBlocks.BRIDGE_CONTROL_LASER.get(), 1).define('R', LibCommonTags.Items.SLIMEBALLS).define('I', LibCommonTags.Items.INGOTS_IRON).pattern("III").pattern("IRI").pattern("III").unlockedBy("has_slime", has(LibCommonTags.Items.SLIMEBALLS)).save(this.output, recipeKey(TechBlocks.BRIDGE_CONTROL_LASER.getId()));
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.REDSTONE, TechBlocks.BRIDGE_CONTROL_ACCEL.get(), 1).define('L', TechBlocks.BRIDGE_CONTROL_LASER.get()).define('R', fluid(FluidTags.WATER)).define('I', LibCommonTags.Items.INGOTS_IRON).pattern("III").pattern("ILI").pattern("IRI").unlockedBy("has_laser_bridge", has(TechBlocks.BRIDGE_CONTROL_LASER.get())).save(this.output, recipeKey(TechBlocks.BRIDGE_CONTROL_ACCEL.getId()));

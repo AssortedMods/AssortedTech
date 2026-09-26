@@ -1,0 +1,44 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "instant_elevator"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_instant_elevator": {
+      "conditions": {
+        "items": [
+          {
+            "items": "assortedtech:instant_elevator"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "assortedtech:camouflaged_instant_elevator"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "instant_elevator"
+    }
+  ],
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_instant_elevator"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "assortedtech:camouflaged_instant_elevator"
+    ]
+  }
+}

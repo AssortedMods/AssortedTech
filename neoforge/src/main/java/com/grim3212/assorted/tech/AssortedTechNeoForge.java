@@ -1,6 +1,7 @@
 package com.grim3212.assorted.tech;
 
 import com.grim3212.assorted.tech.client.data.TechLanguageProvider;
+import com.grim3212.assorted.tech.common.handlers.ElevatorInputHandler;
 import com.grim3212.assorted.tech.client.data.TechManualProvider;
 import com.grim3212.assorted.lib.data.ForgeBlockTagProvider;
 import com.grim3212.assorted.lib.data.ForgeEntityTagProvider;
@@ -16,11 +17,14 @@ import com.grim3212.assorted.tech.data.TechRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,6 +42,13 @@ public class AssortedTechNeoForge {
         modBus.addListener(this::gatherClientData);
 
         TechCommonMod.init();
+
+        // A level tick like Fabric's, rather than a player tick, so both loaders run it at the same point.
+        NeoForge.EVENT_BUS.addListener((LevelTickEvent.Post event) -> {
+            if (event.getLevel() instanceof ServerLevel level) {
+                ElevatorInputHandler.tick(level);
+            }
+        });
     }
 
     /**

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedtech:instant_elevator_takes_a_dye",
+  "structure": "assortedtech:test_box",
+  "max_ticks": 20,
+  "setup_ticks": 0,
+  "sky_access": true,
+  "required": true
+}

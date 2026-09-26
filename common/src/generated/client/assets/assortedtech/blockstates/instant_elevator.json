@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "color=black": {
+      "model": "assortedtech:block/instant_elevator_black"
+    },
+    "color=blue": {
+      "model": "assortedtech:block/instant_elevator_blue"
+    },
+    "color=brown": {
+      "model": "assortedtech:block/instant_elevator_brown"
+    },
+    "color=cyan": {
+      "model": "assortedtech:block/instant_elevator_cyan"
+    },
+    "color=gray": {
+      "model": "assortedtech:block/instant_elevator_gray"
+    },
+    "color=green": {
+      "model": "assortedtech:block/instant_elevator_green"
+    },
+    "color=light_blue": {
+      "model": "assortedtech:block/instant_elevator_light_blue"
+    },
+    "color=light_gray": {
+      "model": "assortedtech:block/instant_elevator_light_gray"
+    },
+    "color=lime": {
+      "model": "assortedtech:block/instant_elevator_lime"
+    },
+    "color=magenta": {
+      "model": "assortedtech:block/instant_elevator_magenta"
+    },
+    "color=orange": {
+      "model": "assortedtech:block/instant_elevator_orange"
+    },
+    "color=pink": {
+      "model": "assortedtech:block/instant_elevator_pink"
+    },
+    "color=purple": {
+      "model": "assortedtech:block/instant_elevator_purple"
+    },
+    "color=red": {
+      "model": "assortedtech:block/instant_elevator_red"
+    },
+    "color=white": {
+      "model": "assortedtech:block/instant_elevator_white"
+    },
+    "color=yellow": {
+      "model": "assortedtech:block/instant_elevator_yellow"
+    }
+  }
+}

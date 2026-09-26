@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedtech:camouflaged_elevator_landing_still_calls_the_car",
+  "structure": "assortedtech:test_box",
+  "max_ticks": 400,
+  "setup_ticks": 0,
+  "required": true
+}

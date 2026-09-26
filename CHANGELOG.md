@@ -1,5 +1,15 @@
 # Changelog
 
+## 9.1.3
+
+Brought over from my very old, maintained Elevator mod and modernized.
+
+- Adds an elevator and an instant elevator
+- Both can be sent up or down by jumping or sneaking
+- The instant elevator can be dyed to go to different colors
+- The elevator supports different landings to act as floors if this is a multi-floor elevator
+- Both support camouflaged variants
+
 ## 9.1.2
 
 Brought over from GrimPack:

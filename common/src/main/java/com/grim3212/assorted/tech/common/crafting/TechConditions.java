@@ -16,6 +16,8 @@ public class TechConditions {
         public static final String EXTRUDER = "extruder";
         public static final String GPS = "gps";
         public static final String METAL_MESH = "metal_mesh";
+        public static final String ELEVATOR = "elevator";
+        public static final String INSTANT_ELEVATOR = "instant_elevator";
     }
 
 
@@ -30,6 +32,8 @@ public class TechConditions {
         Services.CONDITIONS.registerPartCondition(Parts.EXTRUDER, () -> TechCommonMod.COMMON_CONFIG.extruderEnabled.get());
         Services.CONDITIONS.registerPartCondition(Parts.GPS, () -> TechCommonMod.COMMON_CONFIG.gpsEnabled.get());
         Services.CONDITIONS.registerPartCondition(Parts.METAL_MESH, () -> TechCommonMod.COMMON_CONFIG.metalMeshEnabled.get());
+        Services.CONDITIONS.registerPartCondition(Parts.ELEVATOR, () -> TechCommonMod.COMMON_CONFIG.elevatorEnabled.get());
+        Services.CONDITIONS.registerPartCondition(Parts.INSTANT_ELEVATOR, () -> TechCommonMod.COMMON_CONFIG.instantElevatorEnabled.get());
     }
 
 }
