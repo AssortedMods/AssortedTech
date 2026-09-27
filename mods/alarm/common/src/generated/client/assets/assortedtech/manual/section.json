@@ -3,7 +3,13 @@
     "assortedredstone:flip_flop_torch",
     "assortedbridges:bridge_control_laser",
     "assortedelevators:elevator",
-    "assortedgravity:attractor"
+    "assortedgravity:attractor",
+    "assortedgrates:iron_item_grate",
+    "assortedextruder:iron_extruder",
+    "assortedsensors:gold_sensor",
+    "assortedspikes:iron_spike",
+    "assortedalarm:alarm",
+    "assortedfan:fan"
   ],
   "sort_order": 100
 }
