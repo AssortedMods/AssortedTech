@@ -6,6 +6,7 @@ import com.grim3212.assorted.extruder.common.entity.ExtruderEntity;
 import com.grim3212.assorted.extruder.common.entity.ExtruderEntities;
 import com.grim3212.assorted.extruder.common.inventory.ExtruderMenu;
 import com.grim3212.assorted.extruder.common.item.ExtruderItems;
+import com.grim3212.assorted.lib.util.ItemUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -274,8 +275,8 @@ final class ExtruderTests {
         helper.assertTrue(ExtruderType.STONE.toolFor(Blocks.IRON_ORE.defaultBlockState()).is(Items.STONE_PICKAXE), "a stone extruder does not mine iron ore with its pickaxe");
         helper.assertTrue(ExtruderType.WOOD.toolFor(Blocks.DIRT.defaultBlockState()).is(Items.WOODEN_SHOVEL), "a wooden extruder does not dig dirt with its shovel");
         helper.assertTrue(ExtruderType.WOOD.toolFor(Blocks.GLASS.defaultBlockState()).is(Items.WOODEN_PICKAXE), "a block needing no tool is not mined with the pickaxe");
-        helper.assertFalse(ExtruderType.DIAMOND.isUncraftable(), "the diamond extruder has no tools");
-        helper.assertTrue(ExtruderType.STEEL.isUncraftable() && ExtruderType.STEEL.toolFor(Blocks.DIRT.defaultBlockState()).isEmpty(), "the steel extruder has tools without Assorted Tools");
+        helper.assertFalse(ItemUtil.isTagEmpty(ExtruderType.DIAMOND.getAxes()), "the diamond extruder has no tools");
+        helper.assertTrue(ItemUtil.isTagEmpty(ExtruderType.STEEL.getAxes()) && ExtruderType.STEEL.toolFor(Blocks.DIRT.defaultBlockState()).isEmpty(), "the steel extruder has tools without Assorted Tools");
 
         final BlockPos woodStart = new BlockPos(1, 2, 4);
         final BlockPos ironStart = new BlockPos(1, 2, 1);

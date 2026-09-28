@@ -4,8 +4,6 @@ import com.grim3212.assorted.lib.core.creative.CreativeTabItems;
 import com.grim3212.assorted.lib.core.creative.SharedCreativeTabs;
 import com.grim3212.assorted.lib.family.Families;
 import com.grim3212.assorted.spikes.Constants;
-import com.grim3212.assorted.spikes.SpikesCommonMod;
-import com.grim3212.assorted.spikes.api.util.SpikeType;
 import com.grim3212.assorted.spikes.common.block.SpikesBlocks;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
@@ -21,19 +19,9 @@ public class SpikesCreativeItems {
     private static List<ItemStack> getCreativeItems() {
         CreativeTabItems items = new CreativeTabItems();
 
-        SpikesBlocks.SPIKES.forEach((spike) -> {
-            if (canNotCraft(spike.get().getSpikeType())) {
-                return;
-            }
-
-            items.add(spike.get());
-        });
+        SpikesBlocks.SPIKES.forEach(spike -> items.addIfObtainable(spike.get(), spike.get().getSpikeType().getMaterial()));
 
         return items.getItems();
-    }
-
-    private static boolean canNotCraft(SpikeType type) {
-        return SpikesCommonMod.COMMON_CONFIG.hideUncraftableItems.get() && type.isUncraftable();
     }
 
     public static void init() {

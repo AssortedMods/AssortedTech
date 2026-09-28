@@ -2,7 +2,6 @@ package com.grim3212.assorted.grates.api.util;
 
 import com.grim3212.assorted.grates.api.GratesTags;
 import com.grim3212.assorted.lib.util.LibCommonTags;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
@@ -44,14 +43,6 @@ public enum GrateMaterial implements StringRepresentable {
 
     public MapColor getMapColor() {
         return mapColor;
-    }
-
-    /**
-     * Whether nothing can be this grate's material: its tag is empty, or no pack defines it at all,
-     * as with an Assorted Core metal when Assorted Core is not installed.
-     */
-    public boolean isUncraftable() {
-        return BuiltInRegistries.ITEM.get(this.getMaterial()).map(holders -> holders.size() < 1).orElse(true);
     }
 
     @Override

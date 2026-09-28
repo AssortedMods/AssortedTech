@@ -91,11 +91,6 @@ public enum ExtruderType implements StringRepresentable {
         return this.axes;
     }
 
-    /** Whether one of its tool tags is empty, as the Assorted Tools ones are without Assorted Tools. */
-    public boolean isUncraftable() {
-        return this.getTools().stream().anyMatch(ItemStack::isEmpty);
-    }
-
     /** How many slots it lays blocks from, in the row under its fuel. */
     public int getExtrudeSlots() {
         return this.tier.extrudeSlots;

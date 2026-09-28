@@ -5,12 +5,9 @@ import com.grim3212.assorted.lib.migration.MovedIds;
 import com.grim3212.assorted.spikes.common.block.SpikesBlocks;
 import com.grim3212.assorted.spikes.common.handlers.SpikesCreativeItems;
 import com.grim3212.assorted.spikes.common.sounds.SpikesSounds;
-import com.grim3212.assorted.spikes.config.SpikesCommonConfig;
 import net.minecraft.resources.Identifier;
 
 public class SpikesCommonMod {
-
-    public static final SpikesCommonConfig COMMON_CONFIG = new SpikesCommonConfig();
 
     public static void init() {
         Constants.LOG.info(Constants.MOD_NAME + " starting up...");

@@ -1,11 +1,5 @@
 package com.grim3212.assorted.spikes.gametest;
 
-import java.util.Optional;
-import java.util.List;
-import java.util.ArrayList;
-import net.minecraft.world.item.Item;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.HolderSet;
 import com.grim3212.assorted.spikes.api.util.SpikeType;
 import com.grim3212.assorted.spikes.common.block.SpikeBlock;
 import net.minecraft.core.BlockPos;
@@ -31,7 +25,6 @@ final class SpikeTests {
     static void register(BiConsumer<String, Consumer<GameTestHelper>> out) {
         out.accept("spike_damage_scales_with_type", SpikeTests::spikeDamageScalesWithType);
         out.accept("every_spike_type_damages", SpikeTests::everySpikeTypeDamages);
-        out.accept("spikes_with_no_material_are_uncraftable", SpikeTests::spikesWithNoMaterialAreUncraftable);
     }
 
     /**
@@ -115,30 +108,5 @@ final class SpikeTests {
                     }
                 })
                 .thenSucceed();
-    }
-
-    /**
-     * With {@code hideUncraftableItems} on, a spike is hidden when nothing can be its material: its
-     * tag is empty or undefined. The config is off in tests, so this checks the rule directly;
-     * Assorted Core's metals have no tag here, which exercises the undefined case.
-     */
-    private static void spikesWithNoMaterialAreUncraftable(GameTestHelper helper) {
-        List<String> wrong = new ArrayList<>();
-        int undefined = 0;
-        for (SpikeType type : SpikeType.values()) {
-            Optional<HolderSet.Named<Item>> tag = BuiltInRegistries.ITEM.get(type.getMaterial());
-            boolean noMaterial = tag.isEmpty() || tag.get().size() == 0;
-            if (tag.isEmpty()) {
-                undefined++;
-            }
-            if (type.isUncraftable() != noMaterial) {
-                wrong.add(type.getSerializedName() + (noMaterial ? " has no material but counts as craftable" : " has a material but counts as uncraftable"));
-            }
-        }
-
-        helper.assertTrue(wrong.isEmpty(), String.join(", ", wrong));
-        helper.assertFalse(SpikeType.IRON.isUncraftable(), "an iron spike counts as uncraftable");
-        helper.assertTrue(undefined > 0, "every spike material tag is defined here, so the undefined case was not exercised");
-        helper.succeed();
     }
 }

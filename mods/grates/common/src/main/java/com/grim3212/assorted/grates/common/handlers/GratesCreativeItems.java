@@ -1,7 +1,6 @@
 package com.grim3212.assorted.grates.common.handlers;
 
 import com.grim3212.assorted.grates.Constants;
-import com.grim3212.assorted.grates.GratesCommonMod;
 import com.grim3212.assorted.grates.api.util.GrateMaterial;
 import com.grim3212.assorted.grates.common.block.GratesBlocks;
 import com.grim3212.assorted.lib.core.creative.CreativeTabItems;
@@ -24,18 +23,12 @@ public class GratesCreativeItems {
         items.add(GratesBlocks.ITEM_GRATES.get(GrateMaterial.IRON).get());
         GratesBlocks.COPPER_ITEM_GRATES.forEach(grate -> items.add(grate.get()));
         GratesBlocks.ITEM_GRATES.forEach((material, grate) -> {
-            if (material == GrateMaterial.IRON || canNotCraft(material)) {
-                return;
+            if (material != GrateMaterial.IRON) {
+                items.addIfObtainable(grate.get(), material.getMaterial());
             }
-
-            items.add(grate.get());
         });
 
         return items.getItems();
-    }
-
-    private static boolean canNotCraft(GrateMaterial material) {
-        return GratesCommonMod.COMMON_CONFIG.hideUncraftableItems.get() && material.isUncraftable();
     }
 
     public static void init() {

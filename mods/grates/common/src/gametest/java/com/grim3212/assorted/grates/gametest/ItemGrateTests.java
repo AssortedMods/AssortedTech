@@ -1,24 +1,19 @@
 package com.grim3212.assorted.grates.gametest;
 
-import com.grim3212.assorted.grates.api.util.GrateMaterial;
 import com.grim3212.assorted.grates.common.block.GratesBlocks;
 import com.grim3212.assorted.grates.common.block.ItemGrateBlock;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.pig.Pig;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -39,7 +34,6 @@ final class ItemGrateTests {
     static void register(BiConsumer<String, Consumer<GameTestHelper>> out) {
         out.accept("item_grates_drop_items_through", ItemGrateTests::itemGratesDropItemsThrough);
         out.accept("item_grates_carry_a_mob", ItemGrateTests::itemGratesCarryAMob);
-        out.accept("grates_with_no_material_are_uncraftable", ItemGrateTests::gratesWithNoMaterialAreUncraftable);
     }
 
     /** Two apart in both axes, five to a row, so all twenty fit the nine by nine box. */
@@ -92,30 +86,5 @@ final class ItemGrateTests {
                 helper.assertTrue(relativeY >= GRATE_Y + 1, "the pig fell through the " + name(grates.get(i)) + " to " + relativeY);
             }
         });
-    }
-
-    /**
-     * With {@code hideUncraftableItems} on, a grate is hidden when its material's tag is empty or
-     * undefined. The config is off in tests, so this checks the rule, Core's absent tags covering undefined.
-     */
-    private static void gratesWithNoMaterialAreUncraftable(GameTestHelper helper) {
-        List<String> wrong = new ArrayList<>();
-        int undefined = 0;
-        for (GrateMaterial material : GrateMaterial.values()) {
-            Optional<HolderSet.Named<Item>> tag = BuiltInRegistries.ITEM.get(material.getMaterial());
-            boolean noMaterial = tag.isEmpty() || tag.get().size() == 0;
-            if (tag.isEmpty()) {
-                undefined++;
-            }
-            if (material.isUncraftable() != noMaterial) {
-                wrong.add(material.getSerializedName() + (noMaterial ? " has no material but counts as craftable" : " has a material but counts as uncraftable"));
-            }
-        }
-
-        helper.assertTrue(wrong.isEmpty(), String.join(", ", wrong));
-        helper.assertFalse(GrateMaterial.IRON.isUncraftable(), "an iron grate counts as uncraftable");
-        helper.assertFalse(GrateMaterial.GOLD.isUncraftable(), "a gold grate counts as uncraftable");
-        helper.assertTrue(undefined > 0, "every grate material tag is defined here, so the undefined case was not exercised");
-        helper.succeed();
     }
 }
