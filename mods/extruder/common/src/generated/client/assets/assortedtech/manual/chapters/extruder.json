@@ -38,5 +38,6 @@
       "text": "manual.assortedtech.chapter.extruder.materials",
       "title": "manual.assortedtech.chapter.extruder.materials.title"
     }
-  ]
+  ],
+  "sort_order": 8
 }

@@ -22,7 +22,7 @@ public class ElevatorsManualProvider extends LibManualProvider {
     protected void addChapters() {
         this.section(Family.MANUAL_ORDER, Family.ICONS.toArray(Identifier[]::new));
 
-        ChapterBuilder elevators = this.chapter("elevators", 6);
+        ChapterBuilder elevators = this.chapter("elevators", 10);
         elevators.recipes("elevator", ElevatorsBlocks.ELEVATOR.get()).opens(ElevatorsBlocks.ELEVATOR.get()).opens(ElevatorsEntities.ELEVATOR_CAR.get());
         elevators.recipes("camouflaged_elevator", ElevatorsBlocks.CAMOUFLAGED_ELEVATOR.get()).opens(ElevatorsBlocks.CAMOUFLAGED_ELEVATOR.get());
         elevators.recipes("elevator_landing", ElevatorsBlocks.ELEVATOR_LANDING.get()).opens(ElevatorsBlocks.ELEVATOR_LANDING.get());

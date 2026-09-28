@@ -26,7 +26,7 @@ public class ExtruderManualProvider extends LibManualProvider {
 
         Item[] all = ExtruderItems.EXTRUDERS.values().stream().map(IRegistryObject::get).toArray(Item[]::new);
 
-        ChapterBuilder extruder = this.chapter("extruder", 0);
+        ChapterBuilder extruder = this.chapter("extruder", 8);
         extruder.recipes("extruder", all).every(50).opens(all).opens(ExtruderEntities.EXTRUDER.get());
         extruder.text("materials");
     }

@@ -21,7 +21,7 @@ public class FanManualProvider extends LibManualProvider {
     protected void addChapters() {
         this.section(Family.MANUAL_ORDER, Family.ICONS.toArray(Identifier[]::new));
 
-        ChapterBuilder fan = this.chapter("fan", 8);
+        ChapterBuilder fan = this.chapter("fan", 6);
         fan.recipes("fan", FanBlocks.FAN.get()).opens(FanBlocks.FAN.get());
     }
 }

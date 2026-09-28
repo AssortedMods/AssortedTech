@@ -21,7 +21,7 @@ public class RedstoneManualProvider extends LibManualProvider {
     protected void addChapters() {
         this.section(Family.MANUAL_ORDER, Family.ICONS.toArray(Identifier[]::new));
 
-        ChapterBuilder redstone = this.chapter("redstone", 7);
+        ChapterBuilder redstone = this.chapter("redstone", 5);
         redstone.recipes("glowstone_torch", RedstoneBlocks.GLOWSTONE_TORCH.get())
                 .opens(RedstoneBlocks.GLOWSTONE_TORCH.get(), RedstoneBlocks.GLOWSTONE_WALL_TORCH.get());
         redstone.recipes("flip_flop_torch", RedstoneBlocks.FLIP_FLOP_TORCH.get())

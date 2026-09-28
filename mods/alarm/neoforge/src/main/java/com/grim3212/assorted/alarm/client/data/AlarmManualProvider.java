@@ -21,7 +21,7 @@ public class AlarmManualProvider extends LibManualProvider {
     protected void addChapters() {
         this.section(Family.MANUAL_ORDER, Family.ICONS.toArray(Identifier[]::new));
 
-        ChapterBuilder alarm = this.chapter("alarm", 9);
+        ChapterBuilder alarm = this.chapter("alarm", 7);
         alarm.recipes("alarm", AlarmBlocks.ALARM.get()).opens(AlarmBlocks.ALARM.get());
     }
 }

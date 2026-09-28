@@ -25,7 +25,7 @@ public class GratesManualProvider extends LibManualProvider {
 
         Block[] all = GratesBlocks.allItemGrates().stream().map(IRegistryObject::get).toArray(Block[]::new);
 
-        ChapterBuilder grates = this.chapter("item_grates", 5);
+        ChapterBuilder grates = this.chapter("item_grates", 9);
         grates.recipes("item_grates", all).every(50).opens(all);
         grates.text("copper");
     }
