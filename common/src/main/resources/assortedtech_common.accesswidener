@@ -1,3 +1,0 @@
-accessWidener	v2	official
-# Entries reintroduced as each area is ported. The 1.20.1 list used the `named`
-# namespace, which is gone with intermediary. Originals in porting-tools/*.bak

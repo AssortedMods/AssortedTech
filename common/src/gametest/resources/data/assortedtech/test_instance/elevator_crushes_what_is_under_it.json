@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:function",
-  "environment": "minecraft:default",
-  "function": "assortedtech:elevator_crushes_what_is_under_it",
-  "structure": "assortedtech:test_box",
-  "max_ticks": 400,
-  "setup_ticks": 0,
-  "required": true
-}

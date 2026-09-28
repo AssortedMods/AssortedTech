@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:function",
-  "environment": "minecraft:default",
-  "function": "assortedtech:elevator_car_syncs_its_disguises",
-  "structure": "assortedtech:test_box",
-  "max_ticks": 20,
-  "setup_ticks": 0,
-  "required": true
-}

@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:function",
-  "environment": "minecraft:default",
-  "function": "assortedtech:camouflage_glows_as_its_disguise",
-  "structure": "assortedtech:test_box",
-  "max_ticks": 400,
-  "setup_ticks": 0,
-  "required": true
-}

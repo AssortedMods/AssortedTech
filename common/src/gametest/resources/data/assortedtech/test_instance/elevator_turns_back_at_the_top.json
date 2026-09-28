@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:function",
-  "environment": "minecraft:default",
-  "function": "assortedtech:elevator_turns_back_at_the_top",
-  "structure": "assortedtech:test_box",
-  "max_ticks": 400,
-  "setup_ticks": 0,
-  "required": true
-}

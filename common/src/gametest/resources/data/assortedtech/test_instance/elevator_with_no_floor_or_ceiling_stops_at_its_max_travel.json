@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:function",
-  "environment": "minecraft:default",
-  "function": "assortedtech:elevator_with_no_floor_or_ceiling_stops_at_its_max_travel",
-  "structure": "assortedtech:test_box",
-  "max_ticks": 20,
-  "setup_ticks": 0,
-  "required": true
-}

@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "assortedtech:block/instant_elevator_blue_top",
-    "side": "assortedtech:block/instant_elevator_blue_side"
-  }
-}

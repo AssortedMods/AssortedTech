@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:function",
-  "environment": "minecraft:default",
-  "function": "assortedtech:elevator_carries_a_mob_up",
-  "structure": "assortedtech:test_box",
-  "max_ticks": 400,
-  "setup_ticks": 0,
-  "required": true
-}
