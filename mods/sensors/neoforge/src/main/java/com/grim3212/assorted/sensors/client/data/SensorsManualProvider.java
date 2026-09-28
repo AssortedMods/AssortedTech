@@ -3,11 +3,9 @@ package com.grim3212.assorted.sensors.client.data;
 import com.grim3212.assorted.lib.data.LibManualProvider;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
 import com.grim3212.assorted.sensors.Constants;
-import com.grim3212.assorted.sensors.Family;
 import com.grim3212.assorted.sensors.common.block.SensorsBlocks;
 import com.grim3212.assorted.sensors.common.item.SensorsItems;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 
 /**
@@ -17,13 +15,11 @@ import net.minecraft.world.level.block.Block;
 public class SensorsManualProvider extends LibManualProvider {
 
     public SensorsManualProvider(PackOutput output) {
-        super(output, Constants.MOD_ID, Family.ID);
+        super(output, Constants.MOD_ID, Constants.FAMILY_ID);
     }
 
     @Override
     protected void addChapters() {
-        this.section(Family.MANUAL_ORDER, Family.ICONS.toArray(Identifier[]::new));
-
         Block[] all = SensorsBlocks.SENSORS.stream().map(IRegistryObject::get).toArray(Block[]::new);
 
         ChapterBuilder sensors = this.chapter("sensors", 3);

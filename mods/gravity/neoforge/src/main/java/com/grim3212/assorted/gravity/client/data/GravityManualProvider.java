@@ -1,12 +1,10 @@
 package com.grim3212.assorted.gravity.client.data;
 
 import com.grim3212.assorted.gravity.Constants;
-import com.grim3212.assorted.gravity.Family;
 import com.grim3212.assorted.gravity.common.block.GravityBlocks;
 import com.grim3212.assorted.gravity.common.item.GravityItems;
 import com.grim3212.assorted.lib.data.LibManualProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
 
 /**
  * This part's chapter of the Assorted Tech section, which every part shares; the explicit chapter orders keep
@@ -15,13 +13,11 @@ import net.minecraft.resources.Identifier;
 public class GravityManualProvider extends LibManualProvider {
 
     public GravityManualProvider(PackOutput output) {
-        super(output, Constants.MOD_ID, Family.ID);
+        super(output, Constants.MOD_ID, Constants.FAMILY_ID);
     }
 
     @Override
     protected void addChapters() {
-        this.section(Family.MANUAL_ORDER, Family.ICONS.toArray(Identifier[]::new));
-
         this.addGravity();
     }
 

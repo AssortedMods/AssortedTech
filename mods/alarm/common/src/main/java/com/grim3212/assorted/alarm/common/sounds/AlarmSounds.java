@@ -3,14 +3,13 @@ package com.grim3212.assorted.alarm.common.sounds;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
 import com.grim3212.assorted.lib.registry.RegistryProvider;
 import com.grim3212.assorted.alarm.Constants;
-import com.grim3212.assorted.alarm.Family;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 public class AlarmSounds {
 
-    public static final RegistryProvider<SoundEvent> SOUNDS = RegistryProvider.create(Registries.SOUND_EVENT, Constants.MOD_ID).aliasFrom(Family.ID);
+    public static final RegistryProvider<SoundEvent> SOUNDS = RegistryProvider.create(Registries.SOUND_EVENT, Constants.MOD_ID).aliasFrom(Constants.FAMILY_ID);
 
     public static final IRegistryObject<SoundEvent> ALARM_A = registerSound("alarm_a");
     public static final IRegistryObject<SoundEvent> ALARM_B = registerSound("alarm_b");

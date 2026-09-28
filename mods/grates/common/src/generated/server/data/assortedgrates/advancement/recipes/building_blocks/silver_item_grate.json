@@ -3,6 +3,10 @@
     {
       "type": "assortedlib:item_tag_populated",
       "tag": "c:ingots/silver"
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedgrates"
     }
   ],
   "parent": "minecraft:recipes/root",
@@ -31,6 +35,10 @@
       "values": [
         "c:ingots/silver"
       ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedgrates"
     }
   ],
   "requirements": [

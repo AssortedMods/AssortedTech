@@ -20,5 +20,6 @@ public final class AlarmGameTests {
         AliasTests.register(out);
         CrossLoaderDataTests.register(out);
         AlarmTests.register(out);
+        FamilyTests.register(out);
     }
 }

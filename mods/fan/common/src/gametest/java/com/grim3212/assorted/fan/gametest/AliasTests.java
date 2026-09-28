@@ -1,7 +1,7 @@
 package com.grim3212.assorted.fan.gametest;
 
 import com.google.gson.JsonParser;
-import com.grim3212.assorted.fan.Family;
+import com.grim3212.assorted.fan.Constants;
 import com.grim3212.assorted.fan.common.block.FanBlocks;
 import com.grim3212.assorted.fan.common.block.blockentity.FanBlockEntityTypes;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
@@ -45,6 +45,6 @@ final class AliasTests {
     }
 
     private static Identifier old(Identifier id) {
-        return Identifier.fromNamespaceAndPath(Family.ID, id.getPath());
+        return Identifier.fromNamespaceAndPath(Constants.FAMILY_ID, id.getPath());
     }
 }

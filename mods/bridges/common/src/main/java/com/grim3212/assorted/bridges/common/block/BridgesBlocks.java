@@ -1,7 +1,6 @@
 package com.grim3212.assorted.bridges.common.block;
 
 import com.grim3212.assorted.bridges.Constants;
-import com.grim3212.assorted.bridges.Family;
 import com.grim3212.assorted.bridges.api.util.BridgeType;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
 import com.grim3212.assorted.lib.registry.RegistryProvider;
@@ -19,8 +18,8 @@ import java.util.function.Function;
 
 public class BridgesBlocks {
 
-    public static final RegistryProvider<Block> BLOCKS = RegistryProvider.create(Registries.BLOCK, Constants.MOD_ID).aliasFrom(Family.ID);
-    public static final RegistryProvider<Item> ITEMS = RegistryProvider.create(Registries.ITEM, Constants.MOD_ID).aliasFrom(Family.ID);
+    public static final RegistryProvider<Block> BLOCKS = RegistryProvider.create(Registries.BLOCK, Constants.MOD_ID).aliasFrom(Constants.FAMILY_ID);
+    public static final RegistryProvider<Item> ITEMS = RegistryProvider.create(Registries.ITEM, Constants.MOD_ID).aliasFrom(Constants.FAMILY_ID);
 
     public static final IRegistryObject<BridgeBlock> BRIDGE = register("bridge", props -> new BridgeBlock(props.mapColor(MapColor.METAL).sound(SoundType.METAL).strength(-1.0F, 3600000.0F).dynamicShape().noOcclusion().noLootTable().isValidSpawn((s, g, p, e) -> false)));
     public static final IRegistryObject<BridgeControlBlock> BRIDGE_CONTROL_LASER = register("bridge_control_laser", props -> new BridgeControlBlock(BridgeType.LASER, props.mapColor(MapColor.METAL).sound(SoundType.METAL).strength(1.0F, 1.0F).requiresCorrectToolForDrops()));

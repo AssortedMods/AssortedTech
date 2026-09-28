@@ -16,6 +16,10 @@
           "tag": "c:axes/invar"
         }
       ]
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedextruder"
     }
   ],
   "type": "minecraft:crafting_shaped",
@@ -46,6 +50,10 @@
           ]
         }
       ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedextruder"
     }
   ],
   "key": {

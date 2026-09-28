@@ -1,12 +1,10 @@
 package com.grim3212.assorted.elevators.client.data;
 
 import com.grim3212.assorted.elevators.Constants;
-import com.grim3212.assorted.elevators.Family;
 import com.grim3212.assorted.elevators.common.block.ElevatorsBlocks;
 import com.grim3212.assorted.elevators.common.entity.ElevatorsEntities;
 import com.grim3212.assorted.lib.data.LibManualProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
 
 /**
  * This part's chapter of the Assorted Tech section, which every part shares; the explicit chapter order keeps the
@@ -15,13 +13,11 @@ import net.minecraft.resources.Identifier;
 public class ElevatorsManualProvider extends LibManualProvider {
 
     public ElevatorsManualProvider(PackOutput output) {
-        super(output, Constants.MOD_ID, Family.ID);
+        super(output, Constants.MOD_ID, Constants.FAMILY_ID);
     }
 
     @Override
     protected void addChapters() {
-        this.section(Family.MANUAL_ORDER, Family.ICONS.toArray(Identifier[]::new));
-
         ChapterBuilder elevators = this.chapter("elevators", 10);
         elevators.recipes("elevator", ElevatorsBlocks.ELEVATOR.get()).opens(ElevatorsBlocks.ELEVATOR.get()).opens(ElevatorsEntities.ELEVATOR_CAR.get());
         elevators.recipes("camouflaged_elevator", ElevatorsBlocks.CAMOUFLAGED_ELEVATOR.get()).opens(ElevatorsBlocks.CAMOUFLAGED_ELEVATOR.get());

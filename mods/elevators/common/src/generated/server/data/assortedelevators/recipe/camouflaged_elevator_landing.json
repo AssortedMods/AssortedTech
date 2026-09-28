@@ -1,5 +1,17 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedelevators"
+    }
+  ],
   "type": "minecraft:crafting_shapeless",
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedelevators"
+    }
+  ],
   "ingredients": [
     "assortedelevators:elevator_landing",
     "minecraft:amethyst_shard",

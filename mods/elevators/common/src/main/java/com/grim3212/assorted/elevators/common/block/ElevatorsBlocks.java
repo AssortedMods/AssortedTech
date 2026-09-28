@@ -1,7 +1,6 @@
 package com.grim3212.assorted.elevators.common.block;
 
 import com.grim3212.assorted.elevators.Constants;
-import com.grim3212.assorted.elevators.Family;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
 import com.grim3212.assorted.lib.registry.RegistryProvider;
 import net.minecraft.core.registries.Registries;
@@ -19,8 +18,8 @@ import java.util.function.Function;
 
 public class ElevatorsBlocks {
 
-    public static final RegistryProvider<Block> BLOCKS = RegistryProvider.create(Registries.BLOCK, Constants.MOD_ID).aliasFrom(Family.ID);
-    public static final RegistryProvider<Item> ITEMS = RegistryProvider.create(Registries.ITEM, Constants.MOD_ID).aliasFrom(Family.ID);
+    public static final RegistryProvider<Block> BLOCKS = RegistryProvider.create(Registries.BLOCK, Constants.MOD_ID).aliasFrom(Constants.FAMILY_ID);
+    public static final RegistryProvider<Item> ITEMS = RegistryProvider.create(Registries.ITEM, Constants.MOD_ID).aliasFrom(Constants.FAMILY_ID);
 
     public static final IRegistryObject<ElevatorBlock> ELEVATOR = register("elevator", props -> new ElevatorBlock(props.mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER).strength(1.5F, 6.0F).requiresCorrectToolForDrops().pushReaction(PushReaction.BLOCK)));
     public static final IRegistryObject<CamouflagedElevatorBlock> CAMOUFLAGED_ELEVATOR = register("camouflaged_elevator", props -> new CamouflagedElevatorBlock(props.mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER).strength(1.5F, 6.0F).requiresCorrectToolForDrops().pushReaction(PushReaction.BLOCK)));

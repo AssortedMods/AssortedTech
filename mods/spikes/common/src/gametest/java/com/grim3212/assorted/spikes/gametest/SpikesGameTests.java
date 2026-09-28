@@ -21,5 +21,6 @@ public final class SpikesGameTests {
         CrossLoaderDataTests.register(out);
         SpikeTests.register(out);
         TooltipTests.register(out);
+        FamilyTests.register(out);
     }
 }

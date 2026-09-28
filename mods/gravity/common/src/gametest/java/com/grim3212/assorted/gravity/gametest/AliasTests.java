@@ -1,7 +1,7 @@
 package com.grim3212.assorted.gravity.gametest;
 
 import com.google.gson.JsonParser;
-import com.grim3212.assorted.gravity.Family;
+import com.grim3212.assorted.gravity.Constants;
 import com.grim3212.assorted.gravity.common.block.GravityBlocks;
 import com.grim3212.assorted.gravity.common.block.blockentity.GravityBlockEntityTypes;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
@@ -46,6 +46,6 @@ final class AliasTests {
     }
 
     private static Identifier old(Identifier id) {
-        return Identifier.fromNamespaceAndPath(Family.ID, id.getPath());
+        return Identifier.fromNamespaceAndPath(Constants.FAMILY_ID, id.getPath());
     }
 }

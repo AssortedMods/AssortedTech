@@ -1,7 +1,7 @@
 package com.grim3212.assorted.grates.gametest;
 
 import com.google.gson.JsonParser;
-import com.grim3212.assorted.grates.Family;
+import com.grim3212.assorted.grates.Constants;
 import com.grim3212.assorted.grates.api.util.GrateMaterial;
 import com.grim3212.assorted.grates.common.block.GratesBlocks;
 import com.grim3212.assorted.grates.common.block.ItemGrateBlock;
@@ -28,7 +28,7 @@ final class AliasTests {
     private static void metalMeshIdsStillLoad(GameTestHelper helper) {
         ItemGrateBlock iron = GratesBlocks.ITEM_GRATES.get(GrateMaterial.IRON).get();
 
-        for (String namespace : List.of(Family.ID, "assortedgravity")) {
+        for (String namespace : List.of(Constants.FAMILY_ID, "assortedgravity")) {
             Identifier mesh = Identifier.fromNamespaceAndPath(namespace, "metal_mesh");
             ItemStack stack = ItemStack.CODEC.parse(helper.getLevel().registryAccess().createSerializationContext(JsonOps.INSTANCE),
                     JsonParser.parseString("{\"id\": \"" + mesh + "\", \"count\": 1}")).getOrThrow();

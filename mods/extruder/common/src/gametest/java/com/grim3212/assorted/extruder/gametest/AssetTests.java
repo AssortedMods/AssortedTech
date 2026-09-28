@@ -10,7 +10,6 @@ import com.grim3212.assorted.lib.platform.Services;
 import java.io.BufferedReader;
 import java.io.IOException;
 import com.grim3212.assorted.extruder.Constants;
-import com.grim3212.assorted.extruder.Family;
 import com.grim3212.assorted.extruder.common.handlers.ExtruderCreativeItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -68,8 +67,8 @@ final class AssetTests {
         if (!BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(ExtruderCreativeItems.TAB)) {
             missing.add("the " + ExtruderCreativeItems.TAB.identifier() + " creative tab");
         }
-        if (!lang.has("itemGroup." + Family.ID)) {
-            missing.add("lang key itemGroup." + Family.ID);
+        if (!lang.has("itemGroup." + Constants.FAMILY_ID)) {
+            missing.add("lang key itemGroup." + Constants.FAMILY_ID);
         }
 
         // Guards against the whole walk passing because the registry came back empty.

@@ -1,11 +1,11 @@
 package com.grim3212.assorted.gravity.common.handlers;
 
-import com.grim3212.assorted.gravity.Family;
+import com.grim3212.assorted.gravity.Constants;
 import com.grim3212.assorted.gravity.common.block.GravityBlocks;
 import com.grim3212.assorted.gravity.common.item.GravityItems;
 import com.grim3212.assorted.lib.core.creative.CreativeTabItems;
 import com.grim3212.assorted.lib.core.creative.SharedCreativeTabs;
-import net.minecraft.resources.Identifier;
+import com.grim3212.assorted.lib.family.Families;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +15,7 @@ import java.util.List;
 /** This part's share of the Assorted Tech tab, which every part asks for and the first to load registers. */
 public class GravityCreativeItems {
 
-    public static final ResourceKey<CreativeModeTab> TAB = SharedCreativeTabs.tab(Identifier.fromNamespaceAndPath(Family.ID, "tab"), Family.ICONS);
+    public static final ResourceKey<CreativeModeTab> TAB = Families.tab(Constants.FAMILY_ID);
 
     private static List<ItemStack> getGravityItems() {
         CreativeTabItems items = new CreativeTabItems();

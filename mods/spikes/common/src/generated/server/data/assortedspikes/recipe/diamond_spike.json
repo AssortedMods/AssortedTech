@@ -3,6 +3,10 @@
     {
       "type": "assortedlib:item_tag_populated",
       "tag": "c:gems/diamond"
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedspikes"
     }
   ],
   "type": "minecraft:crafting_shaped",
@@ -14,6 +18,10 @@
       "values": [
         "c:gems/diamond"
       ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedspikes"
     }
   ],
   "key": {

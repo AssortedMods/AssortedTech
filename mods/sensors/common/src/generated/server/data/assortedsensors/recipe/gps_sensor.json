@@ -1,6 +1,18 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedsensors"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedsensors"
+    }
+  ],
   "key": {
     "G": "assortedsensors:gps",
     "L": "minecraft:redstone_lamp",

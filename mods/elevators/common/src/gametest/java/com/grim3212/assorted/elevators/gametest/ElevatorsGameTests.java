@@ -21,5 +21,6 @@ public final class ElevatorsGameTests {
         AssetTests.register(out);
         AliasTests.register(out);
         CrossLoaderDataTests.register(out);
+        FamilyTests.register(out);
     }
 }

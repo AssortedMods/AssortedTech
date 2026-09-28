@@ -1,7 +1,6 @@
 package com.grim3212.assorted.grates.common.block;
 
 import com.grim3212.assorted.grates.Constants;
-import com.grim3212.assorted.grates.Family;
 import com.grim3212.assorted.grates.api.util.GrateMaterial;
 import com.grim3212.assorted.lib.platform.Services;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
@@ -41,7 +40,7 @@ public class GratesBlocks {
     public static final WeatheringCopperCollection<IRegistryObject<ItemGrateBlock>> COPPER_ITEM_GRATES = registerCopperItemGrates();
 
     /** The iron grate is the metal mesh of Assorted Tech 9.x, and of Assorted Gravity before this mod. */
-    private static final List<String> METAL_MESH_NAMESPACES = List.of(Family.ID, "assortedgravity");
+    private static final List<String> METAL_MESH_NAMESPACES = List.of(Constants.FAMILY_ID, "assortedgravity");
 
     static {
         Identifier ironGrate = ITEM_GRATES.get(GrateMaterial.IRON).getId();

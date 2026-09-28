@@ -6,7 +6,7 @@
 - Assorted Tech still includes all of them
 - Worlds from 9.x keep all your blocks, items and recipes
 - The metal mesh is the Iron Item Grate now, with new gold, copper and Assorted Core metal grates beside it
-- Removed the config options for turning parts off. Install only the mods you want instead
+- Each part can be turned off again in config/assortedtech-parts.toml
 - Each mod has its own config file now, so settings from assortedtech-common.toml and assortedtech-client.toml need setting again
 - Requires Assorted Lib 4.3.0
 

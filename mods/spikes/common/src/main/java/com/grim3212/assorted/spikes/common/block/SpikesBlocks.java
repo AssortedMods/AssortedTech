@@ -6,7 +6,6 @@ import com.grim3212.assorted.lib.core.item.LibDataComponents;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
 import com.grim3212.assorted.lib.registry.RegistryProvider;
 import com.grim3212.assorted.spikes.Constants;
-import com.grim3212.assorted.spikes.Family;
 import com.grim3212.assorted.spikes.api.util.SpikeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
@@ -25,8 +24,8 @@ import java.util.stream.Stream;
 
 public class SpikesBlocks {
 
-    public static final RegistryProvider<Block> BLOCKS = RegistryProvider.create(Registries.BLOCK, Constants.MOD_ID).aliasFrom(Family.ID);
-    public static final RegistryProvider<Item> ITEMS = RegistryProvider.create(Registries.ITEM, Constants.MOD_ID).aliasFrom(Family.ID);
+    public static final RegistryProvider<Block> BLOCKS = RegistryProvider.create(Registries.BLOCK, Constants.MOD_ID).aliasFrom(Constants.FAMILY_ID);
+    public static final RegistryProvider<Item> ITEMS = RegistryProvider.create(Registries.ITEM, Constants.MOD_ID).aliasFrom(Constants.FAMILY_ID);
 
     /** One per {@link SpikeType}, as {@code <material>_spike}, in enum order. */
     public static final List<IRegistryObject<SpikeBlock>> SPIKES = Lists.newArrayList();

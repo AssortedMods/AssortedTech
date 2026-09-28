@@ -2,7 +2,7 @@ package com.grim3212.assorted.sensors.gametest;
 
 import com.google.gson.JsonParser;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
-import com.grim3212.assorted.sensors.Family;
+import com.grim3212.assorted.sensors.Constants;
 import com.grim3212.assorted.sensors.common.block.SensorsBlocks;
 import com.grim3212.assorted.sensors.common.block.blockentity.SensorsBlockEntityTypes;
 import com.grim3212.assorted.sensors.common.item.SensorsDataComponents;
@@ -65,6 +65,6 @@ final class AliasTests {
     }
 
     private static Identifier old(Identifier id) {
-        return Identifier.fromNamespaceAndPath(Family.ID, id.getPath());
+        return Identifier.fromNamespaceAndPath(Constants.FAMILY_ID, id.getPath());
     }
 }

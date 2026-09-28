@@ -1,6 +1,18 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedalarm"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedalarm"
+    }
+  ],
   "key": {
     "I": "#c:ingots/iron",
     "R": "#c:dusts/redstone",

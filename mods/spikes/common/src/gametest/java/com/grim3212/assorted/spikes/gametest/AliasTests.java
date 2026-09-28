@@ -2,7 +2,7 @@ package com.grim3212.assorted.spikes.gametest;
 
 import com.google.gson.JsonParser;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
-import com.grim3212.assorted.spikes.Family;
+import com.grim3212.assorted.spikes.Constants;
 import com.grim3212.assorted.spikes.common.block.SpikesBlocks;
 import com.grim3212.assorted.spikes.common.sounds.SpikesSounds;
 import com.mojang.serialization.JsonOps;
@@ -45,6 +45,6 @@ final class AliasTests {
     }
 
     private static Identifier old(Identifier id) {
-        return Identifier.fromNamespaceAndPath(Family.ID, id.getPath());
+        return Identifier.fromNamespaceAndPath(Constants.FAMILY_ID, id.getPath());
     }
 }

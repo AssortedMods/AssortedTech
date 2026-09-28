@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedelevators"
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_instant_elevator": {
@@ -18,6 +24,12 @@
       "trigger": "minecraft:recipe_unlocked"
     }
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedelevators"
+    }
+  ],
   "requirements": [
     [
       "has_the_recipe",

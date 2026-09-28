@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedgrates"
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_material": {
@@ -18,6 +24,12 @@
       "trigger": "minecraft:recipe_unlocked"
     }
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedgrates"
+    }
+  ],
   "requirements": [
     [
       "has_the_recipe",

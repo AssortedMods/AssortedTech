@@ -5,7 +5,6 @@ import com.grim3212.assorted.lib.core.item.LibDataComponents;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
 import com.grim3212.assorted.lib.registry.RegistryProvider;
 import com.grim3212.assorted.extruder.Constants;
-import com.grim3212.assorted.extruder.Family;
 import com.grim3212.assorted.extruder.api.util.ExtruderType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -20,7 +19,7 @@ import java.util.function.Function;
 
 public class ExtruderItems {
 
-    public static final RegistryProvider<Item> ITEMS = RegistryProvider.create(Registries.ITEM, Constants.MOD_ID).aliasFrom(Family.ID);
+    public static final RegistryProvider<Item> ITEMS = RegistryProvider.create(Registries.ITEM, Constants.MOD_ID).aliasFrom(Constants.FAMILY_ID);
 
     /** One per material, as {@code <material>_extruder}, in {@link ExtruderType} order. */
     public static final Map<ExtruderType, IRegistryObject<ExtruderItem>> EXTRUDERS = new EnumMap<>(ExtruderType.class);

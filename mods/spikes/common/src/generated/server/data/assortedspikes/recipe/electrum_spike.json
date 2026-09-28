@@ -3,6 +3,10 @@
     {
       "type": "assortedlib:item_tag_populated",
       "tag": "c:ingots/electrum"
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedspikes"
     }
   ],
   "type": "minecraft:crafting_shaped",
@@ -14,6 +18,10 @@
       "values": [
         "c:ingots/electrum"
       ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedspikes"
     }
   ],
   "key": {

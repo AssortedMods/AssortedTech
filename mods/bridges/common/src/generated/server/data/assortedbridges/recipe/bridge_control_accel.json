@@ -1,6 +1,18 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedbridges"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedbridges"
+    }
+  ],
   "key": {
     "I": "#c:ingots/iron",
     "L": "assortedbridges:bridge_control_laser",

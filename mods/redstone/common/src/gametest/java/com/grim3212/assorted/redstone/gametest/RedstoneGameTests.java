@@ -20,5 +20,6 @@ public final class RedstoneGameTests {
         AliasTests.register(out);
         CrossLoaderDataTests.register(out);
         TorchTests.register(out);
+        FamilyTests.register(out);
     }
 }

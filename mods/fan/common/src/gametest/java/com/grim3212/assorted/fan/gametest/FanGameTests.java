@@ -20,5 +20,6 @@ public final class FanGameTests {
         AliasTests.register(out);
         CrossLoaderDataTests.register(out);
         FanTests.register(out);
+        FamilyTests.register(out);
     }
 }

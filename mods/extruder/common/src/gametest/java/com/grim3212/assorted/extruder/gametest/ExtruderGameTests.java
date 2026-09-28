@@ -19,5 +19,6 @@ public final class ExtruderGameTests {
         AssetTests.register(out);
         AliasTests.register(out);
         CrossLoaderDataTests.register(out);
+        FamilyTests.register(out);
     }
 }

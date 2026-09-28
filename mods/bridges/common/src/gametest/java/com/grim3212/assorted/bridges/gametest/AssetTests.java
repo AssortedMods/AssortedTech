@@ -10,7 +10,6 @@ import com.grim3212.assorted.lib.platform.Services;
 import java.io.BufferedReader;
 import java.io.IOException;
 import com.grim3212.assorted.bridges.Constants;
-import com.grim3212.assorted.bridges.Family;
 import com.grim3212.assorted.bridges.common.handlers.BridgesCreativeItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -88,8 +87,8 @@ final class AssetTests {
         if (!BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(BridgesCreativeItems.TAB)) {
             missing.add("the " + BridgesCreativeItems.TAB.identifier() + " creative tab");
         }
-        if (!lang.has("itemGroup." + Family.ID)) {
-            missing.add("lang key itemGroup." + Family.ID);
+        if (!lang.has("itemGroup." + Constants.FAMILY_ID)) {
+            missing.add("lang key itemGroup." + Constants.FAMILY_ID);
         }
 
         // Guards against the whole walk passing because the registries came back empty.

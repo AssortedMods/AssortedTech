@@ -1,6 +1,18 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedredstone"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedredstone"
+    }
+  ],
   "key": {
     "P": "#c:dyes/blue",
     "R": "#c:dusts/redstone",

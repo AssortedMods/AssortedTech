@@ -19,5 +19,6 @@ public final class BridgesGameTests {
         AliasTests.register(out);
         CrossLoaderDataTests.register(out);
         BridgeTests.register(out);
+        FamilyTests.register(out);
     }
 }

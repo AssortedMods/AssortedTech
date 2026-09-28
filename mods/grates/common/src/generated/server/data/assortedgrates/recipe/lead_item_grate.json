@@ -3,6 +3,10 @@
     {
       "type": "assortedlib:item_tag_populated",
       "tag": "c:ingots/lead"
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedgrates"
     }
   ],
   "type": "minecraft:crafting_shaped",
@@ -14,6 +18,10 @@
       "values": [
         "c:ingots/lead"
       ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedgrates"
     }
   ],
   "key": {

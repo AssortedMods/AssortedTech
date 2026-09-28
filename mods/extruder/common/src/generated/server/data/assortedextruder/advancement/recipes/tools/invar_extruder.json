@@ -16,6 +16,10 @@
           "tag": "c:axes/invar"
         }
       ]
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedextruder"
     }
   ],
   "parent": "minecraft:recipes/root",
@@ -73,6 +77,10 @@
           ]
         }
       ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedextruder"
     }
   ],
   "requirements": [

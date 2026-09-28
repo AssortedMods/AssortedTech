@@ -1,6 +1,18 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedgrates"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "building",
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedgrates"
+    }
+  ],
   "key": {
     "B": "minecraft:waxed_weathered_copper_bars"
   },

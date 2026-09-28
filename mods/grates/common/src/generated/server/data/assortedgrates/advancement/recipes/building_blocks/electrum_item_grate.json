@@ -3,6 +3,10 @@
     {
       "type": "assortedlib:item_tag_populated",
       "tag": "c:ingots/electrum"
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedgrates"
     }
   ],
   "parent": "minecraft:recipes/root",
@@ -31,6 +35,10 @@
       "values": [
         "c:ingots/electrum"
       ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedgrates"
     }
   ],
   "requirements": [

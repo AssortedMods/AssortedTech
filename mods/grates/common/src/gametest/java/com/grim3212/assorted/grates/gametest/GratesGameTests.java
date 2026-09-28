@@ -21,5 +21,6 @@ public final class GratesGameTests {
         CrossLoaderDataTests.register(out);
         ItemGrateTests.register(out);
         CopperItemGrateTests.register(out);
+        FamilyTests.register(out);
     }
 }

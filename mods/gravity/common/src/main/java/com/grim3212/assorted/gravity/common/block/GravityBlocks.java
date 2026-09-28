@@ -1,7 +1,6 @@
 package com.grim3212.assorted.gravity.common.block;
 
 import com.grim3212.assorted.gravity.Constants;
-import com.grim3212.assorted.gravity.Family;
 import com.grim3212.assorted.gravity.api.util.GravityType;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
 import com.grim3212.assorted.lib.registry.RegistryProvider;
@@ -19,8 +18,8 @@ import java.util.function.Function;
 
 public class GravityBlocks {
 
-    public static final RegistryProvider<Block> BLOCKS = RegistryProvider.create(Registries.BLOCK, Constants.MOD_ID).aliasFrom(Family.ID);
-    public static final RegistryProvider<Item> ITEMS = RegistryProvider.create(Registries.ITEM, Constants.MOD_ID).aliasFrom(Family.ID);
+    public static final RegistryProvider<Block> BLOCKS = RegistryProvider.create(Registries.BLOCK, Constants.MOD_ID).aliasFrom(Constants.FAMILY_ID);
+    public static final RegistryProvider<Item> ITEMS = RegistryProvider.create(Registries.ITEM, Constants.MOD_ID).aliasFrom(Constants.FAMILY_ID);
 
     public static final IRegistryObject<GravityBlock> ATTRACTOR = register("attractor", props -> new GravityBlock(GravityType.ATTRACT, props.mapColor(MapColor.METAL).sound(SoundType.METAL).strength(0.3F, 10.0F).requiresCorrectToolForDrops()));
     public static final IRegistryObject<GravityBlock> REPULSOR = register("repulsor", props -> new GravityBlock(GravityType.REPULSE, props.mapColor(MapColor.METAL).sound(SoundType.METAL).strength(0.3F, 10.0F).requiresCorrectToolForDrops()));

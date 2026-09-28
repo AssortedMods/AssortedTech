@@ -1,4 +1,10 @@
 {
+  "conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedredstone"
+    }
+  ],
   "pages": [
     {
       "type": "assortedlib:recipe",
