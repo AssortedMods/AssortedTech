@@ -10,4 +10,4 @@ Requires [Assorted Lib](https://github.com/AssortedMods/AssortedLib).
 
 ## License
 
-[LGPL-3.0-only](../../LICENSE).
+[GPL-3.0-only](../../LICENSE).

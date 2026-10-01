@@ -51,7 +51,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A fuelled drill that travels in a straight line, mining what is in front of it into its own
+ * A fueled drill that travels in a straight line, mining what is in front of it into its own
  * inventory and laying the blocks it carries behind itself, one slot after the next. Punching it
  * breaks it like a boat, and its screen sets its direction and starts and stops it.
  * <p>
