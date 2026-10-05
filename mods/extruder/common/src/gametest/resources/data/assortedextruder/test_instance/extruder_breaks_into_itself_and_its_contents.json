@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedextruder:extruder_breaks_into_itself_and_its_contents",
+  "structure": "assortedextruder:test_box",
+  "max_ticks": 1,
+  "setup_ticks": 0,
+  "required": true
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedredstone:assets_have_models_and_names",
+  "structure": "assortedredstone:test_box",
+  "max_ticks": 20,
+  "setup_ticks": 0,
+  "required": true
+}

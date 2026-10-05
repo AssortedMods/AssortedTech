@@ -1,0 +1,49 @@
+{
+  "conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedspikes"
+    }
+  ],
+  "pages": [
+    {
+      "type": "assortedlib:recipe",
+      "id": "spikes",
+      "interval": 50,
+      "recipes": [
+        "assortedspikes:wood_spike",
+        "assortedspikes:stone_spike",
+        "assortedspikes:iron_spike",
+        "assortedspikes:copper_spike",
+        "assortedspikes:diamond_spike",
+        "assortedspikes:gold_spike",
+        "assortedspikes:netherite_spike",
+        "assortedspikes:amethyst_spike",
+        "assortedspikes:emerald_spike",
+        "assortedspikes:tin_spike",
+        "assortedspikes:silver_spike",
+        "assortedspikes:aluminum_spike",
+        "assortedspikes:nickel_spike",
+        "assortedspikes:platinum_spike",
+        "assortedspikes:lead_spike",
+        "assortedspikes:bronze_spike",
+        "assortedspikes:electrum_spike",
+        "assortedspikes:invar_spike",
+        "assortedspikes:steel_spike",
+        "assortedspikes:ruby_spike",
+        "assortedspikes:sapphire_spike",
+        "assortedspikes:topaz_spike",
+        "assortedspikes:peridot_spike"
+      ],
+      "text": "manual.assortedtech.chapter.spikes.spikes",
+      "title": "manual.assortedtech.chapter.spikes.spikes.title"
+    },
+    {
+      "type": "assortedlib:text",
+      "id": "materials",
+      "text": "manual.assortedtech.chapter.spikes.materials",
+      "title": "manual.assortedtech.chapter.spikes.materials.title"
+    }
+  ],
+  "sort_order": 4
+}

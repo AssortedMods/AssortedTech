@@ -1,0 +1,10 @@
+{
+  "values": [
+    "assortedgravity:attractor",
+    "assortedgravity:gravitor",
+    "assortedgravity:repulsor",
+    "assortedgravity:attractor_directional",
+    "assortedgravity:repulsor_directional",
+    "assortedgravity:gravitor_directional"
+  ]
+}

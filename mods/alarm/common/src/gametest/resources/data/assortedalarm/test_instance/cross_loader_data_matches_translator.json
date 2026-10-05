@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedalarm:cross_loader_data_matches_translator",
+  "structure": "assortedalarm:test_box",
+  "max_ticks": 1,
+  "setup_ticks": 0,
+  "required": true
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "assortedspikes:block/spikes/peridot_spike_powered"
+  }
+}

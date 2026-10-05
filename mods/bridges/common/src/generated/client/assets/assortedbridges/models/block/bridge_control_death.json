@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "assortedbridges:block/bridge_control_top",
+    "front": "assortedbridges:block/bridge_control_death",
+    "side": "assortedbridges:block/bridge_control_side",
+    "top": "assortedbridges:block/bridge_control_top"
+  }
+}

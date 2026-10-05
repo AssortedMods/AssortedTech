@@ -1,0 +1,39 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:item_tag_populated",
+      "tag": "c:ingots/invar"
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedspikes"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:tags_populated",
+      "registry": "minecraft:item",
+      "values": [
+        "c:ingots/invar"
+      ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedspikes"
+    }
+  ],
+  "key": {
+    "X": "#c:ingots/invar"
+  },
+  "pattern": [
+    "X X",
+    " X ",
+    "XXX"
+  ],
+  "result": {
+    "count": 6,
+    "id": "assortedspikes:invar_spike"
+  }
+}

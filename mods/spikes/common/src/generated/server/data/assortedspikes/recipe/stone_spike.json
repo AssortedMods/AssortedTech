@@ -1,0 +1,39 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:item_tag_populated",
+      "tag": "minecraft:stone_tool_materials"
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedspikes"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:tags_populated",
+      "registry": "minecraft:item",
+      "values": [
+        "minecraft:stone_tool_materials"
+      ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedspikes"
+    }
+  ],
+  "key": {
+    "X": "#minecraft:stone_tool_materials"
+  },
+  "pattern": [
+    "X X",
+    " X ",
+    "XXX"
+  ],
+  "result": {
+    "count": 6,
+    "id": "assortedspikes:stone_spike"
+  }
+}

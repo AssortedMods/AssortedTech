@@ -1,0 +1,16 @@
+{
+	"spike_deploy": {
+		"category": "block",
+		"subtitle": "assortedspikes.subtitle.spike_deploy",
+		"sounds": [
+			"assortedspikes:spike_deploy"
+		]
+	},
+	"spike_close": {
+		"category": "block",
+		"subtitle": "assortedspikes.subtitle.spike_close",
+		"sounds": [
+			"assortedspikes:spike_close"
+		]
+	}
+}

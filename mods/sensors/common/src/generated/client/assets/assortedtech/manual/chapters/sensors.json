@@ -1,0 +1,65 @@
+{
+  "conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedsensors"
+    }
+  ],
+  "pages": [
+    {
+      "type": "assortedlib:recipe",
+      "id": "sensors",
+      "interval": 60,
+      "recipes": [
+        "assortedsensors:wood_sensor",
+        "assortedsensors:stone_sensor",
+        "assortedsensors:iron_sensor",
+        "assortedsensors:mossy_cobblestone_sensor",
+        "assortedsensors:prismarine_sensor",
+        "assortedsensors:gold_sensor",
+        "assortedsensors:emerald_sensor",
+        "assortedsensors:netherrack_sensor",
+        "assortedsensors:cobweb_sensor",
+        "assortedsensors:end_stone_sensor",
+        "assortedsensors:hay_bale_sensor",
+        "assortedsensors:feather_sensor"
+      ],
+      "text": "manual.assortedtech.chapter.sensors.sensors",
+      "title": "manual.assortedtech.chapter.sensors.sensors.title"
+    },
+    {
+      "type": "assortedlib:text",
+      "id": "triggers",
+      "text": "manual.assortedtech.chapter.sensors.triggers",
+      "title": "manual.assortedtech.chapter.sensors.triggers.title"
+    },
+    {
+      "type": "assortedlib:recipe",
+      "id": "gps",
+      "recipes": [
+        "assortedsensors:gps"
+      ],
+      "text": "manual.assortedtech.chapter.sensors.gps",
+      "title": "manual.assortedtech.chapter.sensors.gps.title"
+    },
+    {
+      "type": "assortedlib:recipe",
+      "id": "gps_sensor",
+      "recipes": [
+        "assortedsensors:gps_sensor"
+      ],
+      "text": "manual.assortedtech.chapter.sensors.gps_sensor",
+      "title": "manual.assortedtech.chapter.sensors.gps_sensor.title"
+    },
+    {
+      "type": "assortedlib:recipe",
+      "id": "upgraded_gps_sensor",
+      "recipes": [
+        "assortedsensors:upgraded_gps_sensor"
+      ],
+      "text": "manual.assortedtech.chapter.sensors.upgraded_gps_sensor",
+      "title": "manual.assortedtech.chapter.sensors.upgraded_gps_sensor.title"
+    }
+  ],
+  "sort_order": 3
+}

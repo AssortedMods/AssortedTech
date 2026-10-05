@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "assortedspikes:block/spikes/nickel_spike_powered"
+  }
+}

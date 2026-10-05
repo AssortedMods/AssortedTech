@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedsensors:gps_sensor_detects_at_its_position",
+  "structure": "assortedsensors:test_box",
+  "max_ticks": 200,
+  "setup_ticks": 0,
+  "required": true
+}

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedelevators:instant_elevator_finds_the_next_one",
+  "structure": "assortedelevators:test_box",
+  "max_ticks": 20,
+  "setup_ticks": 0,
+  "sky_access": true,
+  "required": true
+}

@@ -1,0 +1,14 @@
+{
+  "block.assortedredstone.flip_flop_torch": "Flip Flop Torch",
+  "block.assortedredstone.flip_flop_wall_torch": "Flip Flop Torch",
+  "block.assortedredstone.glowstone_torch": "Glowstone Torch",
+  "block.assortedredstone.glowstone_wall_torch": "Glowstone Torch",
+  "itemGroup.assortedtech": "Assorted Tech",
+  "manual.assortedtech.chapter.redstone": "Redstone Torches",
+  "manual.assortedtech.chapter.redstone.flip_flop_torch": "A flip flop torch changes state each time it is powered and stays there. One button turns it on, the same button turns it off, which saves building the latch yourself.",
+  "manual.assortedtech.chapter.redstone.flip_flop_torch.title": "Flip Flop Torch",
+  "manual.assortedtech.chapter.redstone.glowstone_torch": "A glowstone torch lights up when it is powered and goes dark when it is not, the way a redstone lamp does, but you can still walk through it like any torch.",
+  "manual.assortedtech.chapter.redstone.glowstone_torch.title": "Glowstone Torch",
+  "manual.assortedtech.description": "Laser bridges, gravity, sensors, spikes and additional redstone fun.",
+  "manual.assortedtech.title": "Assorted Tech"
+}

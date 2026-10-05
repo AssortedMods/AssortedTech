@@ -1,0 +1,23 @@
+{
+  "block.assortedfan.fan": "Fan",
+  "fan.screen": "Fan",
+  "fan.screen.add_five": "+5",
+  "fan.screen.add_one": "+1",
+  "fan.screen.cancel": "Cancel",
+  "fan.screen.max": "Max",
+  "fan.screen.min": "Min",
+  "fan.screen.minus_five": "-5",
+  "fan.screen.minus_one": "-1",
+  "fan.screen.mode": "Mode:",
+  "fan.screen.mode.blow": "Blow",
+  "fan.screen.mode.off": "Off",
+  "fan.screen.mode.suck": "Suck",
+  "fan.screen.ok": "Ok",
+  "fan.screen.range": "Range:",
+  "itemGroup.assortedtech": "Assorted Tech",
+  "manual.assortedtech.chapter.fan": "Fan",
+  "manual.assortedtech.chapter.fan.fan": "A fan blows entities away from itself or pulls them towards it. Right click it to set the range and which mode is set.\n\nRedstone turns a fan off rather than on, so it runs by default and a lever stops it.",
+  "manual.assortedtech.chapter.fan.fan.title": "Fan",
+  "manual.assortedtech.description": "Laser bridges, gravity, sensors, spikes and additional redstone fun.",
+  "manual.assortedtech.title": "Assorted Tech"
+}

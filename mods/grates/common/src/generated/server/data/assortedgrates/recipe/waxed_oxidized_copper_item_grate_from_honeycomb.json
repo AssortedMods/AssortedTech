@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedgrates"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedgrates"
+    }
+  ],
+  "group": "waxed_copper_item_grate",
+  "ingredients": [
+    "assortedgrates:oxidized_copper_item_grate",
+    "minecraft:honeycomb"
+  ],
+  "result": {
+    "id": "assortedgrates:waxed_oxidized_copper_item_grate"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:pickaxes/wood"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:shovels/wood"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:axes/wood"
+        }
+      ]
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedextruder"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_pickaxe": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:pickaxes/wood"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "assortedextruder:wood_extruder_alt"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:and",
+      "values": [
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:pickaxes/wood"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:shovels/wood"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:axes/wood"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedextruder"
+    }
+  ],
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_pickaxe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "assortedextruder:wood_extruder_alt"
+    ]
+  }
+}

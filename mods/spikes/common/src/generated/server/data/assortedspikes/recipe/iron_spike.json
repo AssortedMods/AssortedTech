@@ -1,0 +1,39 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:item_tag_populated",
+      "tag": "c:ingots/iron"
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedspikes"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:tags_populated",
+      "registry": "minecraft:item",
+      "values": [
+        "c:ingots/iron"
+      ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedspikes"
+    }
+  ],
+  "key": {
+    "X": "#c:ingots/iron"
+  },
+  "pattern": [
+    "X X",
+    " X ",
+    "XXX"
+  ],
+  "result": {
+    "count": 6,
+    "id": "assortedspikes:iron_spike"
+  }
+}

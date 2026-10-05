@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "assortedgravity:block/repulsor_off",
+    "side": "assortedgravity:block/gravity_side",
+    "top": "assortedgravity:block/gravity_side"
+  }
+}

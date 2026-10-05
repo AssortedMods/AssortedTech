@@ -1,0 +1,49 @@
+package com.grim3212.assorted.spikes.api;
+
+import com.grim3212.assorted.lib.util.LibCommonTags;
+import com.grim3212.assorted.spikes.Constants;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+
+public class SpikesTags {
+
+    public static class Blocks {
+
+        public static final TagKey<Block> SPIKES = spikesTag("spikes");
+
+        private static TagKey<Block> spikesTag(String name) {
+            return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
+        }
+    }
+
+    public static class Items {
+
+        public static final TagKey<Item> SPIKES = spikesTag("spikes");
+
+        public static final TagKey<Item> INGOTS_TIN = commonTag("ingots/tin");
+        public static final TagKey<Item> INGOTS_SILVER = commonTag("ingots/silver");
+        public static final TagKey<Item> INGOTS_ALUMINUM = commonTag("ingots/aluminum");
+        public static final TagKey<Item> INGOTS_NICKEL = commonTag("ingots/nickel");
+        public static final TagKey<Item> INGOTS_PLATINUM = commonTag("ingots/platinum");
+        public static final TagKey<Item> INGOTS_LEAD = commonTag("ingots/lead");
+        public static final TagKey<Item> INGOTS_BRONZE = commonTag("ingots/bronze");
+        public static final TagKey<Item> INGOTS_ELECTRUM = commonTag("ingots/electrum");
+        public static final TagKey<Item> INGOTS_INVAR = commonTag("ingots/invar");
+        public static final TagKey<Item> INGOTS_STEEL = commonTag("ingots/steel");
+        public static final TagKey<Item> GEMS_RUBY = commonTag("gems/ruby");
+        public static final TagKey<Item> GEMS_SAPPHIRE = commonTag("gems/sapphire");
+        public static final TagKey<Item> GEMS_TOPAZ = commonTag("gems/topaz");
+        public static final TagKey<Item> GEMS_PERIDOT = commonTag("gems/peridot");
+
+        private static TagKey<Item> spikesTag(String name) {
+            return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
+        }
+
+        private static TagKey<Item> commonTag(String name) {
+            return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(LibCommonTags.COMMON_NAMESPACE, name));
+        }
+    }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedsensors:every_sensor_type_detects",
+  "structure": "assortedsensors:test_box",
+  "max_ticks": 120,
+  "setup_ticks": 0,
+  "required": true
+}

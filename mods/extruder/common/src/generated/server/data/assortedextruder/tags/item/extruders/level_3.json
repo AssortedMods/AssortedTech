@@ -1,0 +1,10 @@
+{
+  "values": [
+    "assortedextruder:diamond_extruder",
+    "assortedextruder:emerald_extruder",
+    "assortedextruder:silver_extruder",
+    "assortedextruder:platinum_extruder",
+    "assortedextruder:electrum_extruder",
+    "assortedextruder:steel_extruder"
+  ]
+}

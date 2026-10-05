@@ -1,0 +1,43 @@
+{
+  "links": [
+    {
+      "blocks": [
+        "assortedelevators:elevator"
+      ],
+      "entities": [
+        "assortedelevators:elevator_car"
+      ],
+      "page": "assortedtech:elevators/elevator"
+    },
+    {
+      "blocks": [
+        "assortedelevators:camouflaged_elevator"
+      ],
+      "page": "assortedtech:elevators/camouflaged_elevator"
+    },
+    {
+      "blocks": [
+        "assortedelevators:elevator_landing"
+      ],
+      "page": "assortedtech:elevators/elevator_landing"
+    },
+    {
+      "blocks": [
+        "assortedelevators:camouflaged_elevator_landing"
+      ],
+      "page": "assortedtech:elevators/camouflaged_elevator_landing"
+    },
+    {
+      "blocks": [
+        "assortedelevators:instant_elevator"
+      ],
+      "page": "assortedtech:elevators/instant_elevator"
+    },
+    {
+      "blocks": [
+        "assortedelevators:camouflaged_instant_elevator"
+      ],
+      "page": "assortedtech:elevators/camouflaged_instant_elevator"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedelevators:camouflaged_instant_elevator_wears_a_disguise",
+  "structure": "assortedelevators:test_box",
+  "max_ticks": 20,
+  "setup_ticks": 0,
+  "sky_access": true,
+  "required": true
+}

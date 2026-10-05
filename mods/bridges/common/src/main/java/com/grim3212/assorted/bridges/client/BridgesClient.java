@@ -1,0 +1,59 @@
+package com.grim3212.assorted.bridges.client;
+
+import com.google.common.collect.ImmutableList;
+import com.grim3212.assorted.lib.platform.ClientServices;
+import com.grim3212.assorted.bridges.client.color.BridgeItemTintSource;
+import com.grim3212.assorted.bridges.client.model.BridgeItemModel;
+import com.grim3212.assorted.bridges.client.model.BridgeUnbakedModel;
+import com.grim3212.assorted.bridges.common.block.BridgeBlock;
+import com.grim3212.assorted.bridges.common.block.BridgesBlocks;
+import com.grim3212.assorted.bridges.common.block.blockentity.BridgeBlockEntity;
+import net.minecraft.client.color.block.BlockTintSource;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.ARGB;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class BridgesClient {
+
+    public static void init() {
+        ClientServices.CLIENT.registerModelLoader(BridgeUnbakedModel.LOADER_NAME, BridgeUnbakedModel.Loader.INSTANCE);
+
+        // BlockColor became BlockTintSource: color(state) answers the in-hand colour and
+        // colorInWorld(state, level, pos) the placed one, so the nullable BlockPos the old lambda
+        // branched on is gone - the two cases are separate methods. The tint layer is the source's
+        // position in the block's list rather than an argument, and colours are ARGB, so an opaque
+        // white is -1 rather than 0xFFFFFF.
+        ClientServices.CLIENT.registerBlockColor(new BlockTintSource() {
+            @Override
+            public int color(BlockState state) {
+                return -1;
+            }
+
+            @Override
+            public int colorInWorld(BlockState state, BlockAndTintGetter worldIn, BlockPos pos) {
+                BlockEntity te = worldIn.getBlockEntity(pos);
+                if (te instanceof BridgeBlockEntity bridge) {
+                    BlockState stored = bridge.getStoredBlockState();
+                    if (stored != Blocks.AIR.defaultBlockState()) {
+                        BlockTintSource source = ClientServices.CLIENT.getBlockColors().getTintSource(stored, 0);
+                        return source != null ? source.colorInWorld(stored, worldIn, pos) : -1;
+                    }
+
+                    return ARGB.opaque(state.getValue(BridgeBlock.TYPE).getRenderColor());
+                }
+                return -1;
+            }
+        }, () -> ImmutableList.of(BridgesBlocks.BRIDGE.get()));
+
+        // Registering the codec is only half of it: the bridge's item model json lists
+        // {"type": "assortedbridges:bridge"} in its "tints" array, which is what actually consults this.
+        ClientServices.CLIENT.registerItemTintSource(BridgeItemTintSource.ID, BridgeItemTintSource.MAP_CODEC);
+
+        // The item model type items/bridge.json names, so a bridge item draws the block it holds.
+        ClientServices.CLIENT.registerItemModelType(BridgeItemModel.ID, BridgeItemModel.Unbaked.MAP_CODEC);
+    }
+
+}

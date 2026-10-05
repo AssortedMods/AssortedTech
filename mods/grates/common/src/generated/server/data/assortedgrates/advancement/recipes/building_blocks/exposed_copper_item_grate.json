@@ -1,0 +1,44 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedgrates"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_copper_bars": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:exposed_copper_bars"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "assortedgrates:exposed_copper_item_grate"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedgrates"
+    }
+  ],
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_copper_bars"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "assortedgrates:exposed_copper_item_grate"
+    ]
+  }
+}

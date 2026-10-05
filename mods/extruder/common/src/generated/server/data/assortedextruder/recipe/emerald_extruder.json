@@ -1,0 +1,72 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:pickaxes/emerald"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:shovels/emerald"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:axes/emerald"
+        }
+      ]
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedextruder"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:and",
+      "values": [
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:pickaxes/emerald"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:shovels/emerald"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:axes/emerald"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedextruder"
+    }
+  ],
+  "key": {
+    "A": "#c:axes/emerald",
+    "M": "#assortedextruder:extruders/level_2",
+    "P": "#c:pickaxes/emerald",
+    "S": "#c:shovels/emerald"
+  },
+  "pattern": [
+    " P ",
+    "AMS"
+  ],
+  "result": {
+    "id": "assortedextruder:emerald_extruder"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedextruder:extruder_mines_ahead_and_lays_blocks_behind",
+  "structure": "assortedextruder:test_box",
+  "max_ticks": 200,
+  "setup_ticks": 0,
+  "required": true
+}

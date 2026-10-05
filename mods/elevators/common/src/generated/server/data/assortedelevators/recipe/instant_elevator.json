@@ -1,0 +1,28 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedelevators"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedelevators"
+    }
+  ],
+  "key": {
+    "C": "#c:ingots/copper",
+    "E": "#c:ender_pearls",
+    "R": "#c:dusts/redstone"
+  },
+  "pattern": [
+    "CRC",
+    "CEC",
+    "CCC"
+  ],
+  "result": {
+    "id": "assortedelevators:instant_elevator"
+  }
+}

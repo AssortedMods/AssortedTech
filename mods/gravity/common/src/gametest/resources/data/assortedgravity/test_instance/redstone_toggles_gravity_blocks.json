@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedgravity:redstone_toggles_gravity_blocks",
+  "structure": "assortedgravity:test_box",
+  "max_ticks": 60,
+  "setup_ticks": 0,
+  "required": true
+}

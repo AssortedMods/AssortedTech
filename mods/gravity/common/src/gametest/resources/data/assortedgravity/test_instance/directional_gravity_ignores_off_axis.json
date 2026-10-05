@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedgravity:directional_gravity_ignores_off_axis",
+  "structure": "assortedgravity:test_box",
+  "max_ticks": 70,
+  "setup_ticks": 0,
+  "required": true
+}

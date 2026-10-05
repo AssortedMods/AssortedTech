@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedgravity"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "fabric:load_conditions": [
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedgravity"
+    }
+  ],
+  "key": {
+    "C": "minecraft:compass",
+    "E": "#c:ender_pearls",
+    "I": "#c:ingots/iron",
+    "R": "#c:dusts/redstone"
+  },
+  "pattern": [
+    "IRI",
+    "RCR",
+    "IEI"
+  ],
+  "result": {
+    "id": "assortedgravity:attractor"
+  }
+}

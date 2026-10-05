@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "assortedsensors:block/sensors/feather_sensor_off",
+    "side": "assortedsensors:block/sensors/feather_sensor_side",
+    "top": "assortedsensors:block/sensors/feather_sensor_side"
+  }
+}

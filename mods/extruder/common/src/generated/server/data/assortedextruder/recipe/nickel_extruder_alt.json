@@ -1,0 +1,72 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:pickaxes/nickel"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:shovels/nickel"
+        },
+        {
+          "type": "assortedlib:item_tag_populated",
+          "tag": "c:axes/nickel"
+        }
+      ]
+    },
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedextruder"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:and",
+      "values": [
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:pickaxes/nickel"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:shovels/nickel"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:axes/nickel"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "assortedlib:part_enabled",
+      "part": "assortedextruder"
+    }
+  ],
+  "key": {
+    "A": "#c:axes/nickel",
+    "M": "#assortedextruder:extruders/level_1",
+    "P": "#c:pickaxes/nickel",
+    "S": "#c:shovels/nickel"
+  },
+  "pattern": [
+    " P ",
+    "SMA"
+  ],
+  "result": {
+    "id": "assortedextruder:nickel_extruder"
+  }
+}

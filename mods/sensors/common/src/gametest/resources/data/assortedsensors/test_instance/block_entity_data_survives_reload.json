@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedsensors:block_entity_data_survives_reload",
+  "structure": "assortedsensors:test_box",
+  "max_ticks": 20,
+  "setup_ticks": 0,
+  "required": true
+}

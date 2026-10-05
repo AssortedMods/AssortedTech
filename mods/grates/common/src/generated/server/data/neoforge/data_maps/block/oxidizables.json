@@ -1,0 +1,13 @@
+{
+  "values": {
+    "assortedgrates:copper_item_grate": {
+      "next_oxidation_stage": "assortedgrates:exposed_copper_item_grate"
+    },
+    "assortedgrates:exposed_copper_item_grate": {
+      "next_oxidation_stage": "assortedgrates:weathered_copper_item_grate"
+    },
+    "assortedgrates:weathered_copper_item_grate": {
+      "next_oxidation_stage": "assortedgrates:oxidized_copper_item_grate"
+    }
+  }
+}

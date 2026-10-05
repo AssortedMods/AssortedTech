@@ -1,0 +1,8 @@
+{
+  "fabric:type": "assortedelevators:camouflage",
+  "fallback": "assortedelevators:block/camouflaged_elevator_landing",
+  "loader": "assortedelevators:camouflage",
+  "textures": {
+    "particle": "assortedelevators:block/camouflaged_elevator_landing"
+  }
+}

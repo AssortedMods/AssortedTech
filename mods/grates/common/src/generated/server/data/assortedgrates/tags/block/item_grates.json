@@ -1,0 +1,24 @@
+{
+  "values": [
+    "assortedgrates:iron_item_grate",
+    "assortedgrates:copper_item_grate",
+    "assortedgrates:exposed_copper_item_grate",
+    "assortedgrates:weathered_copper_item_grate",
+    "assortedgrates:oxidized_copper_item_grate",
+    "assortedgrates:waxed_copper_item_grate",
+    "assortedgrates:waxed_exposed_copper_item_grate",
+    "assortedgrates:waxed_weathered_copper_item_grate",
+    "assortedgrates:waxed_oxidized_copper_item_grate",
+    "assortedgrates:gold_item_grate",
+    "assortedgrates:tin_item_grate",
+    "assortedgrates:silver_item_grate",
+    "assortedgrates:aluminum_item_grate",
+    "assortedgrates:nickel_item_grate",
+    "assortedgrates:platinum_item_grate",
+    "assortedgrates:lead_item_grate",
+    "assortedgrates:bronze_item_grate",
+    "assortedgrates:electrum_item_grate",
+    "assortedgrates:invar_item_grate",
+    "assortedgrates:steel_item_grate"
+  ]
+}

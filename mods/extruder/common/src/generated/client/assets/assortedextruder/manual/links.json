@@ -1,0 +1,35 @@
+{
+  "links": [
+    {
+      "entities": [
+        "assortedextruder:extruder"
+      ],
+      "items": [
+        "assortedextruder:wood_extruder",
+        "assortedextruder:stone_extruder",
+        "assortedextruder:copper_extruder",
+        "assortedextruder:iron_extruder",
+        "assortedextruder:gold_extruder",
+        "assortedextruder:diamond_extruder",
+        "assortedextruder:netherite_extruder",
+        "assortedextruder:amethyst_extruder",
+        "assortedextruder:emerald_extruder",
+        "assortedextruder:tin_extruder",
+        "assortedextruder:silver_extruder",
+        "assortedextruder:aluminum_extruder",
+        "assortedextruder:nickel_extruder",
+        "assortedextruder:platinum_extruder",
+        "assortedextruder:lead_extruder",
+        "assortedextruder:bronze_extruder",
+        "assortedextruder:electrum_extruder",
+        "assortedextruder:invar_extruder",
+        "assortedextruder:steel_extruder",
+        "assortedextruder:ruby_extruder",
+        "assortedextruder:sapphire_extruder",
+        "assortedextruder:topaz_extruder",
+        "assortedextruder:peridot_extruder"
+      ],
+      "page": "assortedtech:extruder/extruder"
+    }
+  ]
+}

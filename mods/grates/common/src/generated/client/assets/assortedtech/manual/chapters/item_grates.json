@@ -1,0 +1,46 @@
+{
+  "conditions": [
+    {
+      "type": "assortedlib:part_enabled",
+      "part": "assortedgrates"
+    }
+  ],
+  "pages": [
+    {
+      "type": "assortedlib:recipe",
+      "id": "item_grates",
+      "interval": 50,
+      "recipes": [
+        "assortedgrates:iron_item_grate",
+        "assortedgrates:copper_item_grate",
+        "assortedgrates:exposed_copper_item_grate",
+        "assortedgrates:weathered_copper_item_grate",
+        "assortedgrates:oxidized_copper_item_grate",
+        "assortedgrates:waxed_copper_item_grate",
+        "assortedgrates:waxed_exposed_copper_item_grate",
+        "assortedgrates:waxed_weathered_copper_item_grate",
+        "assortedgrates:waxed_oxidized_copper_item_grate",
+        "assortedgrates:gold_item_grate",
+        "assortedgrates:tin_item_grate",
+        "assortedgrates:silver_item_grate",
+        "assortedgrates:aluminum_item_grate",
+        "assortedgrates:nickel_item_grate",
+        "assortedgrates:platinum_item_grate",
+        "assortedgrates:lead_item_grate",
+        "assortedgrates:bronze_item_grate",
+        "assortedgrates:electrum_item_grate",
+        "assortedgrates:invar_item_grate",
+        "assortedgrates:steel_item_grate"
+      ],
+      "text": "manual.assortedtech.chapter.item_grates.item_grates",
+      "title": "manual.assortedtech.chapter.item_grates.item_grates.title"
+    },
+    {
+      "type": "assortedlib:text",
+      "id": "copper",
+      "text": "manual.assortedtech.chapter.item_grates.copper",
+      "title": "manual.assortedtech.chapter.item_grates.copper.title"
+    }
+  ],
+  "sort_order": 9
+}

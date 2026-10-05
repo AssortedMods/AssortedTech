@@ -1,0 +1,15 @@
+{
+  "alarm.screen": "Alarm Box",
+  "alarm.screen.description": "Press the button below to cycle through the different types of alarms available. When you've found the one you want, click the 'Done' button at the bottom. Supply a redstone pulse (on/off signal) to any side of the box to sound the alarm.",
+  "alarm.screen.done": "Done",
+  "alarm.screen.name": "Alarm %s",
+  "alarm.screen.test": "Test",
+  "assortedalarm.subtitle.alarm": "Alarm going off",
+  "block.assortedalarm.alarm": "Alarm Box",
+  "itemGroup.assortedtech": "Assorted Tech",
+  "manual.assortedtech.chapter.alarm": "Alarm",
+  "manual.assortedtech.chapter.alarm.alarm": "An alarm sounds while it has power, and goes on any face of a block. Right click it to pick which of the sounds it makes.\n\nWired to a sensor it becomes a doorbell, or something considerably less polite.",
+  "manual.assortedtech.chapter.alarm.alarm.title": "Alarm",
+  "manual.assortedtech.description": "Laser bridges, gravity, sensors, spikes and additional redstone fun.",
+  "manual.assortedtech.title": "Assorted Tech"
+}

@@ -1,0 +1,35 @@
+{
+  "links": [
+    {
+      "blocks": [
+        "assortedbridges:bridge_control_laser",
+        "assortedbridges:bridge"
+      ],
+      "page": "assortedtech:bridges/laser"
+    },
+    {
+      "blocks": [
+        "assortedbridges:bridge_control_trick"
+      ],
+      "page": "assortedtech:bridges/trick"
+    },
+    {
+      "blocks": [
+        "assortedbridges:bridge_control_accel"
+      ],
+      "page": "assortedtech:bridges/accel"
+    },
+    {
+      "blocks": [
+        "assortedbridges:bridge_control_death"
+      ],
+      "page": "assortedtech:bridges/death"
+    },
+    {
+      "blocks": [
+        "assortedbridges:bridge_control_gravity"
+      ],
+      "page": "assortedtech:bridges/gravity"
+    }
+  ]
+}

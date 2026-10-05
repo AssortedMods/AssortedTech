@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedelevators:elevator_car_of_wood_and_stone_moves_as_one",
+  "structure": "assortedelevators:test_box",
+  "max_ticks": 400,
+  "setup_ticks": 0,
+  "required": true
+}

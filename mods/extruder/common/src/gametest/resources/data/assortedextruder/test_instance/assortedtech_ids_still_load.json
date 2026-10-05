@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedextruder:assortedtech_ids_still_load",
+  "structure": "assortedextruder:test_box",
+  "max_ticks": 1,
+  "setup_ticks": 0,
+  "required": true
+}

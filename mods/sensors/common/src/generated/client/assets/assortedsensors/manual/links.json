@@ -1,0 +1,39 @@
+{
+  "links": [
+    {
+      "blocks": [
+        "assortedsensors:wood_sensor",
+        "assortedsensors:stone_sensor",
+        "assortedsensors:iron_sensor",
+        "assortedsensors:mossy_cobblestone_sensor",
+        "assortedsensors:prismarine_sensor",
+        "assortedsensors:gold_sensor",
+        "assortedsensors:emerald_sensor",
+        "assortedsensors:netherrack_sensor",
+        "assortedsensors:cobweb_sensor",
+        "assortedsensors:end_stone_sensor",
+        "assortedsensors:hay_bale_sensor",
+        "assortedsensors:feather_sensor"
+      ],
+      "page": "assortedtech:sensors/sensors"
+    },
+    {
+      "items": [
+        "assortedsensors:gps"
+      ],
+      "page": "assortedtech:sensors/gps"
+    },
+    {
+      "blocks": [
+        "assortedsensors:gps_sensor"
+      ],
+      "page": "assortedtech:sensors/gps_sensor"
+    },
+    {
+      "blocks": [
+        "assortedsensors:upgraded_gps_sensor"
+      ],
+      "page": "assortedtech:sensors/upgraded_gps_sensor"
+    }
+  ]
+}
