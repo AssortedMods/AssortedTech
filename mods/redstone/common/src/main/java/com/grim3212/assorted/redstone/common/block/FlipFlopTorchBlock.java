@@ -1,6 +1,5 @@
 package com.grim3212.assorted.redstone.common.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -23,19 +22,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class FlipFlopTorchBlock extends BaseTorchBlock {
 
-	public static final MapCodec<FlipFlopTorchBlock> CODEC = simpleCodec(FlipFlopTorchBlock::new);
-
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 	public static final BooleanProperty PREV_LIT = BooleanProperty.create("prev_lit");
 
 	public FlipFlopTorchBlock(Properties props) {
 		super(props);
 		this.registerDefaultState(this.stateDefinition.any().setValue(LIT, false).setValue(PREV_LIT, false));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseTorchBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

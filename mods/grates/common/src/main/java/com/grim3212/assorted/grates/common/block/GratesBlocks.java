@@ -86,7 +86,7 @@ public class GratesBlocks {
     }
 
     private static BlockBehaviour.Properties itemGrate(BlockBehaviour.Properties props) {
-        return props.strength(0.4F, 1.0F).requiresCorrectToolForDrops().noOcclusion().isSuffocating(GratesBlocks::never).isViewBlocking(GratesBlocks::never).isRedstoneConductor(GratesBlocks::never);
+        return props.strength(0.4F, 1.0F).requiresCorrectToolForDrops().noOcclusion().isSuffocating(GratesBlocks::never).isViewBlocking((state, getter, pos, nearPlane) -> false).isRedstoneConductor(GratesBlocks::never);
     }
 
     /** A block and its item. */

@@ -1,6 +1,5 @@
 package com.grim3212.assorted.elevators.common.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -24,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ElevatorBlock extends Block {
 
-    public static final MapCodec<ElevatorBlock> CODEC = simpleCodec(ElevatorBlock::new);
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     /** The way it went last, and so the way a use or pulse sends it next. */
     public static final BooleanProperty GOING_UP = BooleanProperty.create("going_up");
@@ -32,11 +30,6 @@ public class ElevatorBlock extends Block {
     public ElevatorBlock(Properties props) {
         super(props);
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false).setValue(GOING_UP, true));
-    }
-
-    @Override
-    protected MapCodec<? extends ElevatorBlock> codec() {
-        return CODEC;
     }
 
     @Override

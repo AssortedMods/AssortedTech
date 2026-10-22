@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedgravity:repulsor_directional"
+        "recipes": "assortedgravity:repulsor_directional"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

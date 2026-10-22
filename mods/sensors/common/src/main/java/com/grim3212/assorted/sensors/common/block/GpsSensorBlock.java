@@ -31,7 +31,7 @@ public class GpsSensorBlock extends Block implements EntityBlock {
     private final boolean upgraded;
 
     public GpsSensorBlock(Properties props, boolean upgraded) {
-        super(props.pushReaction(PushReaction.BLOCK));
+        super(props.pushReaction(PushReaction.IMMOVEABLE));
         this.upgraded = upgraded;
         this.registerDefaultState(this.stateDefinition.any().setValue(ACTIVE, false));
     }

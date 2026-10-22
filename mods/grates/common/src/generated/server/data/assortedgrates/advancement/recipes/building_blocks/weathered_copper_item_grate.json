@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedgrates:weathered_copper_item_grate"
+        "recipes": "assortedgrates:weathered_copper_item_grate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedextruder:topaz_extruder"
+        "recipes": "assortedextruder:topaz_extruder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

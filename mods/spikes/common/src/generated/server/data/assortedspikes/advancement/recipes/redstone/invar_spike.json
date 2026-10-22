@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedspikes:invar_spike"
+        "recipes": "assortedspikes:invar_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

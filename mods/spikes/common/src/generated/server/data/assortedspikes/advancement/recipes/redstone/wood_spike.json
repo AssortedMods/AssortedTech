@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedspikes:wood_spike"
+        "recipes": "assortedspikes:wood_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

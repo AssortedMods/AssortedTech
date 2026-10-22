@@ -40,7 +40,7 @@ public class GravityDirectionalBlock extends Block implements EntityBlock {
     private final GravityType type;
 
     public GravityDirectionalBlock(GravityType type, Properties props) {
-        super(props.pushReaction(PushReaction.BLOCK));
+        super(props.pushReaction(PushReaction.IMMOVEABLE));
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false).setValue(FACING, Direction.NORTH));
         this.type = type;
     }

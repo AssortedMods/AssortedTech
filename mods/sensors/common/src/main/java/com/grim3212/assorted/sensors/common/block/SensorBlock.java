@@ -38,7 +38,7 @@ public class SensorBlock extends Block implements EntityBlock {
     private final SensorType sensorType;
 
     public SensorBlock(Properties props, SensorType sensorType) {
-        super(props.pushReaction(PushReaction.BLOCK));
+        super(props.pushReaction(PushReaction.IMMOVEABLE));
         this.registerDefaultState(this.stateDefinition.any().setValue(DETECTED, false).setValue(FACING, Direction.NORTH));
         this.sensorType = sensorType;
     }

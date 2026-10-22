@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedextruder:nickel_extruder"
+        "recipes": "assortedextruder:nickel_extruder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

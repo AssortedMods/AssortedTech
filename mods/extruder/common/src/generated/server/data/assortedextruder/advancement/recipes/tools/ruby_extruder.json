@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedextruder:ruby_extruder"
+        "recipes": "assortedextruder:ruby_extruder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

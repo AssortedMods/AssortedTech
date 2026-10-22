@@ -39,9 +39,11 @@ public class ExtruderSpecialRenderer implements NoDataSpecialModelRenderer {
     public void submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, int overlayCoords, boolean hasFoil, int outlineColor) {
         poseStack.pushPose();
         pose(poseStack);
-        submitNodeCollector.order(0).submitModel(this.model, STILL, poseStack, this.texture, lightCoords, overlayCoords, outlineColor, null);
+        // 26.3's glint types draw the texture too; the cutout one keeps the model's see-through gaps.
         if (hasFoil) {
-            submitNodeCollector.order(1).submitModel(this.model, STILL, poseStack, RenderTypes.entityGlint(), lightCoords, overlayCoords, outlineColor, null);
+            submitNodeCollector.submitModel(this.model, STILL, poseStack, RenderTypes.itemCutoutGlint(this.texture), lightCoords, overlayCoords, outlineColor);
+        } else {
+            submitNodeCollector.submitModel(this.model, STILL, poseStack, this.texture, lightCoords, overlayCoords, outlineColor);
         }
         poseStack.popPose();
     }
@@ -57,7 +59,7 @@ public class ExtruderSpecialRenderer implements NoDataSpecialModelRenderer {
     /** Into the middle of the item's block-sized space, the drill turned north, and the usual entity model flip. */
     private static void pose(PoseStack poseStack) {
         poseStack.translate(0.5F, 0.5F, 0.5F);
-        poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
+        poseStack.rotate(Axis.YP.rotationDegrees(-90.0F));
         poseStack.scale(-1.0F, -1.0F, 1.0F);
     }
 

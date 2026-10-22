@@ -29,7 +29,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedsensors:end_stone_sensor"
+        "recipes": "assortedsensors:end_stone_sensor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

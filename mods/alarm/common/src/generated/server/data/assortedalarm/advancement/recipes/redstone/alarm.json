@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedalarm:alarm"
+        "recipes": "assortedalarm:alarm"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

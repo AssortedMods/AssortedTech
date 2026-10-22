@@ -65,17 +65,17 @@ public class ExtruderRenderer extends EntityRenderer<ExtruderEntity, ExtruderRen
         poseStack.translate(0.0F, state.boundingBoxHeight / 2.0F, 0.0F);
 
         switch (state.facing) {
-            case UP -> poseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F));
-            case DOWN -> poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
-            default -> poseStack.mulPose(Axis.YP.rotationDegrees(90.0F - state.facing.toYRot()));
+            case UP -> poseStack.rotate(Axis.ZP.rotationDegrees(-90.0F));
+            case DOWN -> poseStack.rotate(Axis.ZP.rotationDegrees(90.0F));
+            default -> poseStack.rotate(Axis.YP.rotationDegrees(90.0F - state.facing.toYRot()));
         }
 
         if (state.hurtTime > 0.0F) {
-            poseStack.mulPose(Axis.XP.rotationDegrees(Mth.sin(state.hurtTime) * state.hurtTime * state.damage / 10.0F * state.hurtDir));
+            poseStack.rotate(Axis.XP.rotationDegrees(Mth.sin(state.hurtTime) * state.hurtTime * state.damage / 10.0F * state.hurtDir));
         }
 
         poseStack.scale(-1.0F, -1.0F, 1.0F);
-        submitNodeCollector.submitModel(this.model, state, poseStack, TEXTURES.get(state.type), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+        submitNodeCollector.submitModel(this.model, state, poseStack, TEXTURES.get(state.type), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
         poseStack.popPose();
 
         super.submit(state, poseStack, submitNodeCollector, camera);

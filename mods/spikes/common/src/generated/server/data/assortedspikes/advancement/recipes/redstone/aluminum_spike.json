@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedspikes:aluminum_spike"
+        "recipes": "assortedspikes:aluminum_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

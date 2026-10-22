@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedspikes:copper_spike"
+        "recipes": "assortedspikes:copper_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

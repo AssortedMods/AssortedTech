@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedfan:fan"
+        "recipes": "assortedfan:fan"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedbridges:bridge_control_gravity"
+        "recipes": "assortedbridges:bridge_control_gravity"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -2,6 +2,7 @@ package com.grim3212.assorted.extruder.common.inventory;
 
 import com.grim3212.assorted.extruder.api.util.ExtruderType;
 import com.grim3212.assorted.extruder.common.entity.ExtruderEntity;
+import com.grim3212.assorted.lib.platform.Services;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -12,7 +13,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -22,8 +22,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ExtruderMenu extends AbstractContainerMenu {
 
-    /** Fuel, running (1 or 0), and the facing as {@link Direction#get3DDataValue()}. */
-    public static final int DATA_COUNT = 3;
+    /** Fuel, running (1 or 0), the facing as {@link Direction#get3DDataValue()}, and what one item in the fuel slot burns for. */
+    public static final int DATA_COUNT = 4;
 
     private final Container container;
     private final ContainerData data;
@@ -47,11 +47,10 @@ public class ExtruderMenu extends AbstractContainerMenu {
         this.type = type;
         this.extruder = extruder;
 
-        Level level = inventory.player.level();
         this.addSlot(new Slot(container, ExtruderEntity.FUEL_SLOT, 80, 20) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return ExtruderEntity.fuelValue(level, stack) > 0;
+                return Services.PLATFORM.isFuel(stack);
             }
         });
 
@@ -81,6 +80,11 @@ public class ExtruderMenu extends AbstractContainerMenu {
 
     public int getFuel() {
         return this.data.get(0);
+    }
+
+    /** Burn times only resolve on the server, so the screen reads the fuel slot's from here. */
+    public int getFuelPerItem() {
+        return this.data.get(3);
     }
 
     public boolean isRunning() {

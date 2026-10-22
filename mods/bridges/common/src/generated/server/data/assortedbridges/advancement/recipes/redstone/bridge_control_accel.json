@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedbridges:bridge_control_accel"
+        "recipes": "assortedbridges:bridge_control_accel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -1,6 +1,5 @@
 package com.grim3212.assorted.elevators.common.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
@@ -23,18 +22,12 @@ import net.minecraft.world.phys.BlockHitResult;
  */
 public class InstantElevatorBlock extends Block {
 
-    public static final MapCodec<InstantElevatorBlock> CODEC = simpleCodec(InstantElevatorBlock::new);
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
     public static final DyeColor DEFAULT_COLOR = DyeColor.PURPLE;
 
     public InstantElevatorBlock(Properties props) {
         super(props);
         this.registerDefaultState(this.stateDefinition.any().setValue(COLOR, DEFAULT_COLOR));
-    }
-
-    @Override
-    protected MapCodec<? extends InstantElevatorBlock> codec() {
-        return CODEC;
     }
 
     @Override

@@ -29,7 +29,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedsensors:iron_sensor"
+        "recipes": "assortedsensors:iron_sensor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

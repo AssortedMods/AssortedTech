@@ -33,7 +33,7 @@ public class GravityBlock extends Block implements EntityBlock {
     private final GravityType type;
 
     public GravityBlock(GravityType type, Properties props) {
-        super(props.pushReaction(PushReaction.BLOCK));
+        super(props.pushReaction(PushReaction.IMMOVEABLE));
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
         this.type = type;
     }

@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedextruder:netherite_extruder"
+        "recipes": "assortedextruder:netherite_extruder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

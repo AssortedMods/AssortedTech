@@ -37,7 +37,7 @@ public class BridgeControlBlock extends Block implements EntityBlock {
     public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
     public BridgeControlBlock(BridgeType type, Properties props) {
-        super(props.pushReaction(PushReaction.BLOCK).isValidSpawn((s, g, p, e) -> false));
+        super(props.pushReaction(PushReaction.IMMOVEABLE).isValidSpawn((s, g, p, e) -> false));
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false).setValue(FACING, Direction.NORTH));
         this.type = type;
     }

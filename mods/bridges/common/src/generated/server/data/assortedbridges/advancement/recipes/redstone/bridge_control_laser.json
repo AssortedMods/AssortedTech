@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedbridges:bridge_control_laser"
+        "recipes": "assortedbridges:bridge_control_laser"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

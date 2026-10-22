@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedgrates:tin_item_grate"
+        "recipes": "assortedgrates:tin_item_grate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

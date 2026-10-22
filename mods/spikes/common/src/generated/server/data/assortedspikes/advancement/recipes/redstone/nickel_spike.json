@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedspikes:nickel_spike"
+        "recipes": "assortedspikes:nickel_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

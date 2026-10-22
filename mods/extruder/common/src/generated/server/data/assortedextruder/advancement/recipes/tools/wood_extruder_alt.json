@@ -36,7 +36,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedextruder:wood_extruder_alt"
+        "recipes": "assortedextruder:wood_extruder_alt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

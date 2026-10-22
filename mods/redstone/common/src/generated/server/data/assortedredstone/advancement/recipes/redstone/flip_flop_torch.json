@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedredstone:flip_flop_torch"
+        "recipes": "assortedredstone:flip_flop_torch"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

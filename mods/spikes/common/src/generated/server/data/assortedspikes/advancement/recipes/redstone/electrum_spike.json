@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedspikes:electrum_spike"
+        "recipes": "assortedspikes:electrum_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -116,7 +116,7 @@ public class ExtruderScreen extends AbstractContainerScreen<ExtruderMenu> {
      */
     private int blocksFor(int costPerBlock, boolean laying) {
         ItemStack stack = this.menu.getSlot(ExtruderEntity.FUEL_SLOT).getItem();
-        int perItem = ExtruderEntity.fuelValue(this.minecraft.level, stack);
+        int perItem = this.menu.getFuelPerItem();
         return ExtruderEntity.blocksFor(this.menu.getFuel(), perItem, perItem > 0 ? stack.getCount() : 0, this.menu.getExtruderType().getSpeed(), costPerBlock, laying);
     }
 }

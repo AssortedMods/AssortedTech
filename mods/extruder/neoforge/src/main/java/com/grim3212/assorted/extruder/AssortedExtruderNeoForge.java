@@ -8,6 +8,7 @@ import com.grim3212.assorted.extruder.client.data.ExtruderItemModelProvider;
 import com.grim3212.assorted.extruder.data.ExtruderBlockTagProvider;
 import com.grim3212.assorted.extruder.data.ExtruderItemTagProvider;
 import com.grim3212.assorted.extruder.data.ExtruderRecipes;
+import com.grim3212.assorted.lib.data.ForgeRegistryEntries;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
@@ -37,10 +38,9 @@ public class AssortedExtruderNeoForge {
      */
     private void gatherServerData(final GatherDataEvent.Server event) {
         PackOutput packOutput = event.getGenerator().getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getWorldLookupProvider();
 
-        // Recipe providers are not data providers any more - the Runner owns the output.
-        event.addProvider(new ExtruderRecipes.Runner(packOutput, lookupProvider));
+        ForgeRegistryEntries.of(Constants.MOD_ID).recipes(ExtruderRecipes::new).addTo(event);
         ForgeBlockTagProvider blockTagProvider = event.addProvider(new ForgeBlockTagProvider(packOutput, lookupProvider, Constants.MOD_ID, new ExtruderBlockTagProvider(packOutput, lookupProvider)));
         event.addProvider(new ForgeItemTagProvider(packOutput, lookupProvider, blockTagProvider.contentsGetter(), Constants.MOD_ID, new ExtruderItemTagProvider(packOutput, lookupProvider, blockTagProvider.contentsGetter())));
     }

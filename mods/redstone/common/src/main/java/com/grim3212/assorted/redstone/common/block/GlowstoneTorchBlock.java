@@ -1,7 +1,6 @@
 package com.grim3212.assorted.redstone.common.block;
 
 import com.grim3212.assorted.lib.core.block.IBlockLightEmission;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -24,18 +23,11 @@ import org.jetbrains.annotations.Nullable;
  */
 public class GlowstoneTorchBlock extends BaseTorchBlock implements IBlockLightEmission {
 
-    public static final MapCodec<GlowstoneTorchBlock> CODEC = simpleCodec(GlowstoneTorchBlock::new);
-
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     public GlowstoneTorchBlock(Properties props) {
         super(props);
         this.registerDefaultState(this.stateDefinition.any().setValue(LIT, false));
-    }
-
-    @Override
-    protected MapCodec<? extends BaseTorchBlock> codec() {
-        return CODEC;
     }
 
     @Override

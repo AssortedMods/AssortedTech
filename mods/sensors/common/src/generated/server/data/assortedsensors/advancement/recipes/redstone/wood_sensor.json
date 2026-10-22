@@ -29,7 +29,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedsensors:wood_sensor"
+        "recipes": "assortedsensors:wood_sensor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

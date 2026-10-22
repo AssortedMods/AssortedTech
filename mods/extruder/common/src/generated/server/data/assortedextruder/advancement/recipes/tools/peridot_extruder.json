@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedextruder:peridot_extruder"
+        "recipes": "assortedextruder:peridot_extruder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

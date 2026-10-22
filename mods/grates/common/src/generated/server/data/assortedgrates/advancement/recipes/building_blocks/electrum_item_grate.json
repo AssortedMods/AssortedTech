@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedgrates:electrum_item_grate"
+        "recipes": "assortedgrates:electrum_item_grate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

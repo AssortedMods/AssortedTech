@@ -1,6 +1,5 @@
 package com.grim3212.assorted.elevators.common.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -20,15 +19,8 @@ import net.minecraft.world.phys.BlockHitResult;
  */
 public class CamouflagedElevatorBlock extends ElevatorBlock implements CamouflageBlock {
 
-    public static final MapCodec<CamouflagedElevatorBlock> CODEC = simpleCodec(CamouflagedElevatorBlock::new);
-
     public CamouflagedElevatorBlock(Properties props) {
         super(props);
-    }
-
-    @Override
-    protected MapCodec<? extends CamouflagedElevatorBlock> codec() {
-        return CODEC;
     }
 
     @Override

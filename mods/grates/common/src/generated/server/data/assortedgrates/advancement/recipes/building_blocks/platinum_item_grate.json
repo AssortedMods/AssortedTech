@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedgrates:platinum_item_grate"
+        "recipes": "assortedgrates:platinum_item_grate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

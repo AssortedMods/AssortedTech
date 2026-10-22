@@ -1,6 +1,5 @@
 package com.grim3212.assorted.redstone.common.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -10,7 +9,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.BaseTorchBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -26,19 +24,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class GlowstoneWallTorchBlock extends GlowstoneTorchBlock {
 
-    public static final MapCodec<GlowstoneWallTorchBlock> CODEC = simpleCodec(GlowstoneWallTorchBlock::new);
-
     // DirectionProperty was folded back into a plain EnumProperty<Direction> in 26.x.
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     public GlowstoneWallTorchBlock(Properties props) {
         super(props);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(LIT, false));
-    }
-
-    @Override
-    protected MapCodec<? extends BaseTorchBlock> codec() {
-        return CODEC;
     }
 
     @Override

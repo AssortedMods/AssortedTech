@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedextruder:steel_extruder"
+        "recipes": "assortedextruder:steel_extruder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedextruder:amethyst_extruder"
+        "recipes": "assortedextruder:amethyst_extruder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

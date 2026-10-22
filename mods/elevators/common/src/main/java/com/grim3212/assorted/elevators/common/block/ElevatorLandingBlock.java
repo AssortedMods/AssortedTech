@@ -1,6 +1,5 @@
 package com.grim3212.assorted.elevators.common.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -20,17 +19,11 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ElevatorLandingBlock extends Block {
 
-    public static final MapCodec<ElevatorLandingBlock> CODEC = simpleCodec(ElevatorLandingBlock::new);
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public ElevatorLandingBlock(Properties props) {
         super(props);
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
-    }
-
-    @Override
-    protected MapCodec<? extends ElevatorLandingBlock> codec() {
-        return CODEC;
     }
 
     @Override

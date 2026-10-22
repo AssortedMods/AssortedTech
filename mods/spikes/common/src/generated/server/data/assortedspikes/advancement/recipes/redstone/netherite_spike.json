@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedspikes:netherite_spike"
+        "recipes": "assortedspikes:netherite_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -29,6 +29,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InterpolationHandler;
+import net.minecraft.world.entity.LinearInterpolationHandler;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Inventory;
@@ -78,11 +79,6 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
     private static final EntityDataAccessor<Integer> DATA_TYPE = SynchedEntityData.defineId(ExtruderEntity.class, EntityDataSerializers.INT);
 
     private final SimpleContainer container = new SimpleContainer(SLOTS);
-    /**
-     * Without one, the client puts it wherever each position update says the moment it arrives,
-     * out of step with its own ticks, so a moving extruder stutters. Boats and minecarts do the same.
-     */
-    private final InterpolationHandler interpolation = new InterpolationHandler(this);
     /** How far ahead of its centre it looks for the block to mine. */
     private static final double FRONT_REACH = 0.51D;
 
@@ -103,6 +99,7 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
                 case 0 -> ExtruderEntity.this.getFuel();
                 case 1 -> ExtruderEntity.this.isRunning() ? 1 : 0;
                 case 2 -> ExtruderEntity.this.getFacing().get3DDataValue();
+                case 3 -> ExtruderEntity.this.level() instanceof ServerLevel level ? fuelValue(level, ExtruderEntity.this.container.getItem(FUEL_SLOT)) : 0;
                 default -> 0;
             };
         }
@@ -197,15 +194,18 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
             this.setDamage(this.getDamage() - 1.0F);
         }
 
-        this.interpolation.interpolate();
         if (this.level() instanceof ServerLevel level && this.isRunning()) {
             this.run(level);
         }
     }
 
+    /**
+     * Without one, the client puts it wherever each position update says the moment it arrives,
+     * out of step with its own ticks, so a moving extruder stutters. Boats and minecarts do the same.
+     */
     @Override
-    public InterpolationHandler getInterpolation() {
-        return this.interpolation;
+    protected InterpolationHandler createInterpolationHandler() {
+        return LinearInterpolationHandler.create(this);
     }
 
     private void run(ServerLevel level) {
@@ -338,8 +338,8 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
     }
 
     /** Anything a furnace burns, for as long as a furnace would. */
-    public static int fuelValue(Level level, ItemStack stack) {
-        return level.fuelValues().burnDuration(stack);
+    public static int fuelValue(ServerLevel level, ItemStack stack) {
+        return Services.PLATFORM.getFuelTime(stack, level);
     }
 
     /**

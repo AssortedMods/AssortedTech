@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedextruder:platinum_extruder"
+        "recipes": "assortedextruder:platinum_extruder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

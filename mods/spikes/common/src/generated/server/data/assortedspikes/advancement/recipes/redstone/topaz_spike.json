@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedspikes:topaz_spike"
+        "recipes": "assortedspikes:topaz_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

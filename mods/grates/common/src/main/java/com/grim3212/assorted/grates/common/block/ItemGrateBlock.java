@@ -1,6 +1,5 @@
 package com.grim3212.assorted.grates.common.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.BlockGetter;
@@ -14,15 +13,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 /** A grate you can walk on that items drop straight through. */
 public class ItemGrateBlock extends Block {
 
-    public static final MapCodec<ItemGrateBlock> CODEC = simpleCodec(ItemGrateBlock::new);
-
     public ItemGrateBlock(Properties props) {
         super(props);
-    }
-
-    @Override
-    protected MapCodec<? extends ItemGrateBlock> codec() {
-        return CODEC;
     }
 
     @Override

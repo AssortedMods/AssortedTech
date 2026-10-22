@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedbridges:bridge_control_death"
+        "recipes": "assortedbridges:bridge_control_death"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

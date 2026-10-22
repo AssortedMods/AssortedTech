@@ -1,11 +1,8 @@
 package com.grim3212.assorted.grates.common.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.ChangeOverTimeBlock;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -17,20 +14,11 @@ import java.util.Optional;
  */
 public class WeatheringItemGrateBlock extends ItemGrateBlock implements WeatheringCopper {
 
-    public static final MapCodec<WeatheringItemGrateBlock> CODEC = RecordCodecBuilder.mapCodec(
-            i -> i.group(WeatheringCopper.WeatherState.CODEC.fieldOf("weathering_state").forGetter(ChangeOverTimeBlock::getAge), propertiesCodec())
-                    .apply(i, WeatheringItemGrateBlock::new));
-
     private final WeatherState age;
 
     public WeatheringItemGrateBlock(WeatherState age, Properties props) {
         super(props);
         this.age = age;
-    }
-
-    @Override
-    protected MapCodec<WeatheringItemGrateBlock> codec() {
-        return CODEC;
     }
 
     @Override

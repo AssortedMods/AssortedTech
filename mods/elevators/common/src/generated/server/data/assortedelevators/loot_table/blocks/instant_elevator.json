@@ -2,27 +2,23 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "block": "assortedelevators:instant_elevator",
-              "function": "minecraft:copy_state",
-              "properties": [
-                "color"
-              ]
-            }
-          ],
+          "modifier": {
+            "type": "minecraft:copy_state",
+            "block": "assortedelevators:instant_elevator",
+            "properties": [
+              "color"
+            ]
+          },
           "name": "assortedelevators:instant_elevator"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ],
   "random_sequence": "assortedelevators:blocks/instant_elevator"

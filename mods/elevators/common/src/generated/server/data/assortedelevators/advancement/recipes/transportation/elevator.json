@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedelevators:elevator"
+        "recipes": "assortedelevators:elevator"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "assortedextruder:stone_extruder_alt"
+        "recipes": "assortedextruder:stone_extruder_alt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
