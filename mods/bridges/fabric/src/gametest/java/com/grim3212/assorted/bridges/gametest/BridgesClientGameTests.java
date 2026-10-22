@@ -1,5 +1,7 @@
 package com.grim3212.assorted.bridges.gametest;
 
+import com.grim3212.assorted.bridges.Constants;
+import com.grim3212.assorted.lib.test.ClientChecks;
 import com.grim3212.assorted.lib.util.NBTHelper;
 import com.grim3212.assorted.bridges.common.block.BridgesBlocks;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -28,6 +30,7 @@ public class BridgesClientGameTests implements FabricClientGameTest {
         // Inside a world: an ItemStack cannot be made on the title screen, because an item's default
         // components are only bound once a world's registries have loaded.
         try (TestSingleplayerContext world = context.worldBuilder().create()) {
+            ClientChecks.assertDrawsRight(context, Constants.MOD_ID);
             context.runOnClient(client -> {
                 // A bridge item holding gold is drawn from the gold block, so that is also what its
                 // particles are made of. The particle comes off the same model data the quads do.

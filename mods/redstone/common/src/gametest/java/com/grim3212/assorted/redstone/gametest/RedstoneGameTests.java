@@ -1,5 +1,7 @@
 package com.grim3212.assorted.redstone.gametest;
 
+import com.grim3212.assorted.redstone.Constants;
+import com.grim3212.assorted.lib.test.CommonTests;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 import java.util.function.BiConsumer;
@@ -21,5 +23,6 @@ public final class RedstoneGameTests {
         CrossLoaderDataTests.register(out);
         TorchTests.register(out);
         FamilyTests.register(out);
+        CommonTests.register(out, Constants.MOD_ID);
     }
 }

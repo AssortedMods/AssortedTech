@@ -1,5 +1,7 @@
 package com.grim3212.assorted.grates.gametest;
 
+import com.grim3212.assorted.grates.Constants;
+import com.grim3212.assorted.lib.test.CommonTests;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 import java.util.function.BiConsumer;
@@ -22,5 +24,6 @@ public final class GratesGameTests {
         ItemGrateTests.register(out);
         CopperItemGrateTests.register(out);
         FamilyTests.register(out);
+        CommonTests.register(out, Constants.MOD_ID);
     }
 }

@@ -1,5 +1,7 @@
 package com.grim3212.assorted.spikes.gametest;
 
+import com.grim3212.assorted.spikes.Constants;
+import com.grim3212.assorted.lib.test.ClientChecks;
 import com.grim3212.assorted.spikes.common.block.SpikesBlocks;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -22,6 +24,7 @@ public class SpikesClientGameTests implements FabricClientGameTest {
         // Inside a world: an ItemStack cannot be made on the title screen, because an item's default
         // components are only bound once a world's registries have loaded.
         try (TestSingleplayerContext world = context.worldBuilder().create()) {
+            ClientChecks.assertDrawsRight(context, Constants.MOD_ID);
             context.runOnClient(client -> {
                 // Fabric only adds component tooltip lines on the client.
                 ItemStack spike = new ItemStack(SpikesBlocks.SPIKES.get(0).get());

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedgrates:every_item_is_in_a_creative_tab",
+  "structure": "assortedgrates:test_box",
+  "max_ticks": 1,
+  "setup_ticks": 0,
+  "required": true
+}

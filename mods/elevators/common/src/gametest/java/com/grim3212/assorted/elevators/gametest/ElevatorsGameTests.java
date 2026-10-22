@@ -1,5 +1,7 @@
 package com.grim3212.assorted.elevators.gametest;
 
+import com.grim3212.assorted.elevators.Constants;
+import com.grim3212.assorted.lib.test.CommonTests;
 import net.minecraft.gametest.framework.GameTestHelper;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -22,5 +24,6 @@ public final class ElevatorsGameTests {
         AliasTests.register(out);
         CrossLoaderDataTests.register(out);
         FamilyTests.register(out);
+        CommonTests.register(out, Constants.MOD_ID);
     }
 }

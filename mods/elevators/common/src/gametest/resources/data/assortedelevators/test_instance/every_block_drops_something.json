@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedelevators:every_block_drops_something",
+  "structure": "assortedelevators:test_box",
+  "max_ticks": 1,
+  "setup_ticks": 0,
+  "required": true
+}

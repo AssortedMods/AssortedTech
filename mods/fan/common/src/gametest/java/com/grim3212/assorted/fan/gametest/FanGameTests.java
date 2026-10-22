@@ -1,5 +1,7 @@
 package com.grim3212.assorted.fan.gametest;
 
+import com.grim3212.assorted.fan.Constants;
+import com.grim3212.assorted.lib.test.CommonTests;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 import java.util.function.BiConsumer;
@@ -21,5 +23,7 @@ public final class FanGameTests {
         CrossLoaderDataTests.register(out);
         FanTests.register(out);
         FamilyTests.register(out);
+        PowerTests.register(out);
+        CommonTests.register(out, Constants.MOD_ID);
     }
 }

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedalarm:alarm_sounds_while_its_wall_is_powered",
+  "structure": "assortedalarm:test_box",
+  "max_ticks": 60,
+  "setup_ticks": 0,
+  "required": true
+}

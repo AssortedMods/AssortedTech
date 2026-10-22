@@ -1,5 +1,7 @@
 package com.grim3212.assorted.spikes.gametest;
 
+import com.grim3212.assorted.spikes.Constants;
+import com.grim3212.assorted.lib.test.CommonTests;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 import java.util.function.BiConsumer;
@@ -22,5 +24,7 @@ public final class SpikesGameTests {
         SpikeTests.register(out);
         TooltipTests.register(out);
         FamilyTests.register(out);
+        PowerTests.register(out);
+        CommonTests.register(out, Constants.MOD_ID);
     }
 }

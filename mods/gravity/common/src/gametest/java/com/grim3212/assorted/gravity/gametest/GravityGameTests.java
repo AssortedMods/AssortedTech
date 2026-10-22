@@ -1,5 +1,7 @@
 package com.grim3212.assorted.gravity.gametest;
 
+import com.grim3212.assorted.gravity.Constants;
+import com.grim3212.assorted.lib.test.CommonTests;
 import net.minecraft.gametest.framework.GameTestHelper;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -20,5 +22,6 @@ public final class GravityGameTests {
         AliasTests.register(out);
         CrossLoaderDataTests.register(out);
         FamilyTests.register(out);
+        CommonTests.register(out, Constants.MOD_ID);
     }
 }

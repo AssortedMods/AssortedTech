@@ -1,6 +1,10 @@
 package com.grim3212.assorted.bridges.gametest;
 
+import com.grim3212.assorted.bridges.Constants;
+import com.grim3212.assorted.lib.test.CommonTests;
 import net.minecraft.gametest.framework.GameTestHelper;
+
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -20,5 +24,6 @@ public final class BridgesGameTests {
         CrossLoaderDataTests.register(out);
         BridgeTests.register(out);
         FamilyTests.register(out);
+        CommonTests.register(out, Constants.MOD_ID, Set.of("bridge"));
     }
 }
