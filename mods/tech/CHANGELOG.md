@@ -1,5 +1,11 @@
 # Changelog
 
+## 11.0.0
+
+Updated to Minecraft 26.3, for NeoForge and Fabric.
+
+- Requires Assorted Lib 5.0.0
+
 ## 10.0.0
 
 - Split into ten mods that can also be installed on their own. Assorted Elevators, Assorted Bridges, Assorted Gravity, Assorted Grates, Assorted Extruder, Assorted Sensors, Assorted Redstone, Assorted Alarm, Assorted Fan and Assorted Spikes
