@@ -11,6 +11,6 @@ import net.neoforged.fml.common.Mod;
 public class AssortedSensorsNeoForgeClient {
 
     public AssortedSensorsNeoForgeClient(IEventBus modBus, ModContainer modContainer) {
-        SensorsClient.init();
+        SensorsClient.init(NeoForgeSensorRenderers.Sensor::new, NeoForgeSensorRenderers.GpsSensor::new);
     }
 }

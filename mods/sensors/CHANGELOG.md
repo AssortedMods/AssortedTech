@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1
+
+- A sensor's range box and a GPS sensor's target outline stay drawn while the sensor block itself is off screen
+
 ## 2.0.0
 
 Updated to Minecraft 26.3, for NeoForge and Fabric.

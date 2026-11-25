@@ -1,5 +1,10 @@
 # Changelog
 
+## 11.0.1
+
+- Includes Assorted Fan 2.0.1, so a fan placed next to a redstone signal that is already on stays off until the signal goes
+- Includes Assorted Sensors 2.0.1, so range boxes and GPS target outlines stay drawn while the sensor is off screen
+
 ## 11.0.0
 
 Updated to Minecraft 26.3, for NeoForge and Fabric.

@@ -6,6 +6,8 @@ import com.grim3212.assorted.fan.common.block.blockentity.FanBlockEntity;
 import com.grim3212.assorted.fan.common.network.FanOpenPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -73,8 +75,29 @@ public class FanBlock extends Block implements EntityBlock {
         return InteractionResult.SUCCESS;
     }
 
+    /**
+     * A fan placed already powered gets no neighbour update, so it checks its power once its block
+     * entity exists, which is after this call.
+     */
+    @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
+        if (!oldState.is(state.getBlock())) {
+            level.scheduleTick(pos, this, 1);
+        }
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        this.updatePower(state, level, pos);
+    }
+
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean movedByPiston) {
+        this.updatePower(state, level, pos);
+    }
+
+    /** Powered, the fan stops and remembers its mode; unpowered again, it goes back to that mode. */
+    private void updatePower(BlockState state, Level level, BlockPos pos) {
         boolean isPowered = level.hasNeighborSignal(pos);
         BlockEntity ent = level.getBlockEntity(pos);
 

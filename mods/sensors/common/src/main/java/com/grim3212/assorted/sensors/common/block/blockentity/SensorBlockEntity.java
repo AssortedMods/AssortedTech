@@ -83,6 +83,15 @@ public class SensorBlockEntity extends BlockEntity {
         return this.range;
     }
 
+    /**
+     * Everything the range box can cover at this range, the sensor included, in world space. The
+     * client draws the box while any of this is in view.
+     */
+    public AABB rangeBounds() {
+        Vec3i reach = this.getBlockState().getValue(BlockStateProperties.FACING).getUnitVec3i().multiply(this.range + 1);
+        return new AABB(this.getBlockPos()).expandTowards(reach.getX(), reach.getY(), reach.getZ());
+    }
+
     public int cycleRange() {
         int newRange = this.range + 1;
         if (newRange > MAX_RANGE)

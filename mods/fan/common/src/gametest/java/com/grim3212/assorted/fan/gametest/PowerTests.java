@@ -21,6 +21,7 @@ final class PowerTests {
 
     static void register(BiConsumer<String, Consumer<GameTestHelper>> out) {
         out.accept("powered_fan_stops_and_resumes_its_mode", PowerTests::poweredFanStopsAndResumesItsMode);
+        out.accept("fan_placed_on_power_starts_off", PowerTests::fanPlacedOnPowerStartsOff);
     }
 
     private static void poweredFanStopsAndResumesItsMode(GameTestHelper helper) {
@@ -32,5 +33,20 @@ final class PowerTests {
         helper.setBlock(FAN.east(), Blocks.AIR);
         helper.assertBlockProperty(FAN, FanBlock.MODE, FanMode.SUCK);
         helper.succeed();
+    }
+
+    /**
+     * A fan set down next to power already on gets no neighbour update, yet stops all the same, and
+     * blows once the power goes.
+     */
+    private static void fanPlacedOnPowerStartsOff(GameTestHelper helper) {
+        helper.setBlock(FAN.east(), Blocks.REDSTONE_BLOCK);
+        helper.setBlock(FAN, FanBlocks.FAN.get());
+
+        helper.startSequence()
+                .thenWaitUntil(() -> helper.assertBlockProperty(FAN, FanBlock.MODE, FanMode.OFF))
+                .thenExecute(() -> helper.setBlock(FAN.east(), Blocks.AIR))
+                .thenWaitUntil(() -> helper.assertBlockProperty(FAN, FanBlock.MODE, FanMode.BLOW))
+                .thenSucceed();
     }
 }

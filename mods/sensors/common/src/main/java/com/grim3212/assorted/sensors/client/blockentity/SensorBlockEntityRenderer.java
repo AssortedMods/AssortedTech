@@ -77,4 +77,14 @@ public class SensorBlockEntityRenderer implements BlockEntityRenderer<SensorBloc
         submitNodeCollector.submitShapeOutline(poseStack, state.shape, RenderTypes.lines(), state.color(), LINE_WIDTH, false);
     }
 
+    /**
+     * The box reaches up to fifteen blocks out, so it is drawn while its far end is in view. The
+     * client sorts a block entity into the off screen set once, when it is added, so this cannot
+     * follow the range toggle; a sensor not showing its range submits nothing.
+     */
+    @Override
+    public boolean shouldRenderOffScreen() {
+        return true;
+    }
+
 }
