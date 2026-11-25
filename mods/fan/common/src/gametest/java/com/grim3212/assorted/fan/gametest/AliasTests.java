@@ -8,7 +8,7 @@ import com.grim3212.assorted.lib.registry.IRegistryObject;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -35,16 +35,16 @@ final class AliasTests {
         }
 
         for (IRegistryObject<Block> block : FanBlocks.BLOCKS.getEntries()) {
-            helper.assertValueEqual(BuiltInRegistries.BLOCK.getValue(old(block.getId())), block.get(), "the block saved as " + old(block.getId()));
+            helper.assertValueEqual(BuiltInRegistries.BLOCK.get(old(block.getId())), block.get(), "the block saved as " + old(block.getId()));
         }
 
         for (IRegistryObject<BlockEntityType<?>> type : FanBlockEntityTypes.BLOCK_ENTITIES.getEntries()) {
-            helper.assertValueEqual(BuiltInRegistries.BLOCK_ENTITY_TYPE.getValue(old(type.getId())), type.get(), "the block entity saved as " + old(type.getId()));
+            helper.assertValueEqual(BuiltInRegistries.BLOCK_ENTITY_TYPE.get(old(type.getId())), type.get(), "the block entity saved as " + old(type.getId()));
         }
         helper.succeed();
     }
 
-    private static Identifier old(Identifier id) {
-        return Identifier.fromNamespaceAndPath(Constants.FAMILY_ID, id.getPath());
+    private static ResourceLocation old(ResourceLocation id) {
+        return ResourceLocation.fromNamespaceAndPath(Constants.FAMILY_ID, id.getPath());
     }
 }

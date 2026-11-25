@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static com.grim3212.assorted.lib.test.TestSupport.whenTestEnds;
 import static com.grim3212.assorted.redstone.gametest.RedstoneTestSupport.*;
 
 /**
@@ -68,7 +69,7 @@ final class TorchTests {
         BlockPos wallSupport = new BlockPos(6, 3, 4);
         BlockPos wall = new BlockPos(5, 3, 4);
 
-        helper.runBeforeTestEnd(() -> extinguish(helper, stand, wall, standSupport, wallSupport));
+        whenTestEnds(helper, () -> extinguish(helper, stand, wall, standSupport, wallSupport));
 
         helper.startSequence()
                 .thenExecute(() -> {
@@ -113,7 +114,7 @@ final class TorchTests {
         BlockPos support = new BlockPos(3, 3, 4);
         BlockPos torch = new BlockPos(4, 3, 4);
 
-        helper.runBeforeTestEnd(() -> extinguish(helper, torch, support));
+        whenTestEnds(helper, () -> extinguish(helper, torch, support));
 
         helper.startSequence()
                 .thenExecute(() -> {

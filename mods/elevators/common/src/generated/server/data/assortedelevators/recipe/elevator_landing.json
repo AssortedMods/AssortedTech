@@ -6,6 +6,7 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "fabric:load_conditions": [
     {
       "condition": "assortedlib:part_enabled",
@@ -13,8 +14,12 @@
     }
   ],
   "key": {
-    "C": "#c:ingots/copper",
-    "R": "#c:dusts/redstone"
+    "C": {
+      "tag": "c:ingots/copper"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
   },
   "pattern": [
     "C",
@@ -22,6 +27,7 @@
     "C"
   ],
   "result": {
+    "count": 1,
     "id": "assortedelevators:elevator_landing"
   }
 }

@@ -14,10 +14,18 @@
     }
   ],
   "key": {
-    "C": "minecraft:compass",
-    "E": "#c:ender_pearls",
-    "I": "#c:ingots/iron",
-    "R": "#c:dusts/redstone"
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "E": {
+      "tag": "c:ender_pearls"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
   },
   "pattern": [
     "RIR",
@@ -25,6 +33,7 @@
     " E "
   ],
   "result": {
+    "count": 1,
     "id": "assortedgravity:repulsor_directional"
   }
 }

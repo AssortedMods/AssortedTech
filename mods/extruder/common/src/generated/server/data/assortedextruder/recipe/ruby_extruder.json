@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/ruby",
-    "M": "#assortedextruder:extruders/level_1",
-    "P": "#c:pickaxes/ruby",
-    "S": "#c:shovels/ruby"
+    "A": {
+      "tag": "c:axes/ruby"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_1"
+    },
+    "P": {
+      "tag": "c:pickaxes/ruby"
+    },
+    "S": {
+      "tag": "c:shovels/ruby"
+    }
   },
   "pattern": [
     " P ",
     "AMS"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:ruby_extruder"
   }
 }

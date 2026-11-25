@@ -1,18 +1,13 @@
 package com.grim3212.assorted.bridges.client;
 
 import com.google.common.collect.ImmutableList;
-import com.grim3212.assorted.lib.platform.ClientServices;
-import com.grim3212.assorted.bridges.client.color.BridgeItemTintSource;
-import com.grim3212.assorted.bridges.client.model.BridgeItemModel;
+import com.grim3212.assorted.bridges.client.color.BridgeItemColor;
 import com.grim3212.assorted.bridges.client.model.BridgeUnbakedModel;
 import com.grim3212.assorted.bridges.common.block.BridgeBlock;
 import com.grim3212.assorted.bridges.common.block.BridgesBlocks;
 import com.grim3212.assorted.bridges.common.block.blockentity.BridgeBlockEntity;
-import net.minecraft.client.color.block.BlockTintSource;
-import net.minecraft.client.renderer.block.BlockAndTintGetter;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.ARGB;
-import net.minecraft.world.level.block.Blocks;
+import com.grim3212.assorted.lib.platform.ClientServices;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -21,39 +16,26 @@ public class BridgesClient {
     public static void init() {
         ClientServices.CLIENT.registerModelLoader(BridgeUnbakedModel.LOADER_NAME, BridgeUnbakedModel.Loader.INSTANCE);
 
-        // BlockColor became BlockTintSource: color(state) answers the in-hand colour and
-        // colorInWorld(state, level, pos) the placed one, so the nullable BlockPos the old lambda
-        // branched on is gone - the two cases are separate methods. The tint layer is the source's
-        // position in the block's list rather than an argument, and colours are ARGB, so an opaque
-        // white is -1 rather than 0xFFFFFF.
-        ClientServices.CLIENT.registerBlockColor(new BlockTintSource() {
-            @Override
-            public int color(BlockState state) {
-                return -1;
-            }
-
-            @Override
-            public int colorInWorld(BlockState state, BlockAndTintGetter worldIn, BlockPos pos) {
+        // A placed bridge is tinted as its stored block would be at the same position, and an empty
+        // one in its type's colour. Colours are ARGB, so an opaque white is -1 rather than 0xFFFFFF.
+        ClientServices.CLIENT.registerBlockColor((state, worldIn, pos, tintIndex) -> {
+            if (worldIn != null && pos != null) {
                 BlockEntity te = worldIn.getBlockEntity(pos);
                 if (te instanceof BridgeBlockEntity bridge) {
                     BlockState stored = bridge.getStoredBlockState();
-                    if (stored != Blocks.AIR.defaultBlockState()) {
-                        BlockTintSource source = ClientServices.CLIENT.getBlockColors().getTintSource(stored, 0);
-                        return source != null ? source.colorInWorld(stored, worldIn, pos) : -1;
+                    if (!stored.isAir()) {
+                        return ClientServices.CLIENT.getBlockColors().getColor(stored, worldIn, pos, tintIndex);
                     }
 
-                    return ARGB.opaque(state.getValue(BridgeBlock.TYPE).getRenderColor());
+                    return FastColor.ARGB32.opaque(state.getValue(BridgeBlock.TYPE).getRenderColor());
                 }
-                return -1;
             }
+            return -1;
         }, () -> ImmutableList.of(BridgesBlocks.BRIDGE.get()));
 
-        // Registering the codec is only half of it: the bridge's item model json lists
-        // {"type": "assortedbridges:bridge"} in its "tints" array, which is what actually consults this.
-        ClientServices.CLIENT.registerItemTintSource(BridgeItemTintSource.ID, BridgeItemTintSource.MAP_CODEC);
-
-        // The item model type items/bridge.json names, so a bridge item draws the block it holds.
-        ClientServices.CLIENT.registerItemModelType(BridgeItemModel.ID, BridgeItemModel.Unbaked.MAP_CODEC);
+        // The item form is drawn by the block model itself, resolved per stack through its item
+        // overrides; only the tint of a stored grass or leaf block is left to an item colour.
+        ClientServices.CLIENT.registerItemColor(new BridgeItemColor(), () -> ImmutableList.of(BridgesBlocks.BRIDGE.get()));
     }
 
 }

@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#c:ingots/bronze"
+    "X": {
+      "tag": "c:ingots/bronze"
+    }
   },
   "pattern": [
     "X X",

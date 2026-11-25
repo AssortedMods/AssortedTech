@@ -14,9 +14,15 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/iron",
-    "R": "#c:dusts/redstone",
-    "X": "minecraft:lever"
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "X": {
+      "item": "minecraft:lever"
+    }
   },
   "pattern": [
     "III",
@@ -24,6 +30,7 @@
     "IXI"
   ],
   "result": {
+    "count": 1,
     "id": "assortedalarm:alarm"
   }
 }

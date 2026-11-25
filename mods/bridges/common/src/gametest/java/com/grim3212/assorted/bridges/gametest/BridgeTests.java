@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.core.component.DataComponents;
 import com.grim3212.assorted.lib.platform.Services;
+import com.grim3212.assorted.lib.test.TestSupport;
 import com.grim3212.assorted.lib.util.NBTHelper;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,8 +24,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.animal.pig.Pig;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -70,12 +71,12 @@ final class BridgeTests {
         BlockPos referencePos = helper.absolutePos(referenceRel);
 
         helper.setBlock(bridgeRel, BridgesBlocks.BRIDGE.get());
-        helper.runBeforeTestEnd(() -> {
+        TestSupport.whenTestEnds(helper, () -> {
             helper.setBlock(bridgeRel, Blocks.AIR);
             helper.setBlock(referenceRel, Blocks.AIR);
         });
-        BridgeBlockEntity bridge = helper.getBlockEntity(bridgeRel, BridgeBlockEntity.class);
-        helper.assertValueEqual(level.getBlockState(bridgePos).getLightDampening(), BridgeBlock.EMPTY_DAMPENING, "an empty bridge's light dampening");
+        BridgeBlockEntity bridge = helper.<BridgeBlockEntity>getBlockEntity(bridgeRel);
+        helper.assertValueEqual(level.getBlockState(bridgePos).getLightBlock(level, bridgePos), BridgeBlock.EMPTY_DAMPENING, "an empty bridge's light dampening");
 
         for (Block block : List.of(Blocks.STONE, Blocks.GLASS, Blocks.GLOWSTONE)) {
             String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
@@ -84,7 +85,7 @@ final class BridgeTests {
             BlockState filled = level.getBlockState(bridgePos);
             BlockState real = level.getBlockState(referencePos);
 
-            helper.assertValueEqual(filled.getLightDampening(), real.getLightDampening(), "a " + name + " bridge's light dampening, against the real block's");
+            helper.assertValueEqual(filled.getLightBlock(level, bridgePos), real.getLightBlock(level, referencePos), "a " + name + " bridge's light dampening, against the real block's");
             helper.assertValueEqual(Services.LEVEL_PROPERTIES.propagatesSkylightDown(level, bridgePos), Services.LEVEL_PROPERTIES.propagatesSkylightDown(level, referencePos),
                     "whether skylight passes a " + name + " bridge, against the real block");
             helper.assertValueEqual(lowestSkySource(level, bridgePos), lowestSkySource(level, referencePos),
@@ -155,7 +156,7 @@ final class BridgeTests {
         // solid floor and does nothing rather than dropping a stray block in the test volume.
         BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(absolute), Direction.DOWN, absolute, false);
 
-        BridgeControlBlockEntity blockEntity = helper.getBlockEntity(control, BridgeControlBlockEntity.class);
+        BridgeControlBlockEntity blockEntity = helper.<BridgeControlBlockEntity>getBlockEntity(control);
 
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Blocks.STONE_SLAB));
         helper.useBlock(control, player, hit);
@@ -246,7 +247,7 @@ final class BridgeTests {
 
         helper.startSequence()
                 .thenExecute(() -> {
-                    helper.assertTrue(helper.getBlockEntity(control, BridgeControlBlockEntity.class)
+                    helper.assertTrue(helper.<BridgeControlBlockEntity>getBlockEntity(control)
                                     .getStoredBlockState().is(Blocks.GOLD_BLOCK),
                             "the bridge control did not take the block it was clicked with");
                     helper.setBlock(lever, Blocks.REDSTONE_BLOCK);
@@ -256,7 +257,7 @@ final class BridgeTests {
                     for (int x = 2; x <= 4; x++) {
                         BlockPos segment = new BlockPos(x, 1, 4);
                         helper.assertBlockPresent(BridgesBlocks.BRIDGE.get(), segment);
-                        BridgeBlockEntity bridge = helper.getBlockEntity(segment, BridgeBlockEntity.class);
+                        BridgeBlockEntity bridge = helper.<BridgeBlockEntity>getBlockEntity(segment);
                         helper.assertTrue(bridge.getStoredBlockState().is(Blocks.GOLD_BLOCK),
                                 "bridge segment " + x + " did not take the control's stored block state");
                         helper.assertValueEqual(bridge.getFacing(), Direction.EAST, "bridge segment " + x + " facing");
@@ -278,13 +279,13 @@ final class BridgeTests {
         helper.setBlock(accel, BridgesBlocks.BRIDGE.get().defaultBlockState().setValue(BridgeBlock.TYPE, BridgeType.ACCEL));
         helper.setBlock(death, BridgesBlocks.BRIDGE.get().defaultBlockState().setValue(BridgeBlock.TYPE, BridgeType.DEATH));
         helper.setBlock(gravity, BridgesBlocks.BRIDGE.get().defaultBlockState().setValue(BridgeBlock.TYPE, BridgeType.GRAVITY));
-        helper.getBlockEntity(gravity, BridgeBlockEntity.class).setFacing(Direction.UP);
+        helper.<BridgeBlockEntity>getBlockEntity(gravity).setFacing(Direction.UP);
 
         // Accel is the only one of the three that is solid, so its subject stands on top of it while
         // the other two stand inside a segment that has no collision at all.
-        Pig runner = helper.spawnWithNoFreeWill(EntityTypes.PIG, accel.above());
-        Pig victim = helper.spawnWithNoFreeWill(EntityTypes.PIG, death);
-        Pig flier = helper.spawnWithNoFreeWill(EntityTypes.PIG, gravity);
+        Pig runner = helper.spawnWithNoFreeWill(EntityType.PIG, accel.above());
+        Pig victim = helper.spawnWithNoFreeWill(EntityType.PIG, death);
+        Pig flier = helper.spawnWithNoFreeWill(EntityType.PIG, gravity);
 
         float victimStart = victim.getHealth();
         double flierStart = flier.getY();
@@ -293,7 +294,7 @@ final class BridgeTests {
         helper.startSequence()
                 .thenIdle(5)
                 .thenExecute(() -> {
-                    helper.assertLivingEntityHasMobEffect(runner, MobEffects.SPEED, 2);
+                    helper.assertLivingEntityHasMobEffect(runner, MobEffects.MOVEMENT_SPEED, 2);
                     helper.assertTrue(victim.getHealth() < victimStart,
                             "a death bridge did not hurt the entity standing in it");
                 })
@@ -322,7 +323,7 @@ final class BridgeTests {
         InteractionResult result = player.gameMode.useItemOn(player, helper.getLevel(), stack, InteractionHand.MAIN_HAND, top);
         helper.assertTrue(result.consumesAction(), "placing a bridge from an item came back as " + result);
 
-        BridgeBlockEntity bridge = helper.getBlockEntity(floor.above(), BridgeBlockEntity.class);
+        BridgeBlockEntity bridge = helper.<BridgeBlockEntity>getBlockEntity(floor.above());
         helper.assertTrue(bridge.getStoredBlockState().is(Blocks.GOLD_BLOCK), "a bridge placed from an item holding gold stores " + bridge.getStoredBlockState());
         helper.assertTrue(bridge.components().get(DataComponents.CUSTOM_DATA) == null, "the stored block was also kept on the bridge as custom data");
         helper.succeed();
@@ -330,12 +331,12 @@ final class BridgeTests {
 
     /**
      * A bridge's facing and stored state survive the {@code saveWithFullMetadata} / {@code loadStatic}
-     * round trip a chunk uses. A mismatched {@code ValueOutput} / {@code ValueInput} key or a wrong default is silent.
+     * round trip a chunk uses. A mismatched save and load key or a wrong default is silent.
      */
     private static void blockEntityDataSurvivesReload(GameTestHelper helper) {
         BlockPos bridge = new BlockPos(1, 1, 4);
         helper.setBlock(bridge, BridgesBlocks.BRIDGE.get().defaultBlockState().setValue(BridgeBlock.TYPE, BridgeType.ACCEL));
-        BridgeBlockEntity bridgeEntity = helper.getBlockEntity(bridge, BridgeBlockEntity.class);
+        BridgeBlockEntity bridgeEntity = helper.<BridgeBlockEntity>getBlockEntity(bridge);
         bridgeEntity.setFacing(Direction.WEST);
         bridgeEntity.setStoredBlockState(Blocks.GOLD_BLOCK.defaultBlockState());
 

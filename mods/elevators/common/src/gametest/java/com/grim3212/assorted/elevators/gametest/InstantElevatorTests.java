@@ -6,8 +6,8 @@ import com.grim3212.assorted.elevators.common.handlers.ElevatorInputHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -31,8 +31,6 @@ final class InstantElevatorTests {
     private static final BlockPos LOW = new BlockPos(4, 1, 4);
     private static final BlockPos MIDDLE = new BlockPos(4, 4, 4);
     private static final BlockPos HIGH = new BlockPos(4, 7, 4);
-
-    private static final Input SNEAK = new Input(false, false, false, false, false, true, false);
 
     static void register(BiConsumer<String, Consumer<GameTestHelper>> out) {
         out.accept("instant_elevator_finds_the_next_one", InstantElevatorTests::instantElevatorFindsTheNextOne);
@@ -59,9 +57,9 @@ final class InstantElevatorTests {
 
     /** Sneaks on a fresh tick after a tick with nothing held. */
     private static void sneak(ServerPlayer player) {
-        player.setLastClientInput(Input.EMPTY);
+        player.setShiftKeyDown(false);
         ElevatorInputHandler.tick(player);
-        player.setLastClientInput(SNEAK);
+        player.setShiftKeyDown(true);
         ElevatorInputHandler.tick(player);
     }
 
@@ -133,10 +131,10 @@ final class InstantElevatorTests {
 
     private static void instantElevatorTakesADye(GameTestHelper helper) {
         helper.setBlock(LOW, ElevatorsBlocks.INSTANT_ELEVATOR.get());
-        ServerPlayer player = survivalPlayer(helper, new ItemStack(Items.DYE.pick(DyeColor.LIME), 2));
+        ServerPlayer player = survivalPlayer(helper, new ItemStack(DyeItem.byColor(DyeColor.LIME), 2));
         rightClick(player, helper.getLevel(), player.getMainHandItem(), helper.absolutePos(LOW));
         helper.assertBlockProperty(LOW, InstantElevatorBlock.COLOR, DyeColor.LIME);
-        helper.assertValueEqual(countInInventory(player, Items.DYE.pick(DyeColor.LIME)), 1, "lime dye left");
+        helper.assertValueEqual(countInInventory(player, DyeItem.byColor(DyeColor.LIME)), 1, "lime dye left");
         helper.succeed();
     }
 }

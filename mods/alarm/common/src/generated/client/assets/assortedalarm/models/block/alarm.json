@@ -59,6 +59,7 @@
       ]
     }
   ],
+  "render_type": "minecraft:cutout",
   "textures": {
     "particle": "assortedalarm:block/alarm_side",
     "side": "assortedalarm:block/alarm_side",

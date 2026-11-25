@@ -29,7 +29,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedsensors:mossy_cobblestone_sensor"
+        "recipe": "assortedsensors:mossy_cobblestone_sensor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

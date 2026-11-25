@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "assortedfan:fan_placed_on_power_starts_off",
+  "structure": "assortedfan:test_box",
+  "max_ticks": 40,
+  "setup_ticks": 0,
+  "required": true
+}

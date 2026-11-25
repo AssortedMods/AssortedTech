@@ -39,7 +39,7 @@ final class RedstoneTestSupport {
     }
 
     /**
-     * Sets every position back to air. Registered through {@code runBeforeTestEnd} by anything that
+     * Sets every position back to air. Registered through {@code TestSupport.whenTestEnds} by anything that
      * lights a torch, so it also runs on failure: block light crosses test box walls and would skew
      * a neighbouring test.
      */

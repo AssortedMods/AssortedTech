@@ -2,7 +2,7 @@ package com.grim3212.assorted.bridges.data;
 
 import com.grim3212.assorted.bridges.common.block.BridgesBlocks;
 import com.grim3212.assorted.lib.data.LibBlockLootProvider;
-import net.minecraft.data.loot.LootTableSubProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ public class BridgesBlockLoot extends LibBlockLootProvider {
 
     private final List<Block> blocks = new ArrayList<>();
 
-    public BridgesBlockLoot(LootTableSubProvider.Context context) {
-        super(context, () -> BridgesBlocks.BLOCKS.getEntries().stream().map(Supplier::get).collect(Collectors.toList()));
+    public BridgesBlockLoot(HolderLookup.Provider registries) {
+        super(registries, () -> BridgesBlocks.BLOCKS.getEntries().stream().map(Supplier::get).collect(Collectors.toList()));
         this.blocks.add(BridgesBlocks.BRIDGE_CONTROL_ACCEL.get());
         this.blocks.add(BridgesBlocks.BRIDGE_CONTROL_DEATH.get());
         this.blocks.add(BridgesBlocks.BRIDGE_CONTROL_GRAVITY.get());

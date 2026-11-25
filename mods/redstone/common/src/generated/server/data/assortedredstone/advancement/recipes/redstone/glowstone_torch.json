@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedredstone:glowstone_torch"
+        "recipe": "assortedredstone:glowstone_torch"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

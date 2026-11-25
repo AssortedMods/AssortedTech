@@ -1,27 +1,25 @@
 package com.grim3212.assorted.spikes.client.data;
 
 import com.grim3212.assorted.spikes.Constants;
+import com.grim3212.assorted.spikes.common.block.SpikeBlock;
 import com.grim3212.assorted.spikes.common.block.SpikesBlocks;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ItemModelGenerators;
-import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.client.data.models.model.ModelTemplates;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 /**
- * Block states, block models and item models for every spike.
+ * Every spike's block states, block models and item model.
  */
-public class SpikesBlockstateProvider extends ModelProvider {
+public class SpikesBlockstateProvider extends BlockStateProvider {
 
-    public SpikesBlockstateProvider(PackOutput output) {
-        super(output, Constants.MOD_ID);
+    public SpikesBlockstateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
+        super(output, Constants.MOD_ID, exFileHelper);
     }
 
     @Override
@@ -30,36 +28,38 @@ public class SpikesBlockstateProvider extends ModelProvider {
     }
 
     @Override
-    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-        SpikesBlocks.SPIKES.forEach(spike -> spike(blockModels, spike.get()));
+    protected void registerStatesAndModels() {
+        SpikesBlocks.SPIKES.forEach(spike -> spike(spike.get()));
     }
 
-    private void spike(BlockModelGenerators blockModels, Block b) {
+    /**
+     * A cut out cross, retracted or deployed by {@code POWERED} and turned to its {@code FACING} as
+     * a column is. {@code WATERLOGGED} is not dispatched on.
+     */
+    private void spike(Block b) {
         String name = name(b);
-        Material unpowered = texture("block/spikes/" + name);
-        Material powered = texture("block/spikes/" + name + "_powered");
+        ResourceLocation unpowered = texture("block/spikes/" + name);
+        ResourceLocation powered = texture("block/spikes/" + name + "_powered");
 
-        Identifier unpoweredModel = ModelTemplates.CROSS.create(resource("block/spikes/" + name), TextureMapping.cross(unpowered), blockModels.modelOutput);
-        Identifier poweredModel = ModelTemplates.CROSS.create(resource("block/spikes/" + name + "_powered"), TextureMapping.cross(powered), blockModels.modelOutput);
+        ModelFile unpoweredModel = this.models().cross("block/spikes/" + name, unpowered).renderType("cutout");
+        ModelFile poweredModel = this.models().cross("block/spikes/" + name + "_powered", powered).renderType("cutout");
 
-        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(b)
-                .with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.POWERED, BlockModelGenerators.plainVariant(poweredModel), BlockModelGenerators.plainVariant(unpoweredModel)))
-                .with(BlockModelGenerators.ROTATIONS_COLUMN_WITH_FACING));
+        this.getVariantBuilder(b).forAllStatesExcept(state -> {
+            Direction dir = state.getValue(SpikeBlock.FACING);
+            return ConfiguredModel.builder().modelFile(state.getValue(SpikeBlock.POWERED) ? poweredModel : unpoweredModel)
+                    .rotationX(dir == Direction.DOWN ? 180 : dir == Direction.UP ? 0 : 90)
+                    .rotationY(dir.getAxis().isVertical() ? 0 : ((int) dir.toYRot() + 180) % 360).build();
+        }, SpikeBlock.WATERLOGGED);
 
         // The spike item is a flat sprite of the powered texture, not the block model.
-        Identifier itemModel = ModelTemplates.FLAT_ITEM.create(resource("item/" + name), TextureMapping.layer0(powered), blockModels.modelOutput);
-        blockModels.registerSimpleItemModel(b, itemModel);
+        this.itemModels().withExistingParent(name, mcLoc("item/generated")).texture("layer0", powered);
     }
 
     private static String name(Block b) {
         return BuiltInRegistries.BLOCK.getKey(b).getPath();
     }
 
-    private static Identifier resource(String path) {
-        return Identifier.fromNamespaceAndPath(Constants.MOD_ID, path);
-    }
-
-    private static Material texture(String path) {
-        return new Material(resource(path));
+    private static ResourceLocation texture(String path) {
+        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, path);
     }
 }

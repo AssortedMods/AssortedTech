@@ -13,8 +13,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.NotNull;
 
 /** The disguise a {@link CamouflageBlock} wears, air for none. */
@@ -41,18 +42,20 @@ public class CamouflageBlockEntity extends BlockEntity implements IBlockEntityWi
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        BlockState read = input.read("disguise", BlockState.CODEC).orElse(Blocks.AIR.defaultBlockState());
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        BlockState read = tag.contains("disguise", Tag.TAG_COMPOUND)
+                ? NbtUtils.readBlockState(registries.lookupOrThrow(Registries.BLOCK), tag.getCompound("disguise"))
+                : Blocks.AIR.defaultBlockState();
         // One a mod update stopped allowing comes off rather than drawing wrong.
         this.disguise = CamouflageBlock.canDisguiseAs(read) ? read : Blocks.AIR.defaultBlockState();
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         if (!this.disguise.isAir()) {
-            output.store("disguise", BlockState.CODEC, this.disguise);
+            tag.put("disguise", NbtUtils.writeBlockState(this.disguise));
         }
     }
 

@@ -1,0 +1,101 @@
+{
+  "parent": "assortedelevators:block/instant_elevator_purple",
+  "overrides": [
+    {
+      "model": "assortedelevators:block/instant_elevator_white",
+      "predicate": {
+        "assortedelevators:color": 0.0
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_orange",
+      "predicate": {
+        "assortedelevators:color": 0.0625
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_magenta",
+      "predicate": {
+        "assortedelevators:color": 0.125
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_light_blue",
+      "predicate": {
+        "assortedelevators:color": 0.1875
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_yellow",
+      "predicate": {
+        "assortedelevators:color": 0.25
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_lime",
+      "predicate": {
+        "assortedelevators:color": 0.3125
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_pink",
+      "predicate": {
+        "assortedelevators:color": 0.375
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_gray",
+      "predicate": {
+        "assortedelevators:color": 0.4375
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_light_gray",
+      "predicate": {
+        "assortedelevators:color": 0.5
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_cyan",
+      "predicate": {
+        "assortedelevators:color": 0.5625
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_purple",
+      "predicate": {
+        "assortedelevators:color": 0.625
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_blue",
+      "predicate": {
+        "assortedelevators:color": 0.6875
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_brown",
+      "predicate": {
+        "assortedelevators:color": 0.75
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_green",
+      "predicate": {
+        "assortedelevators:color": 0.8125
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_red",
+      "predicate": {
+        "assortedelevators:color": 0.875
+      }
+    },
+    {
+      "model": "assortedelevators:block/instant_elevator_black",
+      "predicate": {
+        "assortedelevators:color": 0.9375
+      }
+    }
+  ]
+}

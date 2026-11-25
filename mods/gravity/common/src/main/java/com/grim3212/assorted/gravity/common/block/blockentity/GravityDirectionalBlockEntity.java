@@ -18,8 +18,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -72,17 +70,17 @@ public class GravityDirectionalBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        this.showRange = input.getBooleanOr("ShowRange", false);
-        this.range = input.getIntOr("Range", 1);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.showRange = tag.getBoolean("ShowRange");
+        this.range = tag.contains("Range") ? tag.getInt("Range") : 1;
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        output.putBoolean("ShowRange", showRange);
-        output.putInt("Range", range);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putBoolean("ShowRange", showRange);
+        tag.putInt("Range", range);
     }
 
     @Override
@@ -125,7 +123,7 @@ public class GravityDirectionalBlockEntity extends BlockEntity {
             }
 
             int distance = obstructed ? traverse : maxLength;
-            Vec3i fanPos = dir.getUnitVec3i().multiply(distance);
+            Vec3i fanPos = dir.getNormal().multiply(distance);
             AABB aabb = state.getCollisionShape(level, pos).bounds().move(pos).expandTowards(fanPos.getX(), fanPos.getY(), fanPos.getZ()).deflate(1D);
 
             List<? extends Entity> list = level.getEntities((Entity) null, aabb);

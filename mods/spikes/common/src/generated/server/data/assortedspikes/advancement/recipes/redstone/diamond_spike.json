@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedspikes:diamond_spike"
+        "recipe": "assortedspikes:diamond_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

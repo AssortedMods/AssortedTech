@@ -9,8 +9,6 @@ import com.grim3212.assorted.extruder.api.util.ExtruderType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 
 import java.util.EnumMap;
@@ -24,10 +22,8 @@ public class ExtruderItems {
     /** One per material, as {@code <material>_extruder}, in {@link ExtruderType} order. */
     public static final Map<ExtruderType, IRegistryObject<ExtruderItem>> EXTRUDERS = new EnumMap<>(ExtruderType.class);
 
-    /** Since 1.21.2 every item has to know its own id before it is constructed, so the properties are built here. */
     private static <T extends Item> IRegistryObject<T> register(final String name, final Function<Item.Properties, ? extends T> factory) {
-        final ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
-        return ITEMS.register(name, () -> factory.apply(new Item.Properties().setId(key)));
+        return ITEMS.register(name, () -> factory.apply(new Item.Properties()));
     }
 
     static {

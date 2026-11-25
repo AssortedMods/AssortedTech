@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#c:ingots/lead"
+    "X": {
+      "tag": "c:ingots/lead"
+    }
   },
   "pattern": [
     "X X",

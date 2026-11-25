@@ -1,70 +1,47 @@
 package com.grim3212.assorted.gravity.api.util;
 
-import com.grim3212.assorted.lib.util.LibCommonTags;
 import com.grim3212.assorted.gravity.Constants;
-import net.minecraft.core.Holder;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundEvent;
+import com.grim3212.assorted.lib.registry.IRegistryObject;
+import com.grim3212.assorted.lib.registry.RegistryProvider;
+import com.grim3212.assorted.lib.util.LibCommonTags;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.TagKey;
-import net.minecraft.util.Util;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.equipment.ArmorMaterial;
-import net.minecraft.world.item.equipment.ArmorType;
-import net.minecraft.world.item.equipment.EquipmentAsset;
-import net.minecraft.world.item.equipment.EquipmentAssets;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.EnumMap;
-import java.util.Map;
+import java.util.List;
 
 /**
- * The mod's armour materials. Each also needs {@code assets/assortedgravity/equipment/<name>.json}, or
- * the worn armour renders untextured.
+ * The mod's armour materials, a registry on 1.21.1. Each one's worn texture is
+ * {@code assets/assortedgravity/textures/models/armor/<name>_layer_1.png} (and {@code _layer_2.png} for leggings),
+ * or the worn armour renders untextured.
  */
-public enum GravityArmorMaterials {
-    GRAVITY("gravity", 15, Util.make(new EnumMap<>(ArmorType.class), (map) -> {
-        map.put(ArmorType.BOOTS, 2);
-        map.put(ArmorType.LEGGINGS, 6);
-        map.put(ArmorType.CHESTPLATE, 5);
-        map.put(ArmorType.HELMET, 2);
-    }), 9, SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.0F, LibCommonTags.Items.ENDER_PEARLS);
+public final class GravityArmorMaterials {
 
-    private final String name;
-    private final int durabilityMultiplier;
-    private final Map<ArmorType, Integer> defense;
-    private final int enchantmentValue;
-    private final Holder<SoundEvent> equipSound;
-    private final float toughness;
-    private final float knockbackResistance;
-    private final TagKey<Item> repairIngredient;
-    private final ResourceKey<EquipmentAsset> assetId;
+    public static final RegistryProvider<ArmorMaterial> ARMOR_MATERIALS = RegistryProvider.create(Registries.ARMOR_MATERIAL, Constants.MOD_ID);
 
-    GravityArmorMaterials(String name, int durabilityMultiplier, Map<ArmorType, Integer> defense, int enchantmentValue, Holder<SoundEvent> equipSound, float toughness, float knockbackResistance, TagKey<Item> repairIngredient) {
-        this.name = name;
-        this.durabilityMultiplier = durabilityMultiplier;
-        this.defense = defense;
-        this.enchantmentValue = enchantmentValue;
-        this.equipSound = equipSound;
-        this.toughness = toughness;
-        this.knockbackResistance = knockbackResistance;
-        this.repairIngredient = repairIngredient;
-        this.assetId = ResourceKey.create(EquipmentAssets.ROOT_ID, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
+    /** The durability multiplier, which on 1.21.1 goes on each piece's properties rather than the material. */
+    public static final int GRAVITY_DURABILITY = 15;
+
+    public static final IRegistryObject<ArmorMaterial> GRAVITY = ARMOR_MATERIALS.register("gravity", () -> new ArmorMaterial(defense(2, 6, 5, 2), 9,
+            SoundEvents.ARMOR_EQUIP_IRON, () -> Ingredient.of(LibCommonTags.Items.ENDER_PEARLS),
+            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "gravity"))), 0.0F, 0.0F));
+
+    private GravityArmorMaterials() {
     }
 
-    /**
-     * This entry as vanilla's armour record. Its durability is a multiplier that
-     * {@code Properties#humanoidArmor} scales per slot with {@link ArmorType#getDurability(int)}.
-     */
-    public ArmorMaterial material() {
-        return new ArmorMaterial(this.durabilityMultiplier, this.defense, this.enchantmentValue, this.equipSound, this.toughness, this.knockbackResistance, this.repairIngredient, this.assetId);
+    private static EnumMap<ArmorItem.Type, Integer> defense(int boots, int leggings, int chestplate, int helmet) {
+        EnumMap<ArmorItem.Type, Integer> defense = new EnumMap<>(ArmorItem.Type.class);
+        defense.put(ArmorItem.Type.BOOTS, boots);
+        defense.put(ArmorItem.Type.LEGGINGS, leggings);
+        defense.put(ArmorItem.Type.CHESTPLATE, chestplate);
+        defense.put(ArmorItem.Type.HELMET, helmet);
+        return defense;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public ResourceKey<EquipmentAsset> assetId() {
-        return this.assetId;
+    public static void init() {
     }
 }

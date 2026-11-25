@@ -14,9 +14,15 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/iron",
-    "R": "#c:dusts/redstone",
-    "X": "#minecraft:planks"
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "X": {
+      "tag": "minecraft:planks"
+    }
   },
   "pattern": [
     "XIX",
@@ -24,6 +30,7 @@
     "XXX"
   ],
   "result": {
+    "count": 1,
     "id": "assortedfan:fan"
   }
 }

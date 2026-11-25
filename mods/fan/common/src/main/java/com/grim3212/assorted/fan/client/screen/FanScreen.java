@@ -5,7 +5,7 @@ import com.grim3212.assorted.fan.FanCommonMod;
 import com.grim3212.assorted.fan.api.util.FanMode;
 import com.grim3212.assorted.fan.common.block.blockentity.FanBlockEntity;
 import com.grim3212.assorted.fan.common.network.FanUpdatePacket;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -87,8 +87,7 @@ public class FanScreen extends Screen {
     }
 
     private void close() {
-        // Minecraft#setScreen is gone; the current screen lives on Gui now.
-        this.minecraft.gui.setScreen(null);
+        this.minecraft.setScreen(null);
     }
 
     @Override
@@ -97,12 +96,11 @@ public class FanScreen extends Screen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
 
-        // Font no longer forces the alpha byte, so 0xffffff would draw nothing.
-        graphics.centeredText(this.font, Component.translatable("fan.screen.mode"), this.width / 2, this.height / 4 - 10, 0xFFFFFFFF);
-        graphics.centeredText(this.font, Component.translatable("fan.screen.range"), this.width / 2, this.height / 4 + 45, 0xFFFFFFFF);
-        graphics.centeredText(this.font, Component.literal("" + this.localRange), this.width / 2, this.height / 4 + 70, 0xFFFFFFFF);
+        graphics.drawCenteredString(this.font, Component.translatable("fan.screen.mode"), this.width / 2, this.height / 4 - 10, 0xFFFFFFFF);
+        graphics.drawCenteredString(this.font, Component.translatable("fan.screen.range"), this.width / 2, this.height / 4 + 45, 0xFFFFFFFF);
+        graphics.drawCenteredString(this.font, Component.literal("" + this.localRange), this.width / 2, this.height / 4 + 70, 0xFFFFFFFF);
     }
 }

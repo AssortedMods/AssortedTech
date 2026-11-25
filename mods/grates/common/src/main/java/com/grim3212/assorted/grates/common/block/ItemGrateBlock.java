@@ -28,7 +28,7 @@ public class ItemGrateBlock extends Block {
 
     /** Daylight comes through the holes; the default would dim it, the shape being a full cube. */
     @Override
-    protected boolean propagatesSkylightDown(BlockState state) {
+    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return true;
     }
 }

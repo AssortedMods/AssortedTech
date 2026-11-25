@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedspikes:amethyst_spike"
+        "recipe": "assortedspikes:amethyst_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

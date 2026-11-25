@@ -10,8 +10,6 @@ import com.grim3212.assorted.sensors.api.util.SensorType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -53,9 +51,8 @@ public class SensorsBlocks {
      */
     private static <T extends Block> IRegistryObject<T> register(String name, Function<BlockBehaviour.Properties, ? extends T> factory, Consumer<Item.Properties> itemProperties, Component tooltip) {
         IRegistryObject<T> ret = registerNoItem(name, factory);
-        final ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
         ITEMS.register(name, () -> {
-            Item.Properties props = new Item.Properties().useBlockDescriptionPrefix().setId(key);
+            Item.Properties props = new Item.Properties();
             itemProperties.accept(props);
             if (tooltip != null) {
                 props.component(LibDataComponents.DESCRIPTION.get(), new ItemDescription(tooltip));
@@ -66,10 +63,7 @@ public class SensorsBlocks {
     }
 
     private static <T extends Block> IRegistryObject<T> registerNoItem(String name, Function<BlockBehaviour.Properties, ? extends T> factory) {
-        // Since 1.21.2 every block has to know its own id before it is constructed, so the
-        // properties are built here where the registration name is known.
-        final ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
-        return BLOCKS.register(name, () -> factory.apply(BlockBehaviour.Properties.of().setId(key)));
+        return BLOCKS.register(name, () -> factory.apply(BlockBehaviour.Properties.of()));
     }
 
     public static void init() {

@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedsensors:upgraded_gps_sensor"
+        "recipe": "assortedsensors:upgraded_gps_sensor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

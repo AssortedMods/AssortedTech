@@ -29,7 +29,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedsensors:gold_sensor"
+        "recipe": "assortedsensors:gold_sensor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

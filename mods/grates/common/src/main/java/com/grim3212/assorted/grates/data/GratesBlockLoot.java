@@ -2,15 +2,15 @@ package com.grim3212.assorted.grates.data;
 
 import com.grim3212.assorted.grates.common.block.GratesBlocks;
 import com.grim3212.assorted.lib.data.LibBlockLootProvider;
-import net.minecraft.data.loot.LootTableSubProvider;
+import net.minecraft.core.HolderLookup;
 
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class GratesBlockLoot extends LibBlockLootProvider {
 
-    public GratesBlockLoot(LootTableSubProvider.Context context) {
-        super(context, () -> GratesBlocks.BLOCKS.getEntries().stream().map(Supplier::get).collect(Collectors.toList()));
+    public GratesBlockLoot(HolderLookup.Provider registries) {
+        super(registries, () -> GratesBlocks.BLOCKS.getEntries().stream().map(Supplier::get).collect(Collectors.toList()));
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.grim3212.assorted.extruder.api;
 
 import com.grim3212.assorted.extruder.Constants;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -15,7 +15,7 @@ public class ExtruderTags {
         public static final TagKey<Block> EXTRUDER_UNMINEABLE = extruderTag("extruder_unmineable");
 
         private static TagKey<Block> extruderTag(String name) {
-            return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
+            return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name));
         }
     }
 
@@ -29,7 +29,7 @@ public class ExtruderTags {
         }
 
         private static TagKey<Item> extruderTag(String name) {
-            return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
+            return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name));
         }
     }
 }

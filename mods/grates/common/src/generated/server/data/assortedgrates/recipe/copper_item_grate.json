@@ -14,7 +14,9 @@
     }
   ],
   "key": {
-    "B": "minecraft:copper_bars"
+    "B": {
+      "item": "minecraft:copper_grate"
+    }
   },
   "pattern": [
     "BB",

@@ -9,7 +9,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -34,7 +33,7 @@ public class ExtruderItem extends Item {
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos().relative(context.getClickedFace());
-        ExtruderEntity extruder = ExtruderEntities.EXTRUDER.get().create(level, EntitySpawnReason.SPAWN_ITEM_USE);
+        ExtruderEntity extruder = ExtruderEntities.EXTRUDER.get().create(level);
         if (extruder == null) {
             return InteractionResult.FAIL;
         }

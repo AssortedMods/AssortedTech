@@ -14,10 +14,12 @@ import com.grim3212.assorted.sensors.data.SensorsEntityTagProvider;
 import com.grim3212.assorted.sensors.data.SensorsItemTagProvider;
 import com.grim3212.assorted.sensors.data.SensorsRecipes;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.concurrent.CompletableFuture;
@@ -30,32 +32,26 @@ public class AssortedSensorsNeoForge {
      * into the {@code @Mod} constructor instead.
      */
     public AssortedSensorsNeoForge(IEventBus modBus, ModContainer modContainer) {
-        modBus.addListener(this::gatherServerData);
-        modBus.addListener(this::gatherClientData);
+        modBus.addListener(this::gatherData);
 
         SensorsCommonMod.init();
     }
 
-    /**
-     * Server datagen. The server and client halves are separate events; if the wrong one runs, the
-     * build still succeeds, with "All providers took: 0 ms".
-     */
-    private void gatherServerData(final GatherDataEvent.Server event) {
-        PackOutput packOutput = event.getGenerator().getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getWorldLookupProvider();
+    /** One event for both halves; the data run's --server and --client flags pick which providers run. */
+    private void gatherData(final GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
+        PackOutput packOutput = generator.getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        ExistingFileHelper fileHelper = event.getExistingFileHelper();
 
         ForgeRegistryEntries.of(Constants.MOD_ID).recipes(SensorsRecipes::new).blockLoot(SensorsBlockLoot::new).addTo(event);
-        ForgeBlockTagProvider blockTagProvider = event.addProvider(new ForgeBlockTagProvider(packOutput, lookupProvider, Constants.MOD_ID, new SensorsBlockTagProvider(packOutput, lookupProvider)));
-        event.addProvider(new ForgeItemTagProvider(packOutput, lookupProvider, blockTagProvider.contentsGetter(), Constants.MOD_ID, new SensorsItemTagProvider(packOutput, lookupProvider, blockTagProvider.contentsGetter())));
-        event.addProvider(new ForgeEntityTagProvider(packOutput, lookupProvider, Constants.MOD_ID, new SensorsEntityTagProvider(packOutput, lookupProvider)));
-    }
+        ForgeBlockTagProvider blockTagProvider = generator.addProvider(event.includeServer(), new ForgeBlockTagProvider(packOutput, lookupProvider, Constants.MOD_ID, fileHelper, new SensorsBlockTagProvider(packOutput, lookupProvider)));
+        generator.addProvider(event.includeServer(), new ForgeItemTagProvider(packOutput, lookupProvider, blockTagProvider.contentsGetter(), Constants.MOD_ID, fileHelper, new SensorsItemTagProvider(packOutput, lookupProvider, blockTagProvider.contentsGetter())));
+        generator.addProvider(event.includeServer(), new ForgeEntityTagProvider(packOutput, lookupProvider, Constants.MOD_ID, fileHelper, new SensorsEntityTagProvider(packOutput, lookupProvider)));
 
-    private void gatherClientData(final GatherDataEvent.Client event) {
-        PackOutput packOutput = event.getGenerator().getPackOutput();
-
-        event.addProvider(new SensorsBlockstateProvider(packOutput));
-        event.addProvider(new SensorsItemModelProvider(packOutput));
-        event.addProvider(new SensorsLanguageProvider(packOutput));
-        event.addProvider(new SensorsManualProvider(packOutput));
+        generator.addProvider(event.includeClient(), new SensorsBlockstateProvider(packOutput, fileHelper));
+        generator.addProvider(event.includeClient(), new SensorsItemModelProvider(packOutput, fileHelper));
+        generator.addProvider(event.includeClient(), new SensorsLanguageProvider(packOutput));
+        generator.addProvider(event.includeClient(), new SensorsManualProvider(packOutput));
     }
 }

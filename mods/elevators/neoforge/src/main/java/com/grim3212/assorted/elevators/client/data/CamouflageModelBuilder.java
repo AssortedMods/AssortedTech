@@ -2,37 +2,32 @@ package com.grim3212.assorted.elevators.client.data;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
-import com.grim3212.assorted.lib.client.data.LibCustomLoaderBuilder;
 import com.grim3212.assorted.elevators.client.model.CamouflageUnbakedModel;
-import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.client.model.generators.template.CustomLoaderBuilder;
+import com.grim3212.assorted.lib.client.data.LibCustomLoaderBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.client.model.generators.ModelBuilder;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Writes the {@code assortedelevators:camouflage} loader block: the {@code fallback} model drawn while undisguised.
+ * Writes the {@code assortedelevators:camouflage} loader block: the {@code fallback} model drawn while
+ * undisguised. Used as {@code builder.customLoader(CamouflageModelBuilder::begin)}.
  */
-public class CamouflageModelBuilder extends LibCustomLoaderBuilder {
+public class CamouflageModelBuilder<T extends ModelBuilder<T>> extends LibCustomLoaderBuilder<T> {
 
-    public static CamouflageModelBuilder begin() {
-        return new CamouflageModelBuilder();
+    public static <T extends ModelBuilder<T>> CamouflageModelBuilder<T> begin(T parent, ExistingFileHelper existingFileHelper) {
+        return new CamouflageModelBuilder<>(parent, existingFileHelper);
     }
 
-    private @Nullable Identifier fallback;
+    private @Nullable ResourceLocation fallback;
 
-    protected CamouflageModelBuilder() {
-        super(CamouflageUnbakedModel.LOADER_NAME, false);
+    protected CamouflageModelBuilder(T parent, ExistingFileHelper existingFileHelper) {
+        super(CamouflageUnbakedModel.LOADER_NAME, parent, existingFileHelper, false);
     }
 
-    public CamouflageModelBuilder fallback(Identifier fallback) {
+    public CamouflageModelBuilder<T> fallback(ResourceLocation fallback) {
         this.fallback = fallback;
         return this;
-    }
-
-    @Override
-    protected CustomLoaderBuilder copyInternal() {
-        CamouflageModelBuilder copy = new CamouflageModelBuilder();
-        copy.fallback = this.fallback;
-        return copy;
     }
 
     @Override

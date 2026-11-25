@@ -7,26 +7,25 @@ import com.grim3212.assorted.fan.common.particle.air.AirParticleData;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 /** The fan's air particle, which follows the range and mode of the fan that spawned it. */
-public class AirParticle extends SingleQuadParticle {
+public class AirParticle extends TextureSheetParticle {
 
     private final FanBlockEntity fan;
     private final BlockPos startPos;
     private final Direction direction;
     private final double distanceModifier;
 
-    public AirParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, FanBlockEntity fan, TextureAtlasSprite sprite) {
-        super(level, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
+    public AirParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, FanBlockEntity fan) {
+        super(level, x, y, z, xSpeed, ySpeed, zSpeed);
         this.fan = fan;
         this.direction = fan.getBlockState().getValue(BlockStateProperties.FACING);
         this.startPos = BlockPos.containing(x, y, z);
@@ -41,8 +40,8 @@ public class AirParticle extends SingleQuadParticle {
     }
 
     @Override
-    public SingleQuadParticle.Layer getLayer() {
-        return SingleQuadParticle.Layer.OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override
@@ -132,12 +131,14 @@ public class AirParticle extends SingleQuadParticle {
          */
         @Nullable
         @Override
-        public Particle createParticle(AirParticleData data, ClientLevel level, double x, double y, double z, double mx, double my, double mz, RandomSource random) {
+        public Particle createParticle(AirParticleData data, ClientLevel level, double x, double y, double z, double mx, double my, double mz) {
             BlockEntity blockEntity = level.getBlockEntity(data.pos);
             if (!(blockEntity instanceof FanBlockEntity fan)) {
                 return null;
             }
-            return new AirParticle(level, x, y, z, mx, my, mz, fan, this.sprites.get(random));
+            AirParticle particle = new AirParticle(level, x, y, z, mx, my, mz, fan);
+            particle.pickSprite(this.sprites);
+            return particle;
         }
     }
 }

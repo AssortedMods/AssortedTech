@@ -19,7 +19,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -42,8 +41,8 @@ import java.util.function.Supplier;
 
 /**
  * A bridge stands in for the block it stores: its light, shade, visual shape and effects come from
- * that block. Vanilla bakes light dampening into the block state, so the stored block's is carried in
- * {@link #LIGHT_DAMPENING}, set by the block entity when its block changes; vanilla then relights,
+ * that block. Its light dampening is carried in {@link #LIGHT_DAMPENING}, set by the block entity
+ * when its block changes, so changing it is an ordinary block update: vanilla then relights,
  * recomputes the sky column and syncs the state itself. Every bridge is a whole block, so every one
  * takes it.
  */
@@ -70,30 +69,30 @@ public class BridgeBlock extends ExtraPropertyBlock implements EntityBlock, IBlo
     }
 
     /** The state {@code bridge} should have while standing in for {@code stored}. */
-    public static BlockState withStoredDampening(BlockState bridge, BlockState stored) {
-        return bridge.setValue(LIGHT_DAMPENING, stored.isAir() ? EMPTY_DAMPENING : stored.getLightDampening());
+    public static BlockState withStoredDampening(BlockState bridge, BlockState stored, BlockGetter level, BlockPos pos) {
+        return bridge.setValue(LIGHT_DAMPENING, stored.isAir() ? EMPTY_DAMPENING : stored.getLightBlock(level, pos));
     }
 
     @Override
-    protected int getLightDampening(BlockState state) {
+    protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
         return state.getValue(LIGHT_DAMPENING);
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state) {
+    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return state.getValue(LIGHT_DAMPENING) == 0;
     }
 
     /** The library's per-position answers; the state already carries the dampening. */
     @Override
     public int getLightDampening(BlockState state, BlockGetter blockGetter, BlockPos pos) {
-        return state.getLightDampening();
+        return state.getLightBlock(blockGetter, pos);
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter blockGetter, BlockPos pos) {
+    public boolean skylightPassesDown(BlockState state, BlockGetter blockGetter, BlockPos pos) {
         BlockState stored = this.getStoredState(blockGetter, pos);
-        return stored.isAir() ? state.propagatesSkylightDown() : stored.propagatesSkylightDown();
+        return stored.isAir() ? state.propagatesSkylightDown(blockGetter, pos) : stored.propagatesSkylightDown(blockGetter, pos);
     }
 
     @Override
@@ -104,19 +103,18 @@ public class BridgeBlock extends ExtraPropertyBlock implements EntityBlock, IBlo
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
         if (level.getBlockState(pos).getValue(TYPE) == BridgeType.ACCEL && entity instanceof LivingEntity livingEntity) {
-            livingEntity.addEffect(new MobEffectInstance(MobEffects.SPEED, 10, 2));
+            livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 10, 2));
         }
     }
 
-    /** The effect applier and {@code isPrecise} are ignored, as vanilla's own hazard blocks do. */
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         BridgeType type = level.getBlockState(pos).getValue(TYPE);
 
         if (type == BridgeType.DEATH) {
             if (level instanceof ServerLevel serverLevel) {
                 DamageSource laser = BridgesDamageTypes.source(serverLevel, BridgesDamageTypes.LASER);
-                entity.hurtServer(serverLevel, laser, 4);
+                entity.hurt(laser, 4);
             }
         } else if (type == BridgeType.GRAVITY) {
 
@@ -188,6 +186,19 @@ public class BridgeBlock extends ExtraPropertyBlock implements EntityBlock, IBlo
         return new BridgeBlockEntity(pos, state);
     }
 
+    /**
+     * A segment going away asks its controller to close the gap, while its block entity, which knows
+     * the segment's facing, still exists. Only when the block itself changes: storing a block
+     * changes {@link #LIGHT_DAMPENING}, which is a state change of the same block.
+     */
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof BridgeBlockEntity bridge) {
+            bridge.onBlockRemoved(level, pos);
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
     public static boolean canLaserBreak(LevelReader level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
 
@@ -211,14 +222,20 @@ public class BridgeBlock extends ExtraPropertyBlock implements EntityBlock, IBlo
     }
 
     /** Read once: the light engines ask this per node, from their own thread. */
+    // NeoForge deprecates BlockState#getLightEmission() for its level-aware overload, which only exists
+    // in its patched jar; common builds against vanilla.
+    @SuppressWarnings("deprecation")
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         BlockState stored = this.getStoredState(level, pos);
         return stored.isAir() ? state.getLightEmission() : stored.getLightEmission();
     }
 
+    // NeoForge deprecates this in favour of its IBlockExtension overload, which defaults to calling
+    // it, so overriding this one is what answers pick block on both loaders.
+    @SuppressWarnings("deprecation")
     @Override
-    protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         ItemStack itemstack = new ItemStack(this);
         NBTHelper.putTag(itemstack, "stored_state", NbtUtils.writeBlockState(Blocks.AIR.defaultBlockState()));
         return itemstack;

@@ -14,9 +14,15 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/iron",
-    "L": "assortedbridges:bridge_control_laser",
-    "R": "#c:ender_pearls"
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "L": {
+      "item": "assortedbridges:bridge_control_laser"
+    },
+    "R": {
+      "tag": "c:ender_pearls"
+    }
   },
   "pattern": [
     "III",
@@ -24,6 +30,7 @@
     "IRI"
   ],
   "result": {
+    "count": 1,
     "id": "assortedbridges:bridge_control_gravity"
   }
 }

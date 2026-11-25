@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#c:ingots/nickel"
+    "X": {
+      "tag": "c:ingots/nickel"
+    }
   },
   "pattern": [
     "X X",

@@ -4,7 +4,7 @@ import com.grim3212.assorted.lib.registry.IRegistryObject;
 import com.grim3212.assorted.lib.registry.RegistryProvider;
 import com.grim3212.assorted.alarm.Constants;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
 public class AlarmSounds {
@@ -27,7 +27,7 @@ public class AlarmSounds {
     public static final IRegistryObject<SoundEvent> ALARM_N = registerSound("alarm_n");
 
     private static IRegistryObject<SoundEvent> registerSound(String name) {
-        Identifier loc = Identifier.fromNamespaceAndPath(Constants.MOD_ID, name);
+        ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name);
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(loc));
     }
 

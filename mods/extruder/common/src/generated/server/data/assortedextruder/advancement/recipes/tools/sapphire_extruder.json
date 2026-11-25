@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedextruder:sapphire_extruder"
+        "recipe": "assortedextruder:sapphire_extruder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

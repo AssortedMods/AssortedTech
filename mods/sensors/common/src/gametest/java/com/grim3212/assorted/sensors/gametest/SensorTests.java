@@ -6,9 +6,8 @@ import com.grim3212.assorted.sensors.common.block.blockentity.SensorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.animal.pig.Pig;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Pig;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -42,18 +41,18 @@ final class SensorTests {
         helper.startSequence()
                 .thenExecute(() -> {
                     helper.assertBlockProperty(sensor, SensorBlock.DETECTED, false);
-                    subject[0] = helper.spawnWithNoFreeWill(EntityTypes.PIG, new BlockPos(4, 1, 3));
+                    subject[0] = helper.spawnWithNoFreeWill(EntityType.PIG, new BlockPos(4, 1, 3));
                 })
                 .thenWaitUntil(() -> {
                     helper.assertBlockProperty(sensor, SensorBlock.DETECTED, true);
                     helper.assertRedstoneSignal(sensor, Direction.NORTH, signal -> signal == 15,
-                            () -> Component.literal("a detecting sensor did not emit 15"));
+                            () -> "a detecting sensor did not emit 15");
                 })
-                .thenExecute(() -> helper.discard(subject[0]))
+                .thenExecute(() -> subject[0].discard())
                 .thenWaitUntil(() -> {
                     helper.assertBlockProperty(sensor, SensorBlock.DETECTED, false);
                     helper.assertRedstoneSignal(sensor, Direction.NORTH, signal -> signal == 0,
-                            () -> Component.literal("a sensor kept its signal after the entity left"));
+                            () -> "a sensor kept its signal after the entity left");
                 })
                 .thenSucceed();
     }
@@ -87,7 +86,7 @@ final class SensorTests {
                         SensorType type = types[i];
                         helper.assertBlockProperty(sensors[i], SensorBlock.DETECTED, true);
                         helper.assertRedstoneSignal(sensors[i], Direction.NORTH, signal -> signal == 15,
-                                () -> Component.literal("the " + type + " sensor did not emit 15 for what it detects"));
+                                () -> "the " + type + " sensor did not emit 15 for what it detects");
                     }
                 })
                 .thenSucceed();
@@ -95,12 +94,12 @@ final class SensorTests {
 
     /**
      * A sensor's range survives the {@code saveWithFullMetadata} / {@code loadStatic} round trip a
-     * chunk uses. A mismatched {@code ValueOutput} / {@code ValueInput} key or a wrong default is silent.
+     * chunk uses. A mismatched save and load key or a wrong default is silent.
      */
     private static void blockEntityDataSurvivesReload(GameTestHelper helper) {
         BlockPos sensor = new BlockPos(5, 1, 1);
         helper.setBlock(sensor, sensorOf(SensorType.WOOD).defaultBlockState().setValue(SensorBlock.FACING, Direction.NORTH));
-        SensorBlockEntity sensorEntity = helper.getBlockEntity(sensor, SensorBlockEntity.class);
+        SensorBlockEntity sensorEntity = helper.<SensorBlockEntity>getBlockEntity(sensor);
         sensorEntity.cycleRange();
         sensorEntity.cycleRange();
         sensorEntity.cycleRange();

@@ -5,7 +5,7 @@ import com.grim3212.assorted.lib.family.Families;
 import com.grim3212.assorted.spikes.Constants;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -30,7 +30,7 @@ final class FamilyTests {
 
     private static void iconsAreItems(GameTestHelper helper) {
         helper.assertTrue(Families.members(Constants.FAMILY_ID).contains(Constants.MOD_ID), Constants.MOD_ID + " is not in " + Constants.FAMILY_ID);
-        for (Identifier icon : Families.icons(Constants.FAMILY_ID)) {
+        for (ResourceLocation icon : Families.icons(Constants.FAMILY_ID)) {
             helper.assertTrue(BuiltInRegistries.ITEM.containsKey(icon), "family icon " + icon + " is not an item");
         }
         helper.succeed();

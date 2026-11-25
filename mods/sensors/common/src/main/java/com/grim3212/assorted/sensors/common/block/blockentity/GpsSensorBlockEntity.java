@@ -11,7 +11,11 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,10 +30,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
@@ -159,14 +162,19 @@ public class GpsSensorBlockEntity extends BlockEntity implements IMenuDataProvid
         return new AABB(target == null ? this.getBlockPos() : target).inflate(this.radius);
     }
 
+    /** The sensor and the box it watches, in world space. The client draws the outline while any of this is in view. */
+    public AABB outlineBounds() {
+        return new AABB(this.getBlockPos()).minmax(this.senseBox());
+    }
+
     /** A plain sensor's items are narrowed by the ghost item; an upgraded one's by its entries alone. */
     public boolean matches(Entity entity) {
         GpsSensorFilter typed = this.parsedFilter();
         return switch (this.mode) {
-            case PLAYERS -> entity instanceof Player player && (typed.isEmpty() || typed.matchesPlayer(player.getGameProfile().name()));
-            case MOBS -> entity instanceof LivingEntity && !(entity instanceof Player) && (typed.isEmpty() || typed.matchesMob(entity.typeHolder()));
+            case PLAYERS -> entity instanceof Player player && (typed.isEmpty() || typed.matchesPlayer(player.getGameProfile().getName()));
+            case MOBS -> entity instanceof LivingEntity && !(entity instanceof Player) && (typed.isEmpty() || typed.matchesMob(BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(entity.getType())));
             case ITEMS -> entity instanceof ItemEntity item && (this.isUpgraded()
-                    ? typed.isEmpty() || typed.matchesItem(item.getItem().typeHolder())
+                    ? typed.isEmpty() || typed.matchesItem(item.getItem().getItemHolder())
                     : this.filterItem.isEmpty() || ItemStack.isSameItem(item.getItem(), this.filterItem));
         };
     }
@@ -271,41 +279,53 @@ public class GpsSensorBlockEntity extends BlockEntity implements IMenuDataProvid
         return new GpsSensorMenu(id, inventory, this);
     }
 
-    /** The GPS is the sensor's to hold, not to keep, so it comes back out when the sensor is broken. */
-    @Override
-    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
-        super.preRemoveSideEffects(pos, state);
-        if (this.level != null) {
-            Containers.dropContents(this.level, pos, this.gps);
-        }
+    /** The GPS is the sensor's to hold, not to keep, so {@link GpsSensorBlock} drops it when the sensor is broken. */
+    public void onBlockRemoved(Level level, BlockPos pos) {
+        Containers.dropContents(level, pos, this.gps);
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
         // Straight into the list, since setItem would send an update mid-load.
-        this.gps.getItems().set(0, input.read("Gps", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
-        this.mode = input.read("Mode", GpsSensorMode.CODEC).orElse(GpsSensorMode.PLAYERS);
+        this.gps.getItems().set(0, ItemStack.parseOptional(registries, tag.getCompound("Gps")));
+        this.mode = read(ops, tag, "Mode", GpsSensorMode.CODEC, GpsSensorMode.PLAYERS);
         this.filters.clear();
-        this.filters.putAll(input.read("Filters", FILTERS_CODEC).orElse(Map.of()));
+        this.filters.putAll(read(ops, tag, "Filters", FILTERS_CODEC, Map.of()));
         this.entries.clear();
-        input.read("Entries", ENTRIES_CODEC).orElse(Map.of()).forEach((mode, list) -> this.entries.put(mode, new ArrayList<>(list)));
+        read(ops, tag, "Entries", ENTRIES_CODEC, Map.<GpsSensorMode, List<String>>of()).forEach((mode, list) -> this.entries.put(mode, new ArrayList<>(list)));
         this.parsedFilter = null;
-        this.filterItem = input.read("FilterItem", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
-        this.radius = input.getIntOr("Radius", 0);
-        this.showTarget = input.getBooleanOr("ShowTarget", false);
+        this.filterItem = ItemStack.parseOptional(registries, tag.getCompound("FilterItem"));
+        this.radius = tag.getInt("Radius");
+        this.showTarget = tag.getBoolean("ShowTarget");
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        output.store("Gps", ItemStack.OPTIONAL_CODEC, this.gps.getItem(0));
-        output.store("Mode", GpsSensorMode.CODEC, this.mode);
-        output.store("Filters", FILTERS_CODEC, this.filters);
-        output.store("Entries", ENTRIES_CODEC, this.entries);
-        output.store("FilterItem", ItemStack.OPTIONAL_CODEC, this.filterItem);
-        output.putInt("Radius", this.radius);
-        output.putBoolean("ShowTarget", this.showTarget);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
+        if (!this.gps.getItem(0).isEmpty()) {
+            tag.put("Gps", this.gps.getItem(0).save(registries));
+        }
+        write(ops, tag, "Mode", GpsSensorMode.CODEC, this.mode);
+        write(ops, tag, "Filters", FILTERS_CODEC, this.filters);
+        write(ops, tag, "Entries", ENTRIES_CODEC, this.entries);
+        if (!this.filterItem.isEmpty()) {
+            tag.put("FilterItem", this.filterItem.save(registries));
+        }
+        tag.putInt("Radius", this.radius);
+        tag.putBoolean("ShowTarget", this.showTarget);
+    }
+
+    /** {@code tag[key]} through {@code codec}, or {@code fallback} when it is missing or unreadable. */
+    private static <T> T read(RegistryOps<Tag> ops, CompoundTag tag, String key, Codec<T> codec, T fallback) {
+        Tag value = tag.get(key);
+        return value == null ? fallback : codec.parse(ops, value).result().orElse(fallback);
+    }
+
+    private static <T> void write(RegistryOps<Tag> ops, CompoundTag tag, String key, Codec<T> codec, T value) {
+        codec.encodeStart(ops, value).result().ifPresent(encoded -> tag.put(key, encoded));
     }
 
     @Override

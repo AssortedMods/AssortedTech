@@ -14,10 +14,14 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/iron",
-    "L": "assortedbridges:bridge_control_laser",
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "L": {
+      "item": "assortedbridges:bridge_control_laser"
+    },
     "R": {
-      "neoforge:ingredient_type": "assortedlib:stored_fluid_ingredient",
+      "type": "assortedlib:stored_fluid_ingredient",
       "fabric:type": "assortedlib:stored_fluid_ingredient",
       "fluid": "minecraft:lava"
     }
@@ -28,6 +32,7 @@
     "IRI"
   ],
   "result": {
+    "count": 1,
     "id": "assortedbridges:bridge_control_death"
   }
 }

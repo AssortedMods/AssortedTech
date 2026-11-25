@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/sapphire",
-    "M": "#assortedextruder:extruders/level_1",
-    "P": "#c:pickaxes/sapphire",
-    "S": "#c:shovels/sapphire"
+    "A": {
+      "tag": "c:axes/sapphire"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_1"
+    },
+    "P": {
+      "tag": "c:pickaxes/sapphire"
+    },
+    "S": {
+      "tag": "c:shovels/sapphire"
+    }
   },
   "pattern": [
     " P ",
     "AMS"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:sapphire_extruder"
   }
 }

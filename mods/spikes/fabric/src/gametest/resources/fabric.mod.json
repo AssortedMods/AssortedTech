@@ -10,11 +10,8 @@
   "license": "${license}",
   "environment": "*",
   "entrypoints": {
-    "main": [
+    "fabric-gametest": [
       "com.grim3212.assorted.spikes.gametest.SpikesFabricGameTests"
-    ],
-    "fabric-client-gametest": [
-      "com.grim3212.assorted.spikes.gametest.SpikesClientGameTests"
     ]
   },
   "depends": {

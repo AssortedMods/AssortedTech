@@ -14,15 +14,22 @@
     }
   ],
   "key": {
-    "C": "minecraft:compass",
-    "I": "#c:ingots/iron",
-    "M": "minecraft:map"
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "M": {
+      "item": "minecraft:map"
+    }
   },
   "pattern": [
     "ICI",
     " M "
   ],
   "result": {
+    "count": 1,
     "id": "assortedsensors:gps"
   }
 }

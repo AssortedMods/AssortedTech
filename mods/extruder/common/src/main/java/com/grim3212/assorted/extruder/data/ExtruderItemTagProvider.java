@@ -7,7 +7,6 @@ import com.grim3212.assorted.extruder.common.item.ExtruderItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagAppender;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -27,7 +26,7 @@ public class ExtruderItemTagProvider extends LibItemTagProvider {
 
     @Override
     public void addCommonTags(Function<TagKey<Item>, TagAppender<Item>> appender, BiConsumer<TagKey<Block>, TagKey<Item>> copier) {
-        // The intrinsic tag appender is gone; TagAppender only accepts ResourceKeys. Wrap it back
+        // The library hands out plain TagAppenders, which take ResourceKeys. Wrap them back
         // into something that takes items so the tag lists below stay readable.
         Function<TagKey<Item>, ItemTagger> tagger = (tag) -> new ItemTagger(appender.apply(tag));
 
@@ -54,7 +53,6 @@ public class ExtruderItemTagProvider extends LibItemTagProvider {
     private static final Map<ExtruderType, Item[]> VANILLA_TOOLS = Map.of(
             ExtruderType.WOOD, new Item[]{Items.WOODEN_PICKAXE, Items.WOODEN_SHOVEL, Items.WOODEN_AXE},
             ExtruderType.STONE, new Item[]{Items.STONE_PICKAXE, Items.STONE_SHOVEL, Items.STONE_AXE},
-            ExtruderType.COPPER, new Item[]{Items.COPPER_PICKAXE, Items.COPPER_SHOVEL, Items.COPPER_AXE},
             ExtruderType.IRON, new Item[]{Items.IRON_PICKAXE, Items.IRON_SHOVEL, Items.IRON_AXE},
             ExtruderType.GOLD, new Item[]{Items.GOLDEN_PICKAXE, Items.GOLDEN_SHOVEL, Items.GOLDEN_AXE},
             ExtruderType.DIAMOND, new Item[]{Items.DIAMOND_PICKAXE, Items.DIAMOND_SHOVEL, Items.DIAMOND_AXE},

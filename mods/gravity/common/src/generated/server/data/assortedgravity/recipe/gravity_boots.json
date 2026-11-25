@@ -6,6 +6,7 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "fabric:load_conditions": [
     {
       "condition": "assortedlib:part_enabled",
@@ -13,14 +14,19 @@
     }
   ],
   "key": {
-    "A": "assortedgravity:attractor",
-    "I": "#c:ingots/iron"
+    "A": {
+      "item": "assortedgravity:attractor"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    }
   },
   "pattern": [
     "I I",
     "A A"
   ],
   "result": {
+    "count": 1,
     "id": "assortedgravity:gravity_boots"
   }
 }

@@ -2,12 +2,11 @@ package com.grim3212.assorted.sensors.client.blockentity;
 
 import com.grim3212.assorted.sensors.common.block.blockentity.SensorBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -16,32 +15,20 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 /**
- * The sensor's detection box. See {@link RangeRenderState} for why the level scan moved into
- * {@code extractRenderState}.
+ * The sensor's detection box, the same box {@link SensorBlockEntity#tick} looks in: green while
+ * clear, red once a full block face stops it short of its range.
  */
-public class SensorBlockEntityRenderer implements BlockEntityRenderer<SensorBlockEntity, RangeRenderState> {
-
-    private static final float LINE_WIDTH = 2.0F;
+public class SensorBlockEntityRenderer implements BlockEntityRenderer<SensorBlockEntity> {
 
     public SensorBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
     }
 
     @Override
-    public RangeRenderState createRenderState() {
-        return new RangeRenderState();
-    }
-
-    @Override
-    public void extractRenderState(SensorBlockEntity entity, RangeRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
-        BlockEntityRenderer.super.extractRenderState(entity, state, partialTicks, cameraPosition, breakProgress);
-
+    public void render(SensorBlockEntity entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int packedOverlay) {
         Level level = entity.getLevel();
-        state.showRange = entity.shouldShowRange() && level != null;
-        if (!state.showRange) {
+        if (!entity.shouldShowRange() || level == null) {
             return;
         }
 
@@ -62,19 +49,14 @@ public class SensorBlockEntityRenderer implements BlockEntityRenderer<SensorBloc
             }
         }
 
-        Vec3i position = dir.getUnitVec3i().multiply(obstructed ? traverse : maxLength);
-        AABB aabb = entity.getBlockState().getCollisionShape(level, entity.getBlockPos()).bounds().expandTowards(position.getX(), position.getY(), position.getZ()).deflate(1D).inflate(0.0020000000949949026D);
-        state.obstructed = obstructed;
-        state.shape = Block.box(aabb.minX * 16D, aabb.minY * 16D, aabb.minZ * 16D, aabb.maxX * 16D, aabb.maxY * 16D, aabb.maxZ * 16D);
+        Vec3i position = dir.getNormal().multiply(obstructed ? traverse : maxLength);
+        AABB box = entity.getBlockState().getCollisionShape(level, entity.getBlockPos()).bounds().expandTowards(position.getX(), position.getY(), position.getZ()).deflate(1D).inflate(0.0020000000949949026D);
+        LevelRenderer.renderLineBox(poseStack, buffers.getBuffer(RenderType.lines()), box, obstructed ? 1.0F : 0.0F, obstructed ? 0.0F : 1.0F, 0.0F, 1.0F);
     }
 
+    /** The box reaches up to fifteen blocks out, so it is drawn while its far end is in view. */
     @Override
-    public void submit(RangeRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
-        if (!state.showRange) {
-            return;
-        }
-
-        submitNodeCollector.submitShapeOutline(poseStack, state.shape, RenderTypes.lines(), state.color(), LINE_WIDTH, false);
+    public boolean shouldRenderOffScreen(SensorBlockEntity entity) {
+        return entity.shouldShowRange();
     }
-
 }

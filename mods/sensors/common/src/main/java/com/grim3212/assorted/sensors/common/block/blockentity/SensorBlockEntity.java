@@ -14,8 +14,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
@@ -56,7 +54,7 @@ public class SensorBlockEntity extends BlockEntity {
                 }
             }
 
-            Vec3i sensorPos = dir.getUnitVec3i().multiply(obstructed ? traverse : maxLength);
+            Vec3i sensorPos = dir.getNormal().multiply(obstructed ? traverse : maxLength);
 
             AABB aabb = state.getCollisionShape(level, pos).bounds().move(pos).expandTowards(sensorPos.getX(), sensorPos.getY(), sensorPos.getZ()).deflate(1D);
 
@@ -83,6 +81,15 @@ public class SensorBlockEntity extends BlockEntity {
         return this.range;
     }
 
+    /**
+     * Everything the range box can cover at this range, the sensor included, in world space. The
+     * client draws the box while any of this is in view.
+     */
+    public AABB rangeBounds() {
+        Vec3i reach = this.getBlockState().getValue(BlockStateProperties.FACING).getNormal().multiply(this.range + 1);
+        return new AABB(this.getBlockPos()).expandTowards(reach.getX(), reach.getY(), reach.getZ());
+    }
+
     public int cycleRange() {
         int newRange = this.range + 1;
         if (newRange > MAX_RANGE)
@@ -104,17 +111,17 @@ public class SensorBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        this.showRange = input.getBooleanOr("ShowRange", false);
-        this.range = input.getIntOr("Range", 1);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.showRange = tag.getBoolean("ShowRange");
+        this.range = tag.contains("Range") ? tag.getInt("Range") : 1;
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        output.putBoolean("ShowRange", showRange);
-        output.putInt("Range", range);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putBoolean("ShowRange", showRange);
+        tag.putInt("Range", range);
     }
 
     @Override

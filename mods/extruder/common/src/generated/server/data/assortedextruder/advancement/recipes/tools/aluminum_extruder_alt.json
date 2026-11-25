@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedextruder:aluminum_extruder_alt"
+        "recipe": "assortedextruder:aluminum_extruder_alt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

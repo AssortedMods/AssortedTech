@@ -14,7 +14,9 @@
     }
   ],
   "key": {
-    "B": "minecraft:oxidized_copper_bars"
+    "B": {
+      "item": "minecraft:oxidized_copper_grate"
+    }
   },
   "pattern": [
     "BB",

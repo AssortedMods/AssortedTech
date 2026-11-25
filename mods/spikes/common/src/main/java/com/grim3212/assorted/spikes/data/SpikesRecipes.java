@@ -5,21 +5,19 @@ import com.grim3212.assorted.lib.registry.IRegistryObject;
 import com.grim3212.assorted.spikes.Constants;
 import com.grim3212.assorted.spikes.common.block.SpikeBlock;
 import com.grim3212.assorted.spikes.common.block.SpikesBlocks;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.Recipe;
+
+import java.util.concurrent.CompletableFuture;
 
 public class SpikesRecipes extends ConditionalRecipeProvider {
 
-    public SpikesRecipes(BootstrapContext<Recipe<?>> recipes, BootstrapContext<Advancement> advancements) {
-        super(recipes, advancements, Constants.MOD_ID);
+    public SpikesRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Constants.MOD_ID);
     }
 
     @Override
@@ -36,12 +34,8 @@ public class SpikesRecipes extends ConditionalRecipeProvider {
 
         for (IRegistryObject<SpikeBlock> b : SpikesBlocks.SPIKES) {
             TagKey<Item> mat = b.get().getSpikeType().getMaterial();
-            ShapedRecipeBuilder.shaped(this.items, RecipeCategory.REDSTONE, b.get(), 6).define('X', mat).pattern("X X").pattern(" X ").pattern("XXX").unlockedBy("has_material", has(mat)).save(this.output, recipeKey(b.getId()));
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, b.get(), 6).define('X', mat).pattern("X X").pattern(" X ").pattern("XXX").unlockedBy("has_material", has(mat)).save(this.output, b.getId());
         }
     }
 
-    /** Recipes are addressed by {@code ResourceKey<Recipe<?>>} rather than a raw {@code Identifier} since 1.21.2. */
-    private static ResourceKey<Recipe<?>> recipeKey(Identifier id) {
-        return ResourceKey.create(Registries.RECIPE, id);
-    }
 }

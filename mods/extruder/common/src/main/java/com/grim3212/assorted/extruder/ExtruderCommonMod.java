@@ -7,7 +7,7 @@ import com.grim3212.assorted.extruder.common.item.ExtruderItems;
 import com.grim3212.assorted.extruder.config.ExtruderCommonConfig;
 import com.grim3212.assorted.lib.family.Families;
 import com.grim3212.assorted.lib.migration.MovedIds;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class ExtruderCommonMod {
 
@@ -16,7 +16,7 @@ public class ExtruderCommonMod {
     public static void init() {
         Constants.LOG.info(Constants.MOD_NAME + " starting up...");
         Families.join(Constants.MOD_ID, Constants.FAMILY_ID)
-                .icon(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "iron_extruder"), 50)
+                .icon(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "iron_extruder"), 50)
                 .manualOrder(100);
 
         ExtruderItems.init();

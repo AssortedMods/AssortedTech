@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#minecraft:stone_tool_materials"
+    "X": {
+      "tag": "minecraft:stone_tool_materials"
+    }
   },
   "pattern": [
     "X X",

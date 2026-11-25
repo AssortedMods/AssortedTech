@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedgrates:iron_item_grate"
+        "recipe": "assortedgrates:iron_item_grate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

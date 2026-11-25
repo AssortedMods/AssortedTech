@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/block",
+  "parent": "assortedextruder:item/extruder",
   "textures": {
     "particle": "assortedextruder:item/extruder_particle"
   }

@@ -6,6 +6,7 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "fabric:load_conditions": [
     {
       "condition": "assortedlib:part_enabled",
@@ -13,9 +14,15 @@
     }
   ],
   "key": {
-    "C": "#c:ingots/copper",
-    "E": "#c:ender_pearls",
-    "R": "#c:dusts/redstone"
+    "C": {
+      "tag": "c:ingots/copper"
+    },
+    "E": {
+      "tag": "c:ender_pearls"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
   },
   "pattern": [
     "CRC",
@@ -23,6 +30,7 @@
     "CCC"
   ],
   "result": {
+    "count": 1,
     "id": "assortedelevators:instant_elevator"
   }
 }

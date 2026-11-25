@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/steel",
-    "M": "#assortedextruder:extruders/level_2",
-    "P": "#c:pickaxes/steel",
-    "S": "#c:shovels/steel"
+    "A": {
+      "tag": "c:axes/steel"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_2"
+    },
+    "P": {
+      "tag": "c:pickaxes/steel"
+    },
+    "S": {
+      "tag": "c:shovels/steel"
+    }
   },
   "pattern": [
     " P ",
     "AMS"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:steel_extruder"
   }
 }

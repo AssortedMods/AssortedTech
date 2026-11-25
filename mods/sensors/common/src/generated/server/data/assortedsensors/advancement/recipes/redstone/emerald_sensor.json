@@ -29,7 +29,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedsensors:emerald_sensor"
+        "recipe": "assortedsensors:emerald_sensor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

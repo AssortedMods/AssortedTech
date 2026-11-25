@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/invar"
+    "I": {
+      "tag": "c:ingots/invar"
+    }
   },
   "pattern": [
     "I I",

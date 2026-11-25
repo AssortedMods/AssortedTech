@@ -14,7 +14,9 @@
     }
   ],
   "key": {
-    "B": "minecraft:iron_bars"
+    "B": {
+      "item": "minecraft:iron_bars"
+    }
   },
   "pattern": [
     "BB",

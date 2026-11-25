@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/tin",
-    "M": "#assortedextruder:extruders/level_0",
-    "P": "#c:pickaxes/tin",
-    "S": "#c:shovels/tin"
+    "A": {
+      "tag": "c:axes/tin"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_0"
+    },
+    "P": {
+      "tag": "c:pickaxes/tin"
+    },
+    "S": {
+      "tag": "c:shovels/tin"
+    }
   },
   "pattern": [
     " P ",
     "SMA"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:tin_extruder"
   }
 }

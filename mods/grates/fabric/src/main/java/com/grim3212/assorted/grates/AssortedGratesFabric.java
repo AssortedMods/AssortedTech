@@ -19,8 +19,8 @@ public class AssortedGratesFabric implements ModInitializer {
      */
     private static void registerCopperItemGrateOxidation() {
         GratesBlocks.COPPER_ITEM_GRATES.weathering().progressMapping((from, to) ->
-                OxidizableBlocksRegistry.registerNextStage(from.get(), to.get()));
+                OxidizableBlocksRegistry.registerOxidizableBlockPair(from.get(), to.get()));
         GratesBlocks.COPPER_ITEM_GRATES.zipUnwaxedWaxed((unwaxed, waxed) ->
-                OxidizableBlocksRegistry.registerWaxable(unwaxed.get(), waxed.get()));
+                OxidizableBlocksRegistry.registerWaxableBlockPair(unwaxed.get(), waxed.get()));
     }
 }

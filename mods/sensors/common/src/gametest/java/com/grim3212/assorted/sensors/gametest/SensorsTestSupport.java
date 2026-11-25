@@ -8,7 +8,7 @@ import com.grim3212.assorted.sensors.common.block.SensorBlock;
 import com.grim3212.assorted.sensors.common.block.SensorsBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import java.io.InputStream;
@@ -32,17 +32,17 @@ final class SensorsTestSupport {
         switch (type) {
             // Any entity at all, so a dropped item proves it is not quietly a living-entity check.
             case WOOD -> helper.spawnItem(Items.STICK, Vec3.atCenterOf(pos));
-            case STONE -> helper.spawnWithNoFreeWill(EntityTypes.PIG, pos);
+            case STONE -> helper.spawnWithNoFreeWill(EntityType.PIG, pos);
             case IRON -> stand(helper, survivalPlayer(helper), pos.below());
-            case MOSSY_COBBLESTONE -> helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, pos);
-            case PRISMARINE -> helper.spawnWithNoFreeWill(EntityTypes.SQUID, pos);
+            case MOSSY_COBBLESTONE -> helper.spawnWithNoFreeWill(EntityType.ZOMBIE, pos);
+            case PRISMARINE -> helper.spawnWithNoFreeWill(EntityType.SQUID, pos);
             case GOLD -> helper.spawnItem(Items.STICK, Vec3.atCenterOf(pos));
-            case EMERALD -> helper.spawnWithNoFreeWill(EntityTypes.VILLAGER, pos);
-            case NETHERRACK -> helper.spawnWithNoFreeWill(EntityTypes.PIGLIN, pos);
-            case COBWEB -> helper.spawnWithNoFreeWill(EntityTypes.SILVERFISH, pos);
-            case END_STONE -> helper.spawnWithNoFreeWill(EntityTypes.ENDERMITE, pos);
-            case HAY_BALE -> helper.spawnWithNoFreeWill(EntityTypes.WOLF, pos);
-            case FEATHER -> helper.spawnWithNoFreeWill(EntityTypes.CHICKEN, pos);
+            case EMERALD -> helper.spawnWithNoFreeWill(EntityType.VILLAGER, pos);
+            case NETHERRACK -> helper.spawnWithNoFreeWill(EntityType.PIGLIN, pos);
+            case COBWEB -> helper.spawnWithNoFreeWill(EntityType.SILVERFISH, pos);
+            case END_STONE -> helper.spawnWithNoFreeWill(EntityType.ENDERMITE, pos);
+            case HAY_BALE -> helper.spawnWithNoFreeWill(EntityType.WOLF, pos);
+            case FEATHER -> helper.spawnWithNoFreeWill(EntityType.CHICKEN, pos);
         }
     }
 

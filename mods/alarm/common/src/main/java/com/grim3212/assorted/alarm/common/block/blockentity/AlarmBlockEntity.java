@@ -10,8 +10,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 
 public class AlarmBlockEntity extends BlockEntity {
 
@@ -25,21 +23,16 @@ public class AlarmBlockEntity extends BlockEntity {
         super(AlarmBlockEntityTypes.ALARM.get(), pos, state);
     }
 
-    /**
-     * Block entity serialization moved off {@code CompoundTag} onto {@link ValueInput} /
-     * {@link ValueOutput}, which carry the registry lookup with them. {@code load} became
-     * {@code loadAdditional}, and the typed getters take a default rather than returning 0.
-     */
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        this.alarmType = input.getIntOr("AlarmType", 0);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.alarmType = tag.getInt("AlarmType");
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        output.putInt("AlarmType", this.alarmType);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("AlarmType", this.alarmType);
     }
 
     @Override

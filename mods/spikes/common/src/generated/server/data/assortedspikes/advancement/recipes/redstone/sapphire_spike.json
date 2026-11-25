@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedspikes:sapphire_spike"
+        "recipe": "assortedspikes:sapphire_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -57,11 +57,21 @@
     }
   ],
   "key": {
-    "A": "#c:axes/wood",
-    "D": "minecraft:dispenser",
-    "M": "minecraft:piston",
-    "P": "#c:pickaxes/wood",
-    "S": "#c:shovels/wood"
+    "A": {
+      "tag": "c:axes/wood"
+    },
+    "D": {
+      "item": "minecraft:dispenser"
+    },
+    "M": {
+      "item": "minecraft:piston"
+    },
+    "P": {
+      "tag": "c:pickaxes/wood"
+    },
+    "S": {
+      "tag": "c:shovels/wood"
+    }
   },
   "pattern": [
     " P ",
@@ -69,6 +79,7 @@
     " D "
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:wood_extruder"
   }
 }

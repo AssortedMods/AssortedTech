@@ -1,5 +1,6 @@
 package com.grim3212.assorted.sensors.api.util;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;
 
 /** What a GPS sensor looks for at the position it watches. */
@@ -8,7 +9,7 @@ public enum GpsSensorMode implements StringRepresentable {
     MOBS("mobs"),
     ITEMS("items");
 
-    public static final StringRepresentable.EnumCodec<GpsSensorMode> CODEC = StringRepresentable.fromEnum(GpsSensorMode::values);
+    public static final Codec<GpsSensorMode> CODEC = StringRepresentable.fromEnum(GpsSensorMode::values);
 
     private final String name;
 

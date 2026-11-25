@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#c:gems/topaz"
+    "X": {
+      "tag": "c:gems/topaz"
+    }
   },
   "pattern": [
     "X X",

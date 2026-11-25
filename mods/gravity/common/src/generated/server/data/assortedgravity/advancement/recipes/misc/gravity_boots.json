@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedgravity:gravity_boots"
+        "recipe": "assortedgravity:gravity_boots"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

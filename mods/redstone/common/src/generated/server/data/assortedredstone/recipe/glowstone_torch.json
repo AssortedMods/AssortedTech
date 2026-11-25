@@ -14,9 +14,15 @@
     }
   ],
   "key": {
-    "P": "#c:dusts/glowstone",
-    "R": "#c:dusts/redstone",
-    "X": "#c:rods/wooden"
+    "P": {
+      "tag": "c:dusts/glowstone"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "X": {
+      "tag": "c:rods/wooden"
+    }
   },
   "pattern": [
     "P",
@@ -24,6 +30,7 @@
     "R"
   ],
   "result": {
+    "count": 1,
     "id": "assortedredstone:glowstone_torch"
   }
 }

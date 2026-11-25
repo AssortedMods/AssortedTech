@@ -7,11 +7,11 @@
   ],
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_copper_bars": {
+    "has_copper_grate": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:waxed_copper_bars"
+            "items": "minecraft:waxed_copper_grate"
           }
         ]
       },
@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedgrates:waxed_copper_item_grate"
+        "recipe": "assortedgrates:waxed_copper_item_grate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -33,7 +33,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_copper_bars"
+      "has_copper_grate"
     ]
   ],
   "rewards": {

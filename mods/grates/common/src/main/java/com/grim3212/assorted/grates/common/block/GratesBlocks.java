@@ -7,15 +7,13 @@ import com.grim3212.assorted.lib.registry.IRegistryObject;
 import com.grim3212.assorted.lib.registry.RegistryProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.WeatheringCopper.WeatherState;
-import net.minecraft.world.level.block.WeatheringCopperCollection;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
@@ -37,15 +35,15 @@ public class GratesBlocks {
      * Copper comes in eight, as it does everywhere in vanilla: four oxidation stages, waxed and
      * unwaxed. Only the unwaxed ones weather; a waxed grate never changes, so it is a plain grate.
      */
-    public static final WeatheringCopperCollection<IRegistryObject<ItemGrateBlock>> COPPER_ITEM_GRATES = registerCopperItemGrates();
+    public static final CopperFamily<IRegistryObject<ItemGrateBlock>> COPPER_ITEM_GRATES = registerCopperItemGrates();
 
     /** The iron grate is the metal mesh of Assorted Tech 9.x, and of Assorted Gravity before this mod. */
     private static final List<String> METAL_MESH_NAMESPACES = List.of(Constants.FAMILY_ID, "assortedgravity");
 
     static {
-        Identifier ironGrate = ITEM_GRATES.get(GrateMaterial.IRON).getId();
+        ResourceLocation ironGrate = ITEM_GRATES.get(GrateMaterial.IRON).getId();
         for (String namespace : METAL_MESH_NAMESPACES) {
-            Identifier metalMesh = Identifier.fromNamespaceAndPath(namespace, "metal_mesh");
+            ResourceLocation metalMesh = ResourceLocation.fromNamespaceAndPath(namespace, "metal_mesh");
             Services.REGISTRY_FACTORY.alias(Registries.BLOCK, metalMesh, ironGrate);
             Services.REGISTRY_FACTORY.alias(Registries.ITEM, metalMesh, ironGrate);
         }
@@ -59,13 +57,10 @@ public class GratesBlocks {
         return grates;
     }
 
-    private static WeatheringCopperCollection<IRegistryObject<ItemGrateBlock>> registerCopperItemGrates() {
-        WeatheringCopperCollection<String> names = WeatheringCopperCollection.prefixWithState(WeatheringCopperCollection.create("copper_item_grate"));
-        return names.apply(
-                weathering -> WeatheringCopperCollection.zipMap(WeatheringCopperCollection.STATES, weathering,
-                        (age, name) -> register(name, props -> new WeatheringItemGrateBlock(age, copperItemGrate(props, age, age != WeatherState.OXIDIZED)))),
-                waxed -> WeatheringCopperCollection.zipMap(WeatheringCopperCollection.STATES, waxed,
-                        (age, name) -> register(name, props -> new ItemGrateBlock(copperItemGrate(props, age, false)))));
+    private static CopperFamily<IRegistryObject<ItemGrateBlock>> registerCopperItemGrates() {
+        return CopperFamily.create("copper_item_grate",
+                (age, name) -> register(name, props -> new WeatheringItemGrateBlock(age, copperItemGrate(props, age, age != WeatherState.OXIDIZED))),
+                (age, name) -> register(name, props -> new ItemGrateBlock(copperItemGrate(props, age, false))));
     }
 
     /**
@@ -86,16 +81,13 @@ public class GratesBlocks {
     }
 
     private static BlockBehaviour.Properties itemGrate(BlockBehaviour.Properties props) {
-        return props.strength(0.4F, 1.0F).requiresCorrectToolForDrops().noOcclusion().isSuffocating(GratesBlocks::never).isViewBlocking((state, getter, pos, nearPlane) -> false).isRedstoneConductor(GratesBlocks::never);
+        return props.strength(0.4F, 1.0F).requiresCorrectToolForDrops().noOcclusion().isSuffocating(GratesBlocks::never).isViewBlocking(GratesBlocks::never).isRedstoneConductor(GratesBlocks::never);
     }
 
     /** A block and its item. */
     private static <T extends Block> IRegistryObject<T> register(String name, Function<BlockBehaviour.Properties, ? extends T> factory) {
-        // Every block has to know its own id before it is constructed, so the properties are built here.
-        final ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
-        IRegistryObject<T> ret = BLOCKS.register(name, () -> factory.apply(BlockBehaviour.Properties.of().setId(key)));
-        final ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
-        ITEMS.register(name, () -> new BlockItem(ret.get(), new Item.Properties().useBlockDescriptionPrefix().setId(itemKey)));
+        IRegistryObject<T> ret = BLOCKS.register(name, () -> factory.apply(BlockBehaviour.Properties.of()));
+        ITEMS.register(name, () -> new BlockItem(ret.get(), new Item.Properties()));
         return ret;
     }
 

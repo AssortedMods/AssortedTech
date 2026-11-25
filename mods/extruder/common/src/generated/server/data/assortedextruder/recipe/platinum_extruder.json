@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/platinum",
-    "M": "#assortedextruder:extruders/level_2",
-    "P": "#c:pickaxes/platinum",
-    "S": "#c:shovels/platinum"
+    "A": {
+      "tag": "c:axes/platinum"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_2"
+    },
+    "P": {
+      "tag": "c:pickaxes/platinum"
+    },
+    "S": {
+      "tag": "c:shovels/platinum"
+    }
   },
   "pattern": [
     " P ",
     "AMS"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:platinum_extruder"
   }
 }

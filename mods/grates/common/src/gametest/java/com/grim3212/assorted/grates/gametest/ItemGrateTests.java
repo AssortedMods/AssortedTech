@@ -5,8 +5,8 @@ import com.grim3212.assorted.grates.common.block.ItemGrateBlock;
 import com.grim3212.assorted.lib.registry.IRegistryObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.animal.pig.Pig;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -75,7 +75,7 @@ final class ItemGrateTests {
         List<ItemGrateBlock> grates = build(helper);
         List<Pig> pigs = new ArrayList<>();
         for (int i = 0; i < grates.size(); i++) {
-            pigs.add(helper.spawnWithNoFreeWill(EntityTypes.PIG, grateSlot(i).above()));
+            pigs.add(helper.spawnWithNoFreeWill(EntityType.PIG, grateSlot(i).above()));
         }
 
         helper.succeedWhen(() -> {

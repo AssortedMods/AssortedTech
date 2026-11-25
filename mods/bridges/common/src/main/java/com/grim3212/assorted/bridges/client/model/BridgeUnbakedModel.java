@@ -5,22 +5,28 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.grim3212.assorted.bridges.Constants;
 import com.grim3212.assorted.lib.client.model.loaders.IModelSpecification;
 import com.grim3212.assorted.lib.client.model.loaders.IModelSpecificationLoader;
 import com.grim3212.assorted.lib.client.model.loaders.context.IModelBakingContext;
-import com.grim3212.assorted.bridges.Constants;
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
-import net.minecraft.client.renderer.block.dispatch.ModelState;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ResolvableModel;
-import net.minecraft.resources.Identifier;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class BridgeUnbakedModel implements IModelSpecification<BridgeUnbakedModel> {
 
-    public static final Identifier LOADER_NAME = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "bridge");
+    public static final ResourceLocation LOADER_NAME = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "bridge");
 
     private final Bridge unbakedBridge;
 
@@ -28,26 +34,31 @@ public class BridgeUnbakedModel implements IModelSpecification<BridgeUnbakedMode
         this.unbakedBridge = unbakedBridge;
     }
 
+    /**
+     * The item form is drawn from the stack's stored block, so the json's own overrides are not used.
+     */
     @Override
-    public BlockStateModel bake(IModelBakingContext context, ModelBaker baker, ModelState modelState, Identifier modelLocation) {
-        return new BridgeBakedModel(context, this.unbakedBridge, baker, modelState, modelLocation);
+    public BakedModel bake(IModelBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides) {
+        UnbakedModel parent = baker.getModel(this.unbakedBridge.parent());
+        parent.resolveParents(baker::getModel);
+        return new BridgeBakedModel(context, this.unbakedBridge, parent, baker, spriteGetter, modelState, this.unbakedBridge.parent());
     }
 
-    // BridgeBakedModel resolves the shape with baker.getModel(parent), and nothing else pulls
-    // tinted_cube in - it is the json parent of nothing and no blockstate names it - so without this
-    // discovery never sees it and the bridges bake to the missing model.
+    /**
+     * The shape template, {@code tinted_cube}, which no blockstate names: without its parents
+     * resolved every bridge bakes to the missing model.
+     */
     @Override
-    public void resolveDependencies(ResolvableModel.Resolver resolver) {
-        resolver.markDependency(this.unbakedBridge.parent());
+    public Collection<ResourceLocation> getDependencies() {
+        return List.of(this.unbakedBridge.parent());
     }
 
     /**
      * The {@code "bridge"} object of a bridge model json: the parent model giving the shape, plus
      * the texture slots it still needs (in practice {@code stored}, overridden by the stored block
-     * state). Read field by field because a json {@code CuboidModel}'s deserializers are package
-     * private; the same shape as AssortedDecor's {@code ColorizerUnbakedModel.Colorizer}.
+     * state). The same shape as AssortedDecor's {@code ColorizerUnbakedModel.Colorizer}.
      */
-    public record Bridge(Identifier parent, ImmutableMap<String, String> textures) {
+    public record Bridge(ResourceLocation parent, ImmutableMap<String, String> textures) {
     }
 
     public static final class Loader implements IModelSpecificationLoader<BridgeUnbakedModel> {
@@ -59,7 +70,7 @@ public class BridgeUnbakedModel implements IModelSpecification<BridgeUnbakedMode
                 throw new JsonParseException("Bridge Loader requires a 'bridge' key holding the model to retexture.");
 
             JsonObject bridge = GsonHelper.getAsJsonObject(jsonObject, "bridge");
-            Identifier parent = Identifier.parse(GsonHelper.getAsString(bridge, "parent"));
+            ResourceLocation parent = ResourceLocation.parse(GsonHelper.getAsString(bridge, "parent"));
 
             ImmutableMap.Builder<String, String> textures = ImmutableMap.builder();
             if (bridge.has("textures")) {

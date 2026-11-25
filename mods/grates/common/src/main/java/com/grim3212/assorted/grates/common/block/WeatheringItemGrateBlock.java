@@ -36,7 +36,7 @@ public class WeatheringItemGrateBlock extends ItemGrateBlock implements Weatheri
             return Optional.empty();
         }
 
-        return Optional.of(GratesBlocks.COPPER_ITEM_GRATES.weathering().pick(this.age.next()).get().withPropertiesOf(state));
+        return Optional.of(GratesBlocks.COPPER_ITEM_GRATES.weathering().pick(CopperFamily.next(this.age)).get().withPropertiesOf(state));
     }
 
     @Override

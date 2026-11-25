@@ -1,5 +1,6 @@
 package com.grim3212.assorted.redstone.common.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -13,8 +14,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.redstone.Orientation;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Extends {@link BaseTorchBlock} rather than {@code TorchBlock}, which only takes a
@@ -22,12 +21,18 @@ import org.jetbrains.annotations.Nullable;
  */
 public class FlipFlopTorchBlock extends BaseTorchBlock {
 
+	public static final MapCodec<FlipFlopTorchBlock> CODEC = simpleCodec(FlipFlopTorchBlock::new);
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 	public static final BooleanProperty PREV_LIT = BooleanProperty.create("prev_lit");
 
 	public FlipFlopTorchBlock(Properties props) {
 		super(props);
 		this.registerDefaultState(this.stateDefinition.any().setValue(LIT, false).setValue(PREV_LIT, false));
+	}
+
+	@Override
+	protected MapCodec<? extends FlipFlopTorchBlock> codec() {
+		return CODEC;
 	}
 
 	@Override
@@ -43,12 +48,12 @@ public class FlipFlopTorchBlock extends BaseTorchBlock {
 	}
 
 	/**
-	 * Replaces {@code onRemove}. 26.x only calls this for a real removal, so the "did the block
-	 * actually change" guard the old method needed is gone.
+	 * 1.21.1 also calls this when only the state changes, which {@link #onPlace} already covers, so
+	 * only a real removal updates the neighbours here.
 	 */
 	@Override
-	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
-		if (!movedByPiston) {
+	protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+		if (!movedByPiston && !state.is(newState.getBlock())) {
 			for (Direction direction : Direction.values()) {
 				level.updateNeighborsAt(pos.relative(direction), this);
 			}
@@ -56,7 +61,7 @@ public class FlipFlopTorchBlock extends BaseTorchBlock {
 	}
 
 	@Override
-	protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean movedByPiston) {
+	protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean movedByPiston) {
 		level.scheduleTick(pos, this, 2);
 	}
 

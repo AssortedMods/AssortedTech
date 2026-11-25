@@ -13,18 +13,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -41,8 +40,7 @@ public class AlarmBlock extends Block implements EntityBlock {
     private static final VoxelShape EAST_BOUNDS = Block.box(0.0D, 3.0D, 3.0D, 4.0D, 13.0D, 13.0D);
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    // DirectionProperty was folded back into a plain EnumProperty<Direction> in 26.x.
-    public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
     public AlarmBlock(Properties props) {
@@ -103,14 +101,10 @@ public class AlarmBlock extends Block implements EntityBlock {
         return null;
     }
 
-    /**
-     * {@code updateShape} takes the neighbour's position and state explicitly now, and gets a
-     * {@link ScheduledTickAccess} instead of the {@code LevelAccessor} it used to schedule through.
-     */
     @Override
-    protected BlockState updateShape(BlockState stateIn, LevelReader level, ScheduledTickAccess ticks, BlockPos currentPos, Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState stateIn, Direction directionToNeighbour, BlockState neighbourState, LevelAccessor level, BlockPos currentPos, BlockPos neighbourPos) {
         if (stateIn.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
 
         return directionToNeighbour.getOpposite() == stateIn.getValue(FACING) && !stateIn.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : stateIn;
@@ -132,26 +126,28 @@ public class AlarmBlock extends Block implements EntityBlock {
     }
 
     /**
-     * Replaces {@code onRemove}; 26.x only calls this for a real removal.
+     * 1.21.1 also calls this when only the state changes, which {@link #onPlace} already covers, so
+     * only a real removal updates the neighbours. The super call drops the block entity.
      */
     @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
-        if (!movedByPiston) {
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!movedByPiston && !state.is(newState.getBlock())) {
             for (Direction direction : Direction.values()) {
                 level.updateNeighborsAt(pos.relative(direction), this);
             }
         }
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean movedByPiston) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean movedByPiston) {
         level.scheduleTick(pos, this, 2);
     }
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
         Direction dir = state.getValue(FACING);
-        BlockPos poweredPos = pos.offset(dir.getOpposite().getUnitVec3i());
+        BlockPos poweredPos = pos.relative(dir.getOpposite());
         if (!state.getValue(POWERED) && level.hasNeighborSignal(poweredPos)) {
 
             BlockEntity blockEntity = level.getBlockEntity(pos);
@@ -172,7 +168,7 @@ public class AlarmBlock extends Block implements EntityBlock {
 
     @Override
     protected BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+        return this.rotate(state, mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     /**
@@ -185,7 +181,7 @@ public class AlarmBlock extends Block implements EntityBlock {
         if (!worldIn.isClientSide()) {
             Services.NETWORK.sendTo(player, new AlarmOpenPacket(pos));
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(worldIn.isClientSide());
     }
 
     @Override

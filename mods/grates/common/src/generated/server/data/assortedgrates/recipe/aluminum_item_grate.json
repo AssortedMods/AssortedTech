@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/aluminum"
+    "I": {
+      "tag": "c:ingots/aluminum"
+    }
   },
   "pattern": [
     "I I",

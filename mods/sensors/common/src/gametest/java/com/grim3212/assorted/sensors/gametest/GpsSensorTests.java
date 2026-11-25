@@ -17,18 +17,17 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.animal.cow.Cow;
-import net.minecraft.world.entity.animal.pig.Pig;
-import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -86,7 +85,7 @@ final class GpsSensorTests {
         final BlockPos sensorPos = new BlockPos(1, 1, 1);
         final BlockPos watched = new BlockPos(4, 1, 4);
         helper.setBlock(sensorPos, SensorsBlocks.GPS_SENSOR.get());
-        GpsSensorBlockEntity sensor = helper.getBlockEntity(sensorPos, GpsSensorBlockEntity.class);
+        GpsSensorBlockEntity sensor = helper.<GpsSensorBlockEntity>getBlockEntity(sensorPos);
         Container slot = sensor.getGpsContainer();
         ResourceKey<Level> here = helper.getLevel().dimension();
 
@@ -130,7 +129,7 @@ final class GpsSensorTests {
         final BlockPos sensorPos = new BlockPos(1, 1, 1);
         final BlockPos watched = new BlockPos(4, 1, 4);
         helper.setBlock(sensorPos, SensorsBlocks.GPS_SENSOR.get());
-        GpsSensorBlockEntity sensor = helper.getBlockEntity(sensorPos, GpsSensorBlockEntity.class);
+        GpsSensorBlockEntity sensor = helper.<GpsSensorBlockEntity>getBlockEntity(sensorPos);
         sensor.getGpsContainer().setItem(0, gps(helper.getLevel().dimension(), helper.absolutePos(watched)));
         sensor.configure(GpsSensorMode.MOBS, "", ItemStack.EMPTY, 0, false);
 
@@ -138,14 +137,14 @@ final class GpsSensorTests {
                 .thenExecute(() -> {
                     helper.assertBlockProperty(sensorPos, GpsSensorBlock.ACTIVE, false);
                     // In front of the sensor, where a plain sensor would look, is ignored.
-                    helper.spawnWithNoFreeWill(EntityTypes.PIG, sensorPos.north().east());
+                    helper.spawnWithNoFreeWill(EntityType.PIG, sensorPos.north().east());
                 })
                 .thenIdle(5)
                 .thenExecute(() -> helper.assertBlockProperty(sensorPos, GpsSensorBlock.ACTIVE, false))
-                .thenExecute(() -> helper.spawnWithNoFreeWill(EntityTypes.PIG, watched))
+                .thenExecute(() -> helper.spawnWithNoFreeWill(EntityType.PIG, watched))
                 .thenWaitUntil(() -> {
                     helper.assertBlockProperty(sensorPos, GpsSensorBlock.ACTIVE, true);
-                    helper.assertRedstoneSignal(sensorPos, Direction.NORTH, signal -> signal == 15, () -> Component.literal("a detecting GPS sensor did not emit 15"));
+                    helper.assertRedstoneSignal(sensorPos, Direction.NORTH, signal -> signal == 15, () -> "a detecting GPS sensor did not emit 15");
                 })
                 .thenExecute(() -> sensor.configure(GpsSensorMode.MOBS, "minecraft:cow", ItemStack.EMPTY, 0, false))
                 .thenWaitUntil(() -> helper.assertBlockProperty(sensorPos, GpsSensorBlock.ACTIVE, false))
@@ -157,28 +156,28 @@ final class GpsSensorTests {
         final BlockPos sensorPos = new BlockPos(1, 1, 1);
         final BlockPos watched = new BlockPos(4, 1, 4);
         helper.setBlock(sensorPos, SensorsBlocks.UPGRADED_GPS_SENSOR.get());
-        GpsSensorBlockEntity sensor = helper.getBlockEntity(sensorPos, GpsSensorBlockEntity.class);
+        GpsSensorBlockEntity sensor = helper.<GpsSensorBlockEntity>getBlockEntity(sensorPos);
         sensor.getGpsContainer().setItem(0, gps(helper.getLevel().dimension(), helper.absolutePos(watched)));
         sensor.configure(GpsSensorMode.MOBS, "", ItemStack.EMPTY, 1, false);
         for (int i = 0; i < 3; i++) {
-            helper.spawnWithNoFreeWill(EntityTypes.PIG, watched);
+            helper.spawnWithNoFreeWill(EntityType.PIG, watched);
         }
 
         helper.startSequence()
-                .thenWaitUntil(() -> helper.assertRedstoneSignal(sensorPos, Direction.NORTH, signal -> signal == 3, () -> Component.literal("three pigs did not give a signal of 3, but " + sensor.getSignal())))
+                .thenWaitUntil(() -> helper.assertRedstoneSignal(sensorPos, Direction.NORTH, signal -> signal == 3, () -> "three pigs did not give a signal of 3, but " + sensor.getSignal()))
                 .thenExecute(() -> {
                     sensor.configure(GpsSensorMode.ITEMS, "", ItemStack.EMPTY, 1, false);
                     helper.spawnItem(Items.APPLE, watched).getItem().setCount(20);
                 })
-                .thenWaitUntil(() -> helper.assertRedstoneSignal(sensorPos, Direction.NORTH, signal -> signal == 15, () -> Component.literal("20 dropped apples did not give a signal of 15, but " + sensor.getSignal())))
+                .thenWaitUntil(() -> helper.assertRedstoneSignal(sensorPos, Direction.NORTH, signal -> signal == 15, () -> "20 dropped apples did not give a signal of 15, but " + sensor.getSignal()))
                 .thenSucceed();
     }
 
     private static void gpsSensorFiltersWhatItMatches(GameTestHelper helper) {
         helper.setBlock(new BlockPos(1, 1, 1), SensorsBlocks.GPS_SENSOR.get());
-        GpsSensorBlockEntity sensor = helper.getBlockEntity(new BlockPos(1, 1, 1), GpsSensorBlockEntity.class);
-        Pig pig = helper.spawnWithNoFreeWill(EntityTypes.PIG, new BlockPos(4, 1, 4));
-        Cow cow = helper.spawnWithNoFreeWill(EntityTypes.COW, new BlockPos(6, 1, 4));
+        GpsSensorBlockEntity sensor = helper.<GpsSensorBlockEntity>getBlockEntity(new BlockPos(1, 1, 1));
+        Pig pig = helper.spawnWithNoFreeWill(EntityType.PIG, new BlockPos(4, 1, 4));
+        Cow cow = helper.spawnWithNoFreeWill(EntityType.COW, new BlockPos(6, 1, 4));
         ServerPlayer player = survivalPlayer(helper);
         ItemEntity apple = helper.spawnItem(Items.APPLE, new BlockPos(2, 1, 6));
 
@@ -189,7 +188,7 @@ final class GpsSensorTests {
 
         sensor.configure(GpsSensorMode.PLAYERS, "", ItemStack.EMPTY, 0, false);
         helper.assertTrue(sensor.matches(player) && !sensor.matches(pig), "an unfiltered player sensor sees players only");
-        sensor.configure(GpsSensorMode.PLAYERS, player.getGameProfile().name().toUpperCase(), ItemStack.EMPTY, 0, false);
+        sensor.configure(GpsSensorMode.PLAYERS, player.getGameProfile().getName().toUpperCase(), ItemStack.EMPTY, 0, false);
         helper.assertTrue(sensor.matches(player), "a player filter is not case sensitive");
         sensor.configure(GpsSensorMode.PLAYERS, "someone-else", ItemStack.EMPTY, 0, false);
         helper.assertFalse(sensor.matches(player), "a player filter saw someone else");
@@ -212,11 +211,11 @@ final class GpsSensorTests {
     private static void upgradedGpsSensorTakesListsAndTags(GameTestHelper helper) {
         helper.setBlock(new BlockPos(1, 1, 1), SensorsBlocks.GPS_SENSOR.get());
         helper.setBlock(new BlockPos(3, 1, 1), SensorsBlocks.UPGRADED_GPS_SENSOR.get());
-        GpsSensorBlockEntity plain = helper.getBlockEntity(new BlockPos(1, 1, 1), GpsSensorBlockEntity.class);
-        GpsSensorBlockEntity upgraded = helper.getBlockEntity(new BlockPos(3, 1, 1), GpsSensorBlockEntity.class);
-        Pig pig = helper.spawnWithNoFreeWill(EntityTypes.PIG, new BlockPos(4, 1, 4));
-        Cow cow = helper.spawnWithNoFreeWill(EntityTypes.COW, new BlockPos(6, 1, 4));
-        Zombie zombie = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, new BlockPos(2, 1, 4));
+        GpsSensorBlockEntity plain = helper.<GpsSensorBlockEntity>getBlockEntity(new BlockPos(1, 1, 1));
+        GpsSensorBlockEntity upgraded = helper.<GpsSensorBlockEntity>getBlockEntity(new BlockPos(3, 1, 1));
+        Pig pig = helper.spawnWithNoFreeWill(EntityType.PIG, new BlockPos(4, 1, 4));
+        Cow cow = helper.spawnWithNoFreeWill(EntityType.COW, new BlockPos(6, 1, 4));
+        Zombie zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, new BlockPos(2, 1, 4));
         ServerPlayer player = survivalPlayer(helper);
         stand(helper, player, new BlockPos(3, 1, 3));
         ItemEntity log = helper.spawnItem(Items.OAK_LOG, new BlockPos(2, 1, 6));
@@ -243,14 +242,14 @@ final class GpsSensorTests {
         helper.assertTrue(upgraded.getEntries().isEmpty(), "the players list started with the mobs list's entries");
         upgraded.addEntry("someone-else");
         helper.assertFalse(upgraded.matches(player), "a list without the player saw them");
-        upgraded.addEntry(player.getGameProfile().name());
+        upgraded.addEntry(player.getGameProfile().getName());
         helper.assertTrue(upgraded.matches(player), "a list of names missed a player on it");
 
         upgraded.configure(GpsSensorMode.ITEMS, "", ItemStack.EMPTY, 0, false);
         upgraded.addEntry("#minecraft:logs");
         helper.assertTrue(upgraded.matches(log) && !upgraded.matches(apple), "a logs tag sees the log only");
         menu.setCarried(new ItemStack(Items.APPLE, 3));
-        menu.clicked(GpsSensorMenu.FILTER_SLOT, 0, ContainerInput.PICKUP, player);
+        menu.clicked(GpsSensorMenu.FILTER_SLOT, 0, ClickType.PICKUP, player);
         helper.assertValueEqual(upgraded.getEntries(), List.of("#minecraft:logs", "minecraft:apple"), "the item entries after clicking apples onto the slot");
         helper.assertTrue(upgraded.getFilterItem().isEmpty() && !menu.getSlot(GpsSensorMenu.FILTER_SLOT).hasItem(), "the upgraded sensor's slot kept the apple");
         helper.assertTrue(upgraded.matches(log) && upgraded.matches(apple), "a tag and a clicked item see either one");
@@ -290,8 +289,8 @@ final class GpsSensorTests {
         final BlockPos upgradedPos = new BlockPos(3, 1, 1);
         helper.setBlock(plainPos, SensorsBlocks.GPS_SENSOR.get());
         helper.setBlock(upgradedPos, SensorsBlocks.UPGRADED_GPS_SENSOR.get());
-        GpsSensorBlockEntity plain = helper.getBlockEntity(plainPos, GpsSensorBlockEntity.class);
-        GpsSensorBlockEntity upgraded = helper.getBlockEntity(upgradedPos, GpsSensorBlockEntity.class);
+        GpsSensorBlockEntity plain = helper.<GpsSensorBlockEntity>getBlockEntity(plainPos);
+        GpsSensorBlockEntity upgraded = helper.<GpsSensorBlockEntity>getBlockEntity(upgradedPos);
 
         plain.configure(GpsSensorMode.MOBS, "", ItemStack.EMPTY, 3, false);
         helper.assertValueEqual(plain.getRadius(), 0, "a plain GPS sensor's radius");
@@ -316,10 +315,12 @@ final class GpsSensorTests {
      * The item filter is a ghost slot: clicking it with a stack, or shift clicking one in the
      * inventory, copies a single into the sensor and moves nothing; an empty click clears it.
      */
+    // NeoForge deprecates RegistryFriendlyByteBuf.decorator for an overload only its patched jar has.
+    @SuppressWarnings("deprecation")
     private static void gpsSensorMenuTakesAGhostItem(GameTestHelper helper) {
         final BlockPos pos = new BlockPos(1, 1, 1);
         helper.setBlock(pos, SensorsBlocks.GPS_SENSOR.get());
-        GpsSensorBlockEntity sensor = helper.getBlockEntity(pos, GpsSensorBlockEntity.class);
+        GpsSensorBlockEntity sensor = helper.<GpsSensorBlockEntity>getBlockEntity(pos);
         ServerPlayer player = survivalPlayer(helper, new ItemStack(Items.EMERALD, 5));
         stand(helper, player, new BlockPos(2, 1, 3));
         GpsSensorMenu menu = openMenu(player, sensor);
@@ -336,7 +337,7 @@ final class GpsSensorTests {
         helper.assertValueEqual(sensor.getMode(), GpsSensorMode.ITEMS, "the mode after two mode clicks");
 
         menu.setCarried(new ItemStack(Items.APPLE, 7));
-        menu.clicked(GpsSensorMenu.FILTER_SLOT, 0, ContainerInput.PICKUP, player);
+        menu.clicked(GpsSensorMenu.FILTER_SLOT, 0, ClickType.PICKUP, player);
         helper.assertTrue(sensor.getFilterItem().is(Items.APPLE) && sensor.getFilterItem().getCount() == 1, "clicking the slot with apples did not make them the filter");
         helper.assertValueEqual(menu.getCarried().getCount(), 7, "the carried apples after setting the filter");
 
@@ -347,7 +348,7 @@ final class GpsSensorTests {
         helper.assertValueEqual(player.getMainHandItem().getCount(), 5, "the held emeralds after shift clicking them");
 
         menu.setCarried(ItemStack.EMPTY);
-        menu.clicked(GpsSensorMenu.FILTER_SLOT, 0, ContainerInput.PICKUP, player);
+        menu.clicked(GpsSensorMenu.FILTER_SLOT, 0, ClickType.PICKUP, player);
         helper.assertTrue(sensor.getFilterItem().isEmpty(), "an empty handed click did not clear the filter");
 
         helper.succeed();

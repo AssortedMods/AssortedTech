@@ -10,10 +10,11 @@ import com.grim3212.assorted.lib.platform.Services;
 import java.io.BufferedReader;
 import java.io.IOException;
 import com.grim3212.assorted.bridges.Constants;
+import com.grim3212.assorted.bridges.common.block.BridgesBlocks;
 import com.grim3212.assorted.bridges.common.handlers.BridgesCreativeItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -55,7 +56,7 @@ final class AssetTests {
         int items = 0;
 
         for (Map.Entry<ResourceKey<Block>, Block> entry : BuiltInRegistries.BLOCK.entrySet()) {
-            Identifier id = entry.getKey().identifier();
+            ResourceLocation id = entry.getKey().location();
             if (!Constants.MOD_ID.equals(id.getNamespace())) {
                 continue;
             }
@@ -70,13 +71,14 @@ final class AssetTests {
         }
 
         for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
-            Identifier id = entry.getKey().identifier();
+            ResourceLocation id = entry.getKey().location();
             if (!Constants.MOD_ID.equals(id.getNamespace())) {
                 continue;
             }
             items++;
-            if (!resourceExists("/assets/" + id.getNamespace() + "/items/" + id.getPath() + ".json")) {
-                missing.add("items/" + id.getPath() + ".json");
+            // 1.21.1 reads an item's model straight from models/item; the items/ definitions came with 1.21.4.
+            if (!resourceExists("/assets/" + id.getNamespace() + "/models/item/" + id.getPath() + ".json")) {
+                missing.add("models/item/" + id.getPath() + ".json");
             }
             String key = entry.getValue().getDescriptionId();
             if (!lang.has(key)) {
@@ -85,7 +87,7 @@ final class AssetTests {
         }
 
         if (!BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(BridgesCreativeItems.TAB)) {
-            missing.add("the " + BridgesCreativeItems.TAB.identifier() + " creative tab");
+            missing.add("the " + BridgesCreativeItems.TAB.location() + " creative tab");
         }
         if (!lang.has("itemGroup." + Constants.FAMILY_ID)) {
             missing.add("lang key itemGroup." + Constants.FAMILY_ID);
@@ -100,37 +102,51 @@ final class AssetTests {
         helper.succeed();
     }
 
+    /** The loader this mod registers, spelled out: its class is client only. */
+    private static final String BRIDGE_LOADER = Constants.MOD_ID + ":bridge";
+
     /**
-     * The bridge item draws the block it holds: {@code items/bridge.json} must name the {@code
-     * assortedbridges:bridge} item model type, as a plain {@code minecraft:model} bakes the bridge
-     * once, empty, and nothing warns. {@code BridgesClientGameTests} checks what it draws.
+     * The bridge item draws the block it holds: its item model must bake through the bridge loader,
+     * its own or a parent's, as only that model resolves a stack to its stored block through its item
+     * overrides. An item model that reaches a plain template bakes the bridge once, empty, and
+     * nothing warns.
      */
     private static void bridgeItemDrawsItsStoredBlock(GameTestHelper helper) {
-        JsonObject json = readJson("/assets/" + Constants.MOD_ID + "/items/bridge.json");
-        helper.assertTrue(json != null, "assets/" + Constants.MOD_ID + "/items/bridge.json is not on the classpath");
-
-        JsonObject model = json.getAsJsonObject("model");
-        helper.assertValueEqual(model.get("type").getAsString(), Constants.MOD_ID + ":bridge", "item model type of the bridge");
-        helper.assertValueEqual(model.get("model").getAsString(), Constants.MOD_ID + ":block/bridge", "block model the bridge item draws");
-        helper.assertTrue(model.has("tints") && model.getAsJsonArray("tints").size() == 1
-                        && (Constants.MOD_ID + ":bridge").equals(model.getAsJsonArray("tints").get(0).getAsJsonObject().get("type").getAsString()),
-                "the bridge item lost its " + Constants.MOD_ID + ":bridge tint: " + model.get("tints"));
-
+        ResourceLocation id = BuiltInRegistries.ITEM.getKey(BridgesBlocks.BRIDGE.get().asItem());
+        helper.assertTrue(readJson("/assets/" + id.getNamespace() + "/models/item/" + id.getPath() + ".json") != null,
+                "assets/" + id.getNamespace() + "/models/item/" + id.getPath() + ".json is not on the classpath");
+        helper.assertValueEqual(inheritedLoader(id.withPrefix("item/")), BRIDGE_LOADER, "the loader the bridge item is drawn by");
         helper.succeed();
     }
 
+    /** The {@code loader} a model json or the nearest of its parents in this mod names, or null. */
+    private static String inheritedLoader(ResourceLocation model) {
+        for (int depth = 0; depth < 8 && model != null && Constants.MOD_ID.equals(model.getNamespace()); depth++) {
+            JsonObject json = readJson("/assets/" + model.getNamespace() + "/models/" + model.getPath() + ".json");
+            if (json == null) {
+                return null;
+            }
+            if (json.has("loader")) {
+                return json.get("loader").getAsString();
+            }
+            model = json.has("parent") ? ResourceLocation.parse(json.get("parent").getAsString()) : null;
+        }
+        return null;
+    }
+
     /**
-     * Every custom blockstate model and loader model carries both loaders' keys: NeoForge reads
-     * {@code "type"} and {@code "loader"}, Fabric only {@code "fabric:type"}. With only NeoForge's
-     * key, Fabric loads a plain static model and nothing warns.
+     * Every variant of the bridge's blockstate reaches a bridge loader model, named by the one
+     * {@code "loader"} key both loaders read in 1.21.1 (Fabric through AssortedLib). A blockstate
+     * pointing at a plain template bakes it once and draws the empty bridge whatever is stored, and
+     * the 26.x keys - a variant {@code "type"}, a model's {@code "fabric:type"} - are read by neither
+     * loader here, so a json still leaning on one is wrong.
      */
     private static void loaderModelsAreReadOnBothLoaders(GameTestHelper helper) {
         List<String> wrong = new ArrayList<>();
-        List<String> checkedModels = new ArrayList<>();
-        int customVariants = 0;
+        int loaderModels = 0;
 
         for (Map.Entry<ResourceKey<Block>, Block> entry : BuiltInRegistries.BLOCK.entrySet()) {
-            Identifier id = entry.getKey().identifier();
+            ResourceLocation id = entry.getKey().location();
             if (!Constants.MOD_ID.equals(id.getNamespace())) {
                 continue;
             }
@@ -139,30 +155,38 @@ final class AssetTests {
                 continue;
             }
 
+            boolean isBridge = entry.getValue() == BridgesBlocks.BRIDGE.get();
             for (JsonObject variant : blockstateVariants(blockstate)) {
-                if (variant.has("type")) {
-                    customVariants++;
-                    if (!variant.get("type").equals(variant.get("fabric:type"))) {
-                        wrong.add("blockstate " + id.getPath() + " has type " + variant.get("type") + " but fabric:type " + variant.get("fabric:type"));
-                    }
+                if (variant.has("type") || variant.has("fabric:type")) {
+                    wrong.add("blockstate " + id.getPath() + " still has the 26.x key " + (variant.has("type") ? "type" : "fabric:type"));
                 }
 
                 String model = variant.has("model") ? variant.get("model").getAsString() : null;
-                if (model == null || checkedModels.contains(model) || !model.startsWith(Constants.MOD_ID + ":")) {
+                if (model == null || !model.startsWith(Constants.MOD_ID + ":")) {
                     continue;
                 }
-                checkedModels.add(model);
-
-                Identifier modelId = Identifier.parse(model);
+                ResourceLocation modelId = ResourceLocation.parse(model);
                 JsonObject json = readJson("/assets/" + modelId.getNamespace() + "/models/" + modelId.getPath() + ".json");
-                if (json != null && json.has("loader") && !json.get("loader").equals(json.get("fabric:type"))) {
-                    wrong.add("model " + model + " has loader " + json.get("loader") + " but fabric:type " + json.get("fabric:type"));
+                if (json == null) {
+                    wrong.add("blockstate " + id.getPath() + " names " + model + ", which does not exist");
+                    continue;
+                }
+                if (json.has("fabric:type")) {
+                    wrong.add("model " + model + " still has the 26.x key fabric:type");
+                }
+                if (json.has("loader")) {
+                    loaderModels++;
+                    if (!BRIDGE_LOADER.equals(json.get("loader").getAsString())) {
+                        wrong.add("model " + model + " names loader " + json.get("loader"));
+                    }
+                } else if (isBridge) {
+                    wrong.add("bridge variant model " + model + " is a plain model");
                 }
             }
         }
 
-        helper.assertTrue(customVariants > 0, "no custom blockstate variants were found to check");
-        helper.assertTrue(wrong.isEmpty(), wrong.size() + " json(s) Fabric would read as static: " + String.join("; ", wrong));
+        helper.assertTrue(loaderModels >= 2, "only " + loaderModels + " bridge loader models were found to check");
+        helper.assertTrue(wrong.isEmpty(), wrong.size() + " json(s) would draw a static model: " + String.join("; ", wrong));
         helper.succeed();
     }
 
@@ -177,8 +201,8 @@ final class AssetTests {
         List<String> failed = new ArrayList<>();
 
         recipes.listMatchingResources(server.getResourceManager()).forEach((file, resource) -> {
-            Identifier id = recipes.fileToId(file);
-            if (!id.getNamespace().equals(Constants.MOD_ID) || server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, id)).isPresent()) {
+            ResourceLocation id = recipes.fileToId(file);
+            if (!id.getNamespace().equals(Constants.MOD_ID) || server.getRecipeManager().byKey(id).isPresent()) {
                 return;
             }
 
@@ -203,7 +227,7 @@ final class AssetTests {
      */
     private static void everyItemTagHasAName(GameTestHelper helper) {
         Language language = Language.getInstance();
-        List<String> missing = helper.getLevel().registryAccess().lookupOrThrow(Registries.ITEM).getTags()
+        List<String> missing = helper.getLevel().registryAccess().lookupOrThrow(Registries.ITEM).listTags()
                 .map(tag -> tag.key().location())
                 .filter(id -> !"minecraft".equals(id.getNamespace()))
                 .map(id -> "tag.item." + id.getNamespace() + "." + id.getPath().replace('/', '.'))

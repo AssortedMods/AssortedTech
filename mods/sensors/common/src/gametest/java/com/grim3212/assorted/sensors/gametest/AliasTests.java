@@ -11,7 +11,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -38,20 +38,20 @@ final class AliasTests {
         }
 
         for (IRegistryObject<Block> block : SensorsBlocks.BLOCKS.getEntries()) {
-            helper.assertValueEqual(BuiltInRegistries.BLOCK.getValue(old(block.getId())), block.get(), "the block saved as " + old(block.getId()));
+            helper.assertValueEqual(BuiltInRegistries.BLOCK.get(old(block.getId())), block.get(), "the block saved as " + old(block.getId()));
         }
 
         for (IRegistryObject<BlockEntityType<?>> type : SensorsBlockEntityTypes.BLOCK_ENTITIES.getEntries()) {
-            helper.assertValueEqual(BuiltInRegistries.BLOCK_ENTITY_TYPE.getValue(old(type.getId())), type.get(), "the block entity saved as " + old(type.getId()));
+            helper.assertValueEqual(BuiltInRegistries.BLOCK_ENTITY_TYPE.get(old(type.getId())), type.get(), "the block entity saved as " + old(type.getId()));
         }
 
         for (IRegistryObject<DataComponentType<?>> type : SensorsDataComponents.DATA_COMPONENTS.getEntries()) {
-            helper.assertValueEqual(BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(old(type.getId())), type.get(), "the data component saved as " + old(type.getId()));
+            helper.assertValueEqual(BuiltInRegistries.DATA_COMPONENT_TYPE.get(old(type.getId())), type.get(), "the data component saved as " + old(type.getId()));
         }
 
         // A GPS saved with its stored position keeps it.
-        Identifier gps = old(SensorsItems.GPS.getId());
-        Identifier target = old(SensorsDataComponents.GPS_TARGET.getId());
+        ResourceLocation gps = old(SensorsItems.GPS.getId());
+        ResourceLocation target = old(SensorsDataComponents.GPS_TARGET.getId());
         ItemStack stored = parse(helper, "{\"id\": \"" + gps + "\", \"count\": 1, \"components\": {\"" + target
                 + "\": {\"dimension\": \"minecraft:overworld\", \"pos\": [1, 2, 3]}}}");
         helper.assertTrue(stored.is(SensorsItems.GPS.get()) && stored.has(SensorsDataComponents.GPS_TARGET.get()),
@@ -64,7 +64,7 @@ final class AliasTests {
                 JsonParser.parseString(json)).getOrThrow();
     }
 
-    private static Identifier old(Identifier id) {
-        return Identifier.fromNamespaceAndPath(Constants.FAMILY_ID, id.getPath());
+    private static ResourceLocation old(ResourceLocation id) {
+        return ResourceLocation.fromNamespaceAndPath(Constants.FAMILY_ID, id.getPath());
     }
 }

@@ -6,6 +6,8 @@ import com.grim3212.assorted.fan.common.block.blockentity.FanBlockEntity;
 import com.grim3212.assorted.fan.common.network.FanOpenPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -20,15 +22,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
 
 public class FanBlock extends Block implements EntityBlock {
 
-    // DirectionProperty was folded back into a plain EnumProperty<Direction> in 26.x.
-    public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final EnumProperty<FanMode> MODE = EnumProperty.create("mode", FanMode.class);
 
     public FanBlock(Properties props) {
@@ -58,7 +58,7 @@ public class FanBlock extends Block implements EntityBlock {
 
     @Override
     protected BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+        return this.rotate(state, mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     /**
@@ -70,11 +70,32 @@ public class FanBlock extends Block implements EntityBlock {
         if (!worldIn.isClientSide()) {
             Services.NETWORK.sendTo(player, new FanOpenPacket(pos));
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(worldIn.isClientSide());
+    }
+
+    /**
+     * A fan placed already powered gets no neighbour update, so it checks its power once its block
+     * entity exists, which is after this call.
+     */
+    @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
+        if (!oldState.is(state.getBlock())) {
+            level.scheduleTick(pos, this, 1);
+        }
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean movedByPiston) {
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        this.updatePower(state, level, pos);
+    }
+
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean movedByPiston) {
+        this.updatePower(state, level, pos);
+    }
+
+    /** Powered, the fan stops and remembers its mode; unpowered again, it goes back to that mode. */
+    private void updatePower(BlockState state, Level level, BlockPos pos) {
         boolean isPowered = level.hasNeighborSignal(pos);
         BlockEntity ent = level.getBlockEntity(pos);
 

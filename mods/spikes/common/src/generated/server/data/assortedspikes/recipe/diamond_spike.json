@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#c:gems/diamond"
+    "X": {
+      "tag": "c:gems/diamond"
+    }
   },
   "pattern": [
     "X X",

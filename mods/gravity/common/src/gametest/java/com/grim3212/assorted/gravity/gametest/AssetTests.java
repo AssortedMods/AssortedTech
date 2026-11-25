@@ -13,7 +13,7 @@ import com.grim3212.assorted.gravity.Constants;
 import com.grim3212.assorted.gravity.common.handlers.GravityCreativeItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -52,7 +52,7 @@ final class AssetTests {
         int items = 0;
 
         for (Map.Entry<ResourceKey<Block>, Block> entry : BuiltInRegistries.BLOCK.entrySet()) {
-            Identifier id = entry.getKey().identifier();
+            ResourceLocation id = entry.getKey().location();
             if (!Constants.MOD_ID.equals(id.getNamespace())) {
                 continue;
             }
@@ -67,13 +67,14 @@ final class AssetTests {
         }
 
         for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
-            Identifier id = entry.getKey().identifier();
+            ResourceLocation id = entry.getKey().location();
             if (!Constants.MOD_ID.equals(id.getNamespace())) {
                 continue;
             }
             items++;
-            if (!resourceExists("/assets/" + id.getNamespace() + "/items/" + id.getPath() + ".json")) {
-                missing.add("items/" + id.getPath() + ".json");
+            // 1.21.1 reads an item's model straight from models/item; the items/ definitions came with 1.21.4.
+            if (!resourceExists("/assets/" + id.getNamespace() + "/models/item/" + id.getPath() + ".json")) {
+                missing.add("models/item/" + id.getPath() + ".json");
             }
             String key = entry.getValue().getDescriptionId();
             if (!lang.has(key)) {
@@ -82,7 +83,7 @@ final class AssetTests {
         }
 
         if (!BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(GravityCreativeItems.TAB)) {
-            missing.add("the " + GravityCreativeItems.TAB.identifier() + " creative tab");
+            missing.add("the " + GravityCreativeItems.TAB.location() + " creative tab");
         }
         if (!lang.has("itemGroup." + Constants.FAMILY_ID)) {
             missing.add("lang key itemGroup." + Constants.FAMILY_ID);
@@ -108,8 +109,8 @@ final class AssetTests {
         List<String> failed = new ArrayList<>();
 
         recipes.listMatchingResources(server.getResourceManager()).forEach((file, resource) -> {
-            Identifier id = recipes.fileToId(file);
-            if (!id.getNamespace().equals(Constants.MOD_ID) || server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, id)).isPresent()) {
+            ResourceLocation id = recipes.fileToId(file);
+            if (!id.getNamespace().equals(Constants.MOD_ID) || server.getRecipeManager().byKey(id).isPresent()) {
                 return;
             }
 
@@ -134,7 +135,7 @@ final class AssetTests {
      */
     private static void everyItemTagHasAName(GameTestHelper helper) {
         Language language = Language.getInstance();
-        List<String> missing = helper.getLevel().registryAccess().lookupOrThrow(Registries.ITEM).getTags()
+        List<String> missing = helper.getLevel().registryAccess().lookupOrThrow(Registries.ITEM).listTags()
                 .map(tag -> tag.key().location())
                 .filter(id -> !"minecraft".equals(id.getNamespace()))
                 .map(id -> "tag.item." + id.getNamespace() + "." + id.getPath().replace('/', '.'))

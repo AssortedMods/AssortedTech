@@ -10,22 +10,20 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -42,8 +40,7 @@ public class SpikeBlock extends Block implements SimpleWaterloggedBlock {
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    // DirectionProperty was folded back into a plain EnumProperty<Direction> in 26.x.
-    public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
     private final SpikeType spikeType;
 
@@ -103,14 +100,10 @@ public class SpikeBlock extends Block implements SimpleWaterloggedBlock {
         return null;
     }
 
-    /**
-     * {@code updateShape} takes the neighbour's position and state explicitly now, and gets a
-     * {@link ScheduledTickAccess} instead of the {@code LevelAccessor} it used to schedule through.
-     */
     @Override
-    protected BlockState updateShape(BlockState stateIn, LevelReader level, ScheduledTickAccess ticks, BlockPos currentPos, Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState stateIn, Direction directionToNeighbour, BlockState neighbourState, LevelAccessor level, BlockPos currentPos, BlockPos neighbourPos) {
         if (stateIn.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
 
         return directionToNeighbour.getOpposite() == stateIn.getValue(FACING) && !stateIn.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : stateIn;
@@ -131,7 +124,7 @@ public class SpikeBlock extends Block implements SimpleWaterloggedBlock {
 
     @Override
     protected BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+        return this.rotate(state, mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
@@ -142,26 +135,28 @@ public class SpikeBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     /**
-     * Replaces {@code onRemove}; 26.x only calls this for a real removal.
+     * 1.21.1 also calls this when only the state changes, which {@link #onPlace} already covers, so
+     * only a real removal updates the neighbours.
      */
     @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
-        if (!movedByPiston) {
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!movedByPiston && !state.is(newState.getBlock())) {
             for (Direction direction : Direction.values()) {
                 level.updateNeighborsAt(pos.relative(direction), this);
             }
         }
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean movedByPiston) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean movedByPiston) {
         level.scheduleTick(pos, this, 2);
     }
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
         Direction dir = state.getValue(FACING);
-        BlockPos poweredPos = pos.offset(dir.getOpposite().getUnitVec3i());
+        BlockPos poweredPos = pos.relative(dir.getOpposite());
         if (!state.getValue(POWERED) && level.hasNeighborSignal(poweredPos)) {
             level.playSound(null, pos, SpikesSounds.SPIKE_DEPLOY.get(), SoundSource.BLOCKS, 0.3F, 0.6F);
             level.setBlock(pos, state.setValue(POWERED, true), 3);
@@ -171,15 +166,12 @@ public class SpikeBlock extends Block implements SimpleWaterloggedBlock {
         }
     }
 
-    /**
-     * Hurts a living entity by this spike type's damage while powered. The effect applier and
-     * {@code isPrecise} are ignored, as vanilla's own hazard blocks do.
-     */
+    /** Hurts a living entity by this spike type's damage while powered. */
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (state.getValue(POWERED) && entity instanceof LivingEntity && level instanceof ServerLevel serverLevel) {
             DamageSource spike = SpikesDamageTypes.source(serverLevel, SpikesDamageTypes.SPIKE);
-            entity.hurtServer(serverLevel, spike, this.spikeType.getDamage());
+            entity.hurt(spike, this.spikeType.getDamage());
         }
     }
 

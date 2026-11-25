@@ -15,10 +15,15 @@
   ],
   "group": "waxed_copper_item_grate",
   "ingredients": [
-    "assortedgrates:weathered_copper_item_grate",
-    "minecraft:honeycomb"
+    {
+      "item": "assortedgrates:weathered_copper_item_grate"
+    },
+    {
+      "item": "minecraft:honeycomb"
+    }
   ],
   "result": {
+    "count": 1,
     "id": "assortedgrates:waxed_weathered_copper_item_grate"
   }
 }

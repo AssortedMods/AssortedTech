@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedextruder:diamond_extruder"
+        "recipe": "assortedextruder:diamond_extruder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

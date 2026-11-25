@@ -1,5 +1,6 @@
 package com.grim3212.assorted.grates.gametest;
 
+import com.grim3212.assorted.grates.common.block.CopperFamily;
 import com.grim3212.assorted.grates.common.block.GratesBlocks;
 import com.grim3212.assorted.grates.common.block.ItemGrateBlock;
 import com.grim3212.assorted.grates.common.block.WeatheringItemGrateBlock;
@@ -10,7 +11,6 @@ import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.WeatheringCopper.WeatherState;
-import net.minecraft.world.level.block.WeatheringCopperCollection;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -40,26 +40,26 @@ final class CopperItemGrateTests {
     private static void copperItemGratesOxidise(GameTestHelper helper) {
         List<String> wrong = new ArrayList<>();
 
-        WeatheringCopperCollection.zipApply(WeatheringCopperCollection.STATES, GratesBlocks.COPPER_ITEM_GRATES.weathering(), (age, grate) -> {
-            ItemGrateBlock block = grate.get();
+        for (WeatherState age : WeatherState.values()) {
+            ItemGrateBlock block = GratesBlocks.COPPER_ITEM_GRATES.weathering().pick(age).get();
             boolean shouldOxidise = age != WeatherState.OXIDIZED;
             helper.setBlock(GRATE, block);
 
             // The baked property that schedules the change; the loaders' oxidation registries load too late to ask.
             if (helper.getBlockState(GRATE).isRandomlyTicking() != shouldOxidise) {
                 wrong.add(name(block) + (shouldOxidise ? " is not randomly ticked, so it never oxidises" : " is randomly ticked but has nowhere to go"));
-                return;
+                continue;
             }
             if (!shouldOxidise) {
-                return;
+                continue;
             }
 
             Optional<BlockState> next = ((WeatheringItemGrateBlock) block).getNext(helper.getBlockState(GRATE));
-            Block expected = GratesBlocks.COPPER_ITEM_GRATES.weathering().pick(age.next()).get();
+            Block expected = GratesBlocks.COPPER_ITEM_GRATES.weathering().pick(CopperFamily.next(age)).get();
             if (next.filter(state -> state.is(expected)).isEmpty()) {
                 wrong.add(name(block) + " oxidises into " + next.map(state -> name(state.getBlock())).orElse("nothing") + ", not " + name(expected));
             }
-        });
+        }
 
         GratesBlocks.COPPER_ITEM_GRATES.waxed().forEach(grate -> {
             helper.setBlock(GRATE, grate.get());

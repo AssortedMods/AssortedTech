@@ -18,8 +18,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -61,7 +59,7 @@ public class FanBlockEntity extends BlockEntity {
             }
 
             int distance = obstructed ? traverse : maxLength;
-            Vec3i fanPos = dir.getUnitVec3i().multiply(distance);
+            Vec3i fanPos = dir.getNormal().multiply(distance);
             AABB aabb = state.getCollisionShape(level, pos).bounds().move(pos).expandTowards(fanPos.getX(), fanPos.getY(), fanPos.getZ()).deflate(1D);
 
             List<? extends Entity> list = level.getEntities((Entity) null, aabb);
@@ -111,19 +109,19 @@ public class FanBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        this.mode = FanMode.VALUES[input.getIntOr("Mode", FanMode.BLOW.ordinal())];
-        this.oldMode = FanMode.VALUES[input.getIntOr("OldMode", FanMode.BLOW.ordinal())];
-        this.range = input.getIntOr("Range", 1);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.mode = FanMode.VALUES[tag.contains("Mode") ? tag.getInt("Mode") : FanMode.BLOW.ordinal()];
+        this.oldMode = FanMode.VALUES[tag.contains("OldMode") ? tag.getInt("OldMode") : FanMode.BLOW.ordinal()];
+        this.range = tag.contains("Range") ? tag.getInt("Range") : 1;
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        output.putInt("Mode", mode.ordinal());
-        output.putInt("OldMode", oldMode.ordinal());
-        output.putInt("Range", range);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("Mode", mode.ordinal());
+        tag.putInt("OldMode", oldMode.ordinal());
+        tag.putInt("Range", range);
     }
 
     @Override

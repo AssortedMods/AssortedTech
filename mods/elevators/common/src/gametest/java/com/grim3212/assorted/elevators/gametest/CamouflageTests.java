@@ -13,7 +13,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ProblemReporter;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -21,8 +21,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.TagValueInput;
-import net.minecraft.world.level.storage.TagValueOutput;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,13 +61,13 @@ final class CamouflageTests {
     }
 
     private static void disguise(GameTestHelper helper, BlockPos rel, Block as) {
-        helper.getBlockEntity(rel, CamouflageBlockEntity.class).setDisguise(as.defaultBlockState());
+        helper.<CamouflageBlockEntity>getBlockEntity(rel).setDisguise(as.defaultBlockState());
     }
 
     private static void camouflagedInstantElevatorWearsADisguise(GameTestHelper helper) {
         BlockPos pos = BOTTOM;
         helper.setBlock(pos, ElevatorsBlocks.CAMOUFLAGED_INSTANT_ELEVATOR.get());
-        CamouflageBlockEntity camouflage = helper.getBlockEntity(pos, CamouflageBlockEntity.class);
+        CamouflageBlockEntity camouflage = helper.<CamouflageBlockEntity>getBlockEntity(pos);
         ServerPlayer player = survivalPlayer(helper, new ItemStack(Items.GLASS));
         rightClick(player, helper.getLevel(), player.getMainHandItem(), helper.absolutePos(pos));
         helper.assertTrue(camouflage.getDisguise().isAir(), "it took glass, which it cannot draw as the real thing");
@@ -100,7 +98,7 @@ final class CamouflageTests {
         helper.succeedWhen(() -> {
             helper.assertBlockPresent(ElevatorsBlocks.ELEVATOR.get(), TOP);
             helper.assertBlockPresent(ElevatorsBlocks.CAMOUFLAGED_ELEVATOR.get(), TOP.east());
-            BlockState disguise = helper.getBlockEntity(TOP.east(), CamouflageBlockEntity.class).getDisguise();
+            BlockState disguise = helper.<CamouflageBlockEntity>getBlockEntity(TOP.east()).getDisguise();
             helper.assertTrue(disguise.is(Blocks.OAK_LOG), "the camouflaged block arrived as " + disguise);
         });
     }
@@ -129,17 +127,17 @@ final class CamouflageTests {
     private static void elevatorCarSavesItsDisguises(GameTestHelper helper) {
         ElevatorCarEntity car = mixedCar(helper);
 
-        ProblemReporter.Collector problems = new ProblemReporter.Collector();
-        TagValueOutput output = TagValueOutput.createWithContext(problems, helper.getLevel().registryAccess());
-        car.saveWithoutId(output);
+        CompoundTag saved = car.saveWithoutId(new CompoundTag());
         ElevatorCarEntity copy = new ElevatorCarEntity(ElevatorsEntities.ELEVATOR_CAR.get(), helper.getLevel());
-        copy.load(TagValueInput.create(problems, helper.getLevel().registryAccess(), output.buildResult()));
-        helper.assertTrue(problems.isEmpty(), "the car reported serialization errors: " + problems.getReport());
+        copy.load(saved);
         assertSameCells(helper, copy, car, "back from a save");
         helper.succeed();
     }
 
     /** What a client is told: its data packet, written and read back as the network does, draws the same cells. */
+    // NeoForge deprecates this buffer for one that also names a connection type, which only exists in its
+    // patched jar; the entity data codec reads no connection type.
+    @SuppressWarnings("deprecation")
     private static void elevatorCarSyncsItsDisguises(GameTestHelper helper) {
         ElevatorCarEntity car = mixedCar(helper);
         RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), helper.getLevel().registryAccess());
@@ -192,8 +190,8 @@ final class CamouflageTests {
         helper.assertTrue(ElevatorShaft.send(helper.getLevel(), helper.absolutePos(BOTTOM), null), "the car did not set off");
         helper.assertBlockNotPresent(ElevatorsBlocks.CAMOUFLAGED_ELEVATOR.get(), BOTTOM.east());
         helper.succeedWhen(() -> {
-            helper.assertTrue(helper.getBlockEntity(TOP, CamouflageBlockEntity.class).getDisguise().is(Blocks.OAK_PLANKS), "the wooden block did not arrive as wood");
-            helper.assertTrue(helper.getBlockEntity(TOP.east(), CamouflageBlockEntity.class).getDisguise().is(Blocks.STONE), "the stone block did not arrive as stone");
+            helper.assertTrue(helper.<CamouflageBlockEntity>getBlockEntity(TOP).getDisguise().is(Blocks.OAK_PLANKS), "the wooden block did not arrive as wood");
+            helper.assertTrue(helper.<CamouflageBlockEntity>getBlockEntity(TOP.east()).getDisguise().is(Blocks.STONE), "the stone block did not arrive as stone");
         });
     }
 
@@ -201,6 +199,9 @@ final class CamouflageTests {
         return helper.getLevel().getBrightness(LightLayer.BLOCK, helper.absolutePos(rel));
     }
 
+    // NeoForge deprecates the state-only light emission for its level-aware overload, which only exists in
+    // its patched jar; glowstone gives the same either way.
+    @SuppressWarnings("deprecation")
     private static void camouflageGlowsAsItsDisguise(GameTestHelper helper) {
         helper.setBlock(BOTTOM, ElevatorsBlocks.CAMOUFLAGED_ELEVATOR_LANDING.get());
         disguise(helper, BOTTOM, Blocks.GLOWSTONE);
@@ -217,6 +218,9 @@ final class CamouflageTests {
     }
 
     /** A glowing car lights its way up with light blocks, and leaves none behind when it lands. */
+    // NeoForge deprecates the state-only light emission for its level-aware overload, which only exists in
+    // its patched jar; glowstone gives the same either way.
+    @SuppressWarnings("deprecation")
     private static void elevatorCarCarriesItsLight(GameTestHelper helper) {
         helper.setBlock(FLOOR, Blocks.STONE);
         helper.setBlock(CEILING, Blocks.STONE);

@@ -8,7 +8,7 @@ import com.grim3212.assorted.fan.common.particle.FanParticleTypes;
 import com.grim3212.assorted.fan.config.FanCommonConfig;
 import com.grim3212.assorted.lib.family.Families;
 import com.grim3212.assorted.lib.migration.MovedIds;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class FanCommonMod {
 
@@ -17,7 +17,7 @@ public class FanCommonMod {
     public static void init() {
         Constants.LOG.info(Constants.MOD_NAME + " starting up...");
         Families.join(Constants.MOD_ID, Constants.FAMILY_ID)
-                .icon(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "fan"), 10)
+                .icon(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "fan"), 10)
                 .manualOrder(100);
 
         FanBlocks.init();

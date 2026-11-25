@@ -15,8 +15,6 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -69,17 +67,17 @@ public class GravityBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
-		this.showRange = input.getBooleanOr("ShowRange", false);
-		this.range = input.getIntOr("Range", 1);
+	protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+		super.loadAdditional(tag, registries);
+		this.showRange = tag.getBoolean("ShowRange");
+		this.range = tag.contains("Range") ? tag.getInt("Range") : 1;
 	}
 
 	@Override
-	protected void saveAdditional(ValueOutput output) {
-		super.saveAdditional(output);
-		output.putBoolean("ShowRange", showRange);
-		output.putInt("Range", range);
+	protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+		super.saveAdditional(tag, registries);
+		tag.putBoolean("ShowRange", showRange);
+		tag.putInt("Range", range);
 	}
 
 	@Override

@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/iron",
-    "M": "#assortedextruder:extruders/level_1",
-    "P": "#c:pickaxes/iron",
-    "S": "#c:shovels/iron"
+    "A": {
+      "tag": "c:axes/iron"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_1"
+    },
+    "P": {
+      "tag": "c:pickaxes/iron"
+    },
+    "S": {
+      "tag": "c:shovels/iron"
+    }
   },
   "pattern": [
     " P ",
     "AMS"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:iron_extruder"
   }
 }

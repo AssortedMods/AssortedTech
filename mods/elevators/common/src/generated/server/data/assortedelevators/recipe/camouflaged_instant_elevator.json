@@ -6,6 +6,7 @@
     }
   ],
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "fabric:load_conditions": [
     {
       "condition": "assortedlib:part_enabled",
@@ -13,11 +14,18 @@
     }
   ],
   "ingredients": [
-    "assortedelevators:instant_elevator",
-    "minecraft:amethyst_shard",
-    "#c:dyes"
+    {
+      "item": "assortedelevators:instant_elevator"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "tag": "c:dyes"
+    }
   ],
   "result": {
+    "count": 1,
     "id": "assortedelevators:camouflaged_instant_elevator"
   }
 }

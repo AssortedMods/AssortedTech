@@ -7,7 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
@@ -53,7 +53,6 @@ public enum ExtruderType implements StringRepresentable {
     TOPAZ("topaz", Tier.IRON),
     PERIDOT("peridot", Tier.IRON);
 
-    public static final StringRepresentable.EnumCodec<ExtruderType> CODEC = StringRepresentable.fromEnum(ExtruderType::values);
     private static final IntFunction<ExtruderType> BY_ID = ByIdMap.continuous(ExtruderType::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
     public static final StreamCodec<ByteBuf, ExtruderType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, ExtruderType::ordinal);
 
@@ -72,11 +71,21 @@ public enum ExtruderType implements StringRepresentable {
     }
 
     private static TagKey<Item> toolTag(String kind, String material) {
-        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(LibCommonTags.COMMON_NAMESPACE, kind + "/" + material));
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(LibCommonTags.COMMON_NAMESPACE, kind + "/" + material));
     }
 
     public static ExtruderType byId(int id) {
         return BY_ID.apply(id);
+    }
+
+    /** The material saved as {@code name}, or {@code fallback} for a name no material has. */
+    public static ExtruderType byName(String name, ExtruderType fallback) {
+        for (ExtruderType type : values()) {
+            if (type.name.equals(name)) {
+                return type;
+            }
+        }
+        return fallback;
     }
 
     public TagKey<Item> getPickaxes() {

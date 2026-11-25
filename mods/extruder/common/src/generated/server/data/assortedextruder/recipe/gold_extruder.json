@@ -57,11 +57,21 @@
     }
   ],
   "key": {
-    "A": "#c:axes/gold",
-    "D": "minecraft:dispenser",
-    "M": "minecraft:piston",
-    "P": "#c:pickaxes/gold",
-    "S": "#c:shovels/gold"
+    "A": {
+      "tag": "c:axes/gold"
+    },
+    "D": {
+      "item": "minecraft:dispenser"
+    },
+    "M": {
+      "item": "minecraft:piston"
+    },
+    "P": {
+      "tag": "c:pickaxes/gold"
+    },
+    "S": {
+      "tag": "c:shovels/gold"
+    }
   },
   "pattern": [
     " P ",
@@ -69,6 +79,7 @@
     " D "
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:gold_extruder"
   }
 }

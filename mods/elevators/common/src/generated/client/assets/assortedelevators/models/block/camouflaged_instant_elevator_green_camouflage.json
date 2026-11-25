@@ -1,5 +1,4 @@
 {
-  "fabric:type": "assortedelevators:camouflage",
   "fallback": "assortedelevators:block/camouflaged_instant_elevator_green",
   "loader": "assortedelevators:camouflage",
   "textures": {

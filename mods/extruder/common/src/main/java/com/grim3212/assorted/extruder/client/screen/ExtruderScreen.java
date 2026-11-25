@@ -5,13 +5,12 @@ import com.grim3212.assorted.extruder.ExtruderCommonMod;
 import com.grim3212.assorted.extruder.api.util.ExtruderType;
 import com.grim3212.assorted.extruder.common.entity.ExtruderEntity;
 import com.grim3212.assorted.extruder.common.inventory.ExtruderMenu;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +26,7 @@ import java.util.Map;
  */
 public class ExtruderScreen extends AbstractContainerScreen<ExtruderMenu> {
 
-    private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/extruder.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/extruder.png");
     private static final int TEXT = 0xFF404040;
     private static final int BRACKET = 0xFF9C9C9C;
     private static final Direction[] BUTTON_ORDER = {Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
@@ -36,7 +35,10 @@ public class ExtruderScreen extends AbstractContainerScreen<ExtruderMenu> {
     private Button toggle;
 
     public ExtruderScreen(ExtruderMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title, 176, 244);
+        super(menu, inventory, title);
+        this.imageWidth = 176;
+        this.imageHeight = 244;
+        this.inventoryLabelY = this.imageHeight - 94;
     }
 
     @Override
@@ -71,9 +73,14 @@ public class ExtruderScreen extends AbstractContainerScreen<ExtruderMenu> {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, this.leftPos, this.topPos, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(graphics, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+        graphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
         // Only the fuel slot is in the texture; each material shows as many others as it has.
         for (int i = 1; i < this.menu.slots.size(); i++) {
@@ -81,7 +88,7 @@ public class ExtruderScreen extends AbstractContainerScreen<ExtruderMenu> {
             if (slot.container instanceof Inventory) {
                 break;
             }
-            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, this.leftPos + slot.x - 1, this.topPos + slot.y - 1, 176.0F, 0.0F, 18, 18, 256, 256);
+            graphics.blit(TEXTURE, this.leftPos + slot.x - 1, this.topPos + slot.y - 1, 176, 0, 18, 18);
         }
 
         // The bracket from the fuel slot down to the extrusion row, as wide as the row.
@@ -96,17 +103,17 @@ public class ExtruderScreen extends AbstractContainerScreen<ExtruderMenu> {
     }
 
     @Override
-    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        super.extractLabels(graphics, mouseX, mouseY);
-        graphics.text(this.font, Component.translatable("extruder.screen.fuel", this.menu.getFuel()), 8, 24, TEXT, false);
-        graphics.text(this.font, Component.translatable("extruder.screen.mined"), 8, 75, TEXT, false);
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderLabels(graphics, mouseX, mouseY);
+        graphics.drawString(this.font, Component.translatable("extruder.screen.fuel", this.menu.getFuel()), 8, 24, TEXT, false);
+        graphics.drawString(this.font, Component.translatable("extruder.screen.mined"), 8, 75, TEXT, false);
 
         ExtruderType type = this.menu.getExtruderType();
         int mine = this.blocksFor(type.blockCost(ExtruderCommonMod.COMMON_CONFIG.extruderFuelPerMinedBlock.get()), false);
         int extrude = this.blocksFor(type.blockCost(ExtruderCommonMod.COMMON_CONFIG.extruderFuelPerExtrudedBlock.get()), true);
         if (mine > 0 || extrude > 0) {
-            graphics.text(this.font, Component.translatable("extruder.screen.mine_blocks", mine), 102, 18, TEXT, false);
-            graphics.text(this.font, Component.translatable("extruder.screen.extrude_blocks", extrude), 102, 30, TEXT, false);
+            graphics.drawString(this.font, Component.translatable("extruder.screen.mine_blocks", mine), 102, 18, TEXT, false);
+            graphics.drawString(this.font, Component.translatable("extruder.screen.extrude_blocks", extrude), 102, 30, TEXT, false);
         }
     }
 

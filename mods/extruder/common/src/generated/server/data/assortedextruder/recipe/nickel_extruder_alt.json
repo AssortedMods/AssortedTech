@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/nickel",
-    "M": "#assortedextruder:extruders/level_1",
-    "P": "#c:pickaxes/nickel",
-    "S": "#c:shovels/nickel"
+    "A": {
+      "tag": "c:axes/nickel"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_1"
+    },
+    "P": {
+      "tag": "c:pickaxes/nickel"
+    },
+    "S": {
+      "tag": "c:shovels/nickel"
+    }
   },
   "pattern": [
     " P ",
     "SMA"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:nickel_extruder"
   }
 }

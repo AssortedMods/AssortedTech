@@ -14,7 +14,9 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/gold"
+    "I": {
+      "tag": "c:ingots/gold"
+    }
   },
   "pattern": [
     "I I",

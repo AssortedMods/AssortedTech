@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -23,9 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
 
 public class GravityBlock extends Block implements EntityBlock {
 
@@ -33,7 +32,7 @@ public class GravityBlock extends Block implements EntityBlock {
     private final GravityType type;
 
     public GravityBlock(GravityType type, Properties props) {
-        super(props.pushReaction(PushReaction.IMMOVEABLE));
+        super(props.pushReaction(PushReaction.BLOCK));
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
         this.type = type;
     }
@@ -49,7 +48,7 @@ public class GravityBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean movedByPiston) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean movedByPiston) {
         if (!level.isClientSide()) {
             boolean flag = state.getValue(POWERED);
             if (flag != level.hasNeighborSignal(pos)) {
@@ -82,28 +81,27 @@ public class GravityBlock extends Block implements EntityBlock {
     /**
      * {@code use} split in two. A redstone torch toggles the range overlay, so that branch needs the
      * held stack and lives in {@code useItemOn}; anything else cycles the range, which the
-     * hand-agnostic {@code useWithoutItem} handles once {@code TRY_WITH_EMPTY_HAND} falls through.
+     * hand-agnostic {@code useWithoutItem} handles once {@code PASS_TO_DEFAULT_BLOCK_INTERACTION} falls through.
      */
     @Override
-    protected InteractionResult useItemOn(ItemStack inHand, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected ItemInteractionResult useItemOn(ItemStack inHand, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (inHand.getItem() == Items.REDSTONE_TORCH && level.getBlockEntity(pos) instanceof GravityBlockEntity gravity) {
             gravity.toggleShowRange();
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
         }
 
-        return InteractionResult.TRY_WITH_EMPTY_HAND;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof GravityBlockEntity gravity) {
             int newRange = player.isShiftKeyDown() ? gravity.reverseCycleRange() : gravity.cycleRange();
-            // Player#displayClientMessage is gone; the action-bar overlay it used lives on
-            // ServerPlayer#sendSystemMessage(Component, boolean) now, and this only ever runs server side.
+            // Shown in the action bar, and only from the server so it is not shown twice.
             if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.sendSystemMessage(Component.translatable("message.sensor.range", newRange), true);
+                serverPlayer.displayClientMessage(Component.translatable("message.sensor.range", newRange), true);
             }
-            return InteractionResult.SUCCESS;
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
 
         return InteractionResult.PASS;

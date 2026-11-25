@@ -14,9 +14,15 @@
     }
   ],
   "key": {
-    "G": "assortedsensors:gps",
-    "L": "minecraft:redstone_lamp",
-    "R": "#c:storage_blocks/redstone"
+    "G": {
+      "item": "assortedsensors:gps"
+    },
+    "L": {
+      "item": "minecraft:redstone_lamp"
+    },
+    "R": {
+      "tag": "c:storage_blocks/redstone"
+    }
   },
   "pattern": [
     " R ",
@@ -24,6 +30,7 @@
     " R "
   ],
   "result": {
+    "count": 1,
     "id": "assortedsensors:gps_sensor"
   }
 }

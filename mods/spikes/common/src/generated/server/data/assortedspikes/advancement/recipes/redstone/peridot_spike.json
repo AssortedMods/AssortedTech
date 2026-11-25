@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedspikes:peridot_spike"
+        "recipe": "assortedspikes:peridot_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

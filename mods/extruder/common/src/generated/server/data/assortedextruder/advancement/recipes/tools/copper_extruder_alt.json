@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedextruder:copper_extruder_alt"
+        "recipe": "assortedextruder:copper_extruder_alt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -1,6 +1,7 @@
 package com.grim3212.assorted.sensors.client.screen;
 
 import com.grim3212.assorted.lib.platform.Services;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.grim3212.assorted.sensors.Constants;
 import com.grim3212.assorted.sensors.api.util.GpsSensorMode;
 import com.grim3212.assorted.sensors.common.block.blockentity.GpsSensorBlockEntity;
@@ -8,17 +9,14 @@ import com.grim3212.assorted.sensors.common.block.blockentity.GpsSensorFilter;
 import com.grim3212.assorted.sensors.common.inventory.GpsSensorMenu;
 import com.grim3212.assorted.sensors.common.network.GpsSensorFilterPacket;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -37,8 +35,8 @@ import java.util.Objects;
  */
 public class GpsSensorScreen extends AbstractContainerScreen<GpsSensorMenu> {
 
-    private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/gps_sensor.png");
-    private static final Identifier LIST_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/gps_sensor_list.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/gps_sensor.png");
+    private static final ResourceLocation LIST_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/gps_sensor_list.png");
     private static final int TEXT = 0xFF404040;
     private static final int INVALID = 0xFFFF5555;
     private static final int MAIN_WIDTH = 176;
@@ -65,7 +63,10 @@ public class GpsSensorScreen extends AbstractContainerScreen<GpsSensorMenu> {
 
     public GpsSensorScreen(GpsSensorMenu menu, Inventory inventory, Component title) {
         // The upgraded sensor's panel counts as part of the screen, so clicks on it do not drop the carried item.
-        super(menu, inventory, title, menu.getSensor().isUpgraded() ? MAIN_WIDTH + PANEL_WIDTH : MAIN_WIDTH, HEIGHT);
+        super(menu, inventory, title);
+        this.imageWidth = menu.getSensor().isUpgraded() ? MAIN_WIDTH + PANEL_WIDTH : MAIN_WIDTH;
+        this.imageHeight = HEIGHT;
+        this.inventoryLabelY = this.imageHeight - 94;
         this.sensor = menu.getSensor();
         this.upgraded = this.sensor.isUpgraded();
         this.shownMode = this.sensor.getMode();
@@ -215,14 +216,14 @@ public class GpsSensorScreen extends AbstractContainerScreen<GpsSensorMenu> {
 
     /** Vanilla only moves focus to what was clicked, so a click anywhere else would leave the box taking keys. */
     @Override
-    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        if (this.filter.isFocused() && !this.filter.isMouseOver(event.x(), event.y())) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (this.filter.isFocused() && !this.filter.isMouseOver(mouseX, mouseY)) {
             this.filter.setFocused(false);
             if (this.getFocused() == this.filter) {
                 this.setFocused(null);
             }
         }
-        return super.mouseClicked(event, doubleClick);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     /**
@@ -230,71 +231,71 @@ public class GpsSensorScreen extends AbstractContainerScreen<GpsSensorMenu> {
      * adds to the upgraded sensor's list like its +.
      */
     @Override
-    public boolean keyPressed(KeyEvent event) {
-        if (!event.isEscape() && this.filter.canConsumeInput()) {
-            if (this.upgraded && event.isConfirmation()) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode != InputConstants.KEY_ESCAPE && this.filter.canConsumeInput()) {
+            if (this.upgraded && (keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_NUMPADENTER)) {
                 this.addTyped();
             } else {
-                this.filter.keyPressed(event);
+                this.filter.keyPressed(keyCode, scanCode, modifiers);
             }
             return true;
         }
-        return super.keyPressed(event);
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     /** The upgraded sensor's box sits where the slot's hint would go, so its always empty slot explains itself on hover. */
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
         if (this.hoveredSlot != null && this.hoveredSlot.index == GpsSensorMenu.FILTER_SLOT && this.upgraded) {
-            graphics.setTooltipForNextFrame(Component.translatable("gps_sensor.screen.item_add_hint"), mouseX, mouseY);
-        }
-        if (this.hoveredSlot != null && this.hoveredSlot.index == GpsSensorMenu.GPS_SLOT && !this.hoveredSlot.hasItem() && this.menu.getCarried().isEmpty()) {
-            graphics.setTooltipForNextFrame(Component.translatable("gps_sensor.screen.gps_hint"), mouseX, mouseY);
+            graphics.renderTooltip(this.font, Component.translatable("gps_sensor.screen.item_add_hint"), mouseX, mouseY);
+        } else if (this.hoveredSlot != null && this.hoveredSlot.index == GpsSensorMenu.GPS_SLOT && !this.hoveredSlot.hasItem() && this.menu.getCarried().isEmpty()) {
+            graphics.renderTooltip(this.font, Component.translatable("gps_sensor.screen.gps_hint"), mouseX, mouseY);
+        } else {
+            this.renderTooltip(graphics, mouseX, mouseY);
         }
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, this.leftPos, this.topPos, 0.0F, 0.0F, MAIN_WIDTH, HEIGHT, 256, 256);
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+        graphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, MAIN_WIDTH, HEIGHT);
         if (this.upgraded) {
-            graphics.blit(RenderPipelines.GUI_TEXTURED, LIST_TEXTURE, this.leftPos + MAIN_WIDTH, this.topPos, 0.0F, 0.0F, PANEL_WIDTH, PANEL_HEIGHT, 256, 256);
+            graphics.blit(LIST_TEXTURE, this.leftPos + MAIN_WIDTH, this.topPos, 0, 0, PANEL_WIDTH, PANEL_HEIGHT);
         }
     }
 
     @Override
-    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        super.extractLabels(graphics, mouseX, mouseY);
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderLabels(graphics, mouseX, mouseY);
 
         // The longer statuses do not fit on one line beside the GPS slot.
         List<FormattedCharSequence> status = this.font.split(this.statusLine(), WIDTH - 24);
         for (int i = 0; i < Math.min(2, status.size()); i++) {
-            graphics.text(this.font, status.get(i), 8, 18 + i * 10, TEXT, false);
+            graphics.drawString(this.font, status.get(i), 8, 18 + i * 10, TEXT, false);
         }
 
         if (this.shownMode == GpsSensorMode.ITEMS && !this.upgraded) {
             ItemStack item = this.menu.getSlot(GpsSensorMenu.FILTER_SLOT).getItem();
             Component name = Component.translatable("gps_sensor.screen.item", item.isEmpty() ? Component.translatable("gps_sensor.screen.any_item") : item.getHoverName());
-            graphics.text(this.font, this.font.split(name, WIDTH - 22).getFirst(), 30, 66, TEXT, false);
+            graphics.drawString(this.font, this.font.split(name, WIDTH - 22).getFirst(), 30, 66, TEXT, false);
             // A plain sensor has no radius row, so the hint has room to wrap down toward the outline button.
             List<FormattedCharSequence> hint = this.font.split(Component.translatable(item.isEmpty() ? "gps_sensor.screen.item_hint" : "gps_sensor.screen.item_change_hint"), WIDTH - 22);
             for (int i = 0; i < Math.min(3, hint.size()); i++) {
-                graphics.text(this.font, hint.get(i), 30, 76 + i * 10, 0xFF808080, false);
+                graphics.drawString(this.font, hint.get(i), 30, 76 + i * 10, 0xFF808080, false);
             }
         }
 
         if (this.shrink != null) {
             Component radius = Component.translatable("gps_sensor.screen.radius", this.sensor.getRadius());
-            graphics.text(this.font, radius, (MAIN_WIDTH - this.font.width(radius)) / 2, 94, TEXT, false);
+            graphics.drawString(this.font, radius, (MAIN_WIDTH - this.font.width(radius)) / 2, 94, TEXT, false);
         }
 
         if (this.upgraded) {
-            graphics.text(this.font, Component.translatable("gps_sensor.screen.entries", this.shownEntries.size(), GpsSensorBlockEntity.MAX_ENTRIES), MAIN_WIDTH + 8, 6, TEXT, false);
+            graphics.drawString(this.font, Component.translatable("gps_sensor.screen.entries", this.shownEntries.size(), GpsSensorBlockEntity.MAX_ENTRIES), MAIN_WIDTH + 8, 6, TEXT, false);
             if (this.shownEntries.isEmpty()) {
                 List<FormattedCharSequence> empty = this.font.split(Component.translatable("gps_sensor.screen.entries.empty." + this.shownMode.getSerializedName()), 100);
                 for (int i = 0; i < empty.size(); i++) {
-                    graphics.text(this.font, empty.get(i), MAIN_WIDTH + 12, 24 + i * 10, 0xFF808080, false);
+                    graphics.drawString(this.font, empty.get(i), MAIN_WIDTH + 12, 24 + i * 10, 0xFF808080, false);
                 }
             }
         }

@@ -1,33 +1,23 @@
 package com.grim3212.assorted.extruder.client.data;
 
 import com.grim3212.assorted.extruder.Constants;
-import com.grim3212.assorted.extruder.api.util.ExtruderType;
-import com.grim3212.assorted.extruder.client.render.ExtruderRenderer;
-import com.grim3212.assorted.extruder.client.render.ExtruderSpecialRenderer;
+import com.grim3212.assorted.extruder.client.render.ExtruderItemRenderer;
 import com.grim3212.assorted.extruder.common.item.ExtruderItems;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ItemModelGenerators;
-import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.model.ItemModelUtils;
-import net.minecraft.client.data.models.model.ModelTemplate;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.data.models.model.TextureSlot;
-import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.core.Holder;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.model.generators.template.ExtendedModelTemplateBuilder;
-
-import java.util.stream.Stream;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 /** The extruder items, each drawn as the extruder itself. */
-public class ExtruderItemModelProvider extends ModelProvider {
+public class ExtruderItemModelProvider extends ItemModelProvider {
 
-    public ExtruderItemModelProvider(PackOutput output) {
-        super(output, Constants.MOD_ID);
+    public ExtruderItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
+        super(output, Constants.MOD_ID, existingFileHelper);
     }
 
     @Override
@@ -35,40 +25,31 @@ public class ExtruderItemModelProvider extends ModelProvider {
         return Constants.MOD_NAME + " item models";
     }
 
-    @Override
-    protected Stream<? extends Holder<Block>> getKnownBlocks() {
-        return Stream.empty();
-    }
-
-    @Override
-    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-        ExtruderItems.EXTRUDERS.forEach((type, extruder) -> extruder(itemModels, extruder.get(), type));
-    }
-
     /**
-     * The extruder in 3D, drawn by {@link ExtruderSpecialRenderer}. The base model holds only the display
-     * settings and the particle, which has to be an atlas sprite rather than the entity texture.
+     * The extruder in 3D, drawn by {@link ExtruderItemRenderer}. Every item model is a
+     * {@code builtin/entity} one through {@code item/extruder}, which carries {@code block/block}'s
+     * display settings, since a special model cannot inherit them from a parent of its own. The
+     * particle has to be an atlas sprite rather than the entity texture.
      */
-    private void extruder(ItemModelGenerators itemModels, Item item, ExtruderType type) {
-        TextureMapping particle = new TextureMapping().put(TextureSlot.PARTICLE, prefixed("item/extruder_particle"));
-        Identifier base = EXTRUDER_BASE.create(modelId(name(item)), particle, itemModels.modelOutput);
-        itemModels.itemModelOutput.accept(item, ItemModelUtils.specialModel(base, new ExtruderSpecialRenderer.Unbaked(ExtruderRenderer.texture(type))));
+    @Override
+    protected void registerModels() {
+        ItemModelBuilder base = this.getBuilder("extruder").parent(new ModelFile.UncheckedModelFile("builtin/entity")).guiLight(BlockModel.GuiLight.SIDE);
+        blockDisplay(base);
+
+        ResourceLocation particle = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item/extruder_particle");
+        ExtruderItems.EXTRUDERS.values().forEach(extruder ->
+                this.getBuilder(BuiltInRegistries.ITEM.getKey(extruder.get()).getPath()).parent(base).texture("particle", particle));
     }
 
-    private static String name(Item item) {
-        return BuiltInRegistries.ITEM.getKey(item).getPath();
-    }
-
-    private static final ModelTemplate EXTRUDER_BASE = ExtendedModelTemplateBuilder.builder()
-            .parent(Identifier.withDefaultNamespace("block/block"))
-            .requiredTextureSlot(TextureSlot.PARTICLE)
-            .build();
-
-    private static Identifier modelId(String path) {
-        return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "item/" + path);
-    }
-
-    private static Material prefixed(String texture) {
-        return new Material(Identifier.fromNamespaceAndPath(Constants.MOD_ID, texture));
+    /** {@code block/block}'s display settings, which every block item shows itself with. */
+    private static void blockDisplay(ItemModelBuilder builder) {
+        builder.transforms()
+                .transform(ItemDisplayContext.GUI).rotation(30, 225, 0).translation(0, 0, 0).scale(0.625F).end()
+                .transform(ItemDisplayContext.GROUND).rotation(0, 0, 0).translation(0, 3, 0).scale(0.25F).end()
+                .transform(ItemDisplayContext.FIXED).rotation(0, 0, 0).translation(0, 0, 0).scale(0.5F).end()
+                .transform(ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 2.5F, 0).scale(0.375F).end()
+                .transform(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 45, 0).translation(0, 0, 0).scale(0.4F).end()
+                .transform(ItemDisplayContext.FIRST_PERSON_LEFT_HAND).rotation(0, 225, 0).translation(0, 0, 0).scale(0.4F).end()
+                .end();
     }
 }

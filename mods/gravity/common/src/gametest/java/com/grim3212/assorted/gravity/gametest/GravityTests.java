@@ -10,9 +10,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.animal.pig.Pig;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -57,7 +57,7 @@ final class GravityTests {
         BlockPos lever = new BlockPos(3, 1, 4);
 
         helper.setBlock(gravitor, GravityBlocks.GRAVITOR.get());
-        Pig pig = helper.spawnWithNoFreeWill(EntityTypes.PIG, new BlockPos(4, 2, 4));
+        Pig pig = helper.spawnWithNoFreeWill(EntityType.PIG, new BlockPos(4, 2, 4));
 
         // Heights are compared as a rise from where the pig started: a test structure is placed at
         // whatever world position the runner picked, so an absolute y means nothing here.
@@ -90,7 +90,7 @@ final class GravityTests {
                 .setValue(GravityDirectionalBlock.FACING, Direction.UP));
         helper.setBlock(lever, Blocks.REDSTONE_BLOCK);
 
-        Pig pig = helper.spawnWithNoFreeWill(EntityTypes.PIG, new BlockPos(4, 2, 4));
+        Pig pig = helper.spawnWithNoFreeWill(EntityType.PIG, new BlockPos(4, 2, 4));
         double start = pig.getY();
         double[] rise = {0.0D};
 
@@ -115,7 +115,7 @@ final class GravityTests {
         // redstone block's own neighbour update that runs neighborChanged and flips POWERED.
         helper.setBlock(lever, Blocks.REDSTONE_BLOCK);
 
-        Pig pig = helper.spawnWithNoFreeWill(EntityTypes.PIG, new BlockPos(4, 1, 4));
+        Pig pig = helper.spawnWithNoFreeWill(EntityType.PIG, new BlockPos(4, 1, 4));
         Vec3 corner = Vec3.atLowerCornerOf(helper.absolutePos(attractor));
         double start = pig.position().distanceTo(corner);
         double[] closest = {start};
@@ -125,7 +125,7 @@ final class GravityTests {
                     helper.assertBlockProperty(attractor, GravityBlock.POWERED, true);
                     // Range 1 reaches one block out, which is not far enough down to touch something
                     // standing on the floor three blocks below.
-                    GravityBlockEntity gravity = helper.getBlockEntity(attractor, GravityBlockEntity.class);
+                    GravityBlockEntity gravity = helper.<GravityBlockEntity>getBlockEntity(attractor);
                     gravity.cycleRange();
                     gravity.cycleRange();
                     helper.assertValueEqual(gravity.getRange(), 3, "attractor range after two cycles");
@@ -144,7 +144,7 @@ final class GravityTests {
         helper.setBlock(repulsor, GravityBlocks.REPULSOR.get());
         helper.setBlock(lever, Blocks.REDSTONE_BLOCK);
 
-        Pig pig = helper.spawnWithNoFreeWill(EntityTypes.PIG, new BlockPos(4, 2, 4));
+        Pig pig = helper.spawnWithNoFreeWill(EntityType.PIG, new BlockPos(4, 2, 4));
         Vec3 corner = Vec3.atLowerCornerOf(helper.absolutePos(repulsor));
         double start = pig.position().distanceTo(corner);
         double[] furthest = {start};
@@ -172,8 +172,8 @@ final class GravityTests {
                 .setValue(GravityDirectionalBlock.FACING, Direction.UP));
         helper.setBlock(lever, Blocks.REDSTONE_BLOCK);
 
-        Pig onAxis = helper.spawnWithNoFreeWill(EntityTypes.PIG, new BlockPos(4, 2, 4));
-        Pig offAxis = helper.spawnWithNoFreeWill(EntityTypes.PIG, new BlockPos(7, 2, 4));
+        Pig onAxis = helper.spawnWithNoFreeWill(EntityType.PIG, new BlockPos(4, 2, 4));
+        Pig offAxis = helper.spawnWithNoFreeWill(EntityType.PIG, new BlockPos(7, 2, 4));
 
         double onStart = onAxis.getY();
         Vec3 offStart = offAxis.position();
@@ -281,7 +281,7 @@ final class GravityTests {
 
     /**
      * An empty-hand right-click steps a gravity block's range on and a shift-click steps it back.
-     * The player is a real {@link ServerPlayer}: the branch ends in {@code sendSystemMessage},
+     * The player is a real {@link ServerPlayer}: the branch ends in an action-bar message,
      * which NPEs on a mock with no connection.
      */
     private static void emptyHandCyclesGravityRange(GameTestHelper helper) {
@@ -292,7 +292,7 @@ final class GravityTests {
         BlockPos absolute = helper.absolutePos(attractor);
         BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(absolute), Direction.UP, absolute, false);
 
-        GravityBlockEntity gravity = helper.getBlockEntity(attractor, GravityBlockEntity.class);
+        GravityBlockEntity gravity = helper.<GravityBlockEntity>getBlockEntity(attractor);
         helper.assertValueEqual(gravity.getRange(), 1, "gravity range before any click");
 
         helper.useBlock(attractor, player, hit);
@@ -320,8 +320,8 @@ final class GravityTests {
         helper.setBlock(gravitor, GravityBlocks.GRAVITOR.get());
         helper.setBlock(lever, Blocks.REDSTONE_BLOCK);
 
-        Pig bare = helper.spawnWithNoFreeWill(EntityTypes.PIG, bareStand.above());
-        Pig booted = helper.spawnWithNoFreeWill(EntityTypes.PIG, bootedStand.above());
+        Pig bare = helper.spawnWithNoFreeWill(EntityType.PIG, bareStand.above());
+        Pig booted = helper.spawnWithNoFreeWill(EntityType.PIG, bootedStand.above());
         booted.setItemSlot(EquipmentSlot.FEET, new ItemStack(GravityItems.GRAVITY_BOOTS.get()));
 
         double[] lift = {0.0D, 0.0D};
@@ -343,12 +343,12 @@ final class GravityTests {
 
     /**
      * Every gravity block entity field survives the {@code saveWithFullMetadata} / {@code loadStatic} round trip
-     * a chunk uses. A mismatched {@code ValueOutput} / {@code ValueInput} key or a wrong default is silent.
+     * a chunk uses. A mismatched save and load key or a wrong default is silent.
      */
     private static void blockEntityDataSurvivesReload(GameTestHelper helper) {
         BlockPos gravity = new BlockPos(1, 1, 1);
         helper.setBlock(gravity, GravityBlocks.ATTRACTOR.get());
-        GravityBlockEntity gravityEntity = helper.getBlockEntity(gravity, GravityBlockEntity.class);
+        GravityBlockEntity gravityEntity = helper.<GravityBlockEntity>getBlockEntity(gravity);
         gravityEntity.cycleRange();
         gravityEntity.cycleRange();
         gravityEntity.toggleShowRange();
@@ -356,7 +356,7 @@ final class GravityTests {
         BlockPos directional = new BlockPos(3, 1, 1);
         helper.setBlock(directional, GravityBlocks.REPULSOR_DIRECTIONAL.get().defaultBlockState()
                 .setValue(GravityDirectionalBlock.FACING, Direction.EAST));
-        helper.getBlockEntity(directional, GravityDirectionalBlockEntity.class).cycleRange();
+        helper.<GravityDirectionalBlockEntity>getBlockEntity(directional).cycleRange();
 
         helper.assertValueEqual(afterReload(helper, gravity, GravityBlockEntity.class).getRange(), 3,
                 "gravity range after a reload");

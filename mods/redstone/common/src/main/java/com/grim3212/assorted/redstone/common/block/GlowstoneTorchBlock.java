@@ -1,6 +1,7 @@
 package com.grim3212.assorted.redstone.common.block;
 
 import com.grim3212.assorted.lib.core.block.IBlockLightEmission;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -14,8 +15,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.redstone.Orientation;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * See {@link FlipFlopTorchBlock} for why this extends {@link BaseTorchBlock} rather than
@@ -23,11 +22,17 @@ import org.jetbrains.annotations.Nullable;
  */
 public class GlowstoneTorchBlock extends BaseTorchBlock implements IBlockLightEmission {
 
+    public static final MapCodec<GlowstoneTorchBlock> CODEC = simpleCodec(GlowstoneTorchBlock::new);
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     public GlowstoneTorchBlock(Properties props) {
         super(props);
         this.registerDefaultState(this.stateDefinition.any().setValue(LIT, false));
+    }
+
+    @Override
+    protected MapCodec<? extends GlowstoneTorchBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -42,9 +47,10 @@ public class GlowstoneTorchBlock extends BaseTorchBlock implements IBlockLightEm
         }
     }
 
+    /** See {@link FlipFlopTorchBlock#onRemove}: only a real removal updates the neighbours. */
     @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
-        if (!movedByPiston) {
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!movedByPiston && !state.is(newState.getBlock())) {
             for (Direction direction : Direction.values()) {
                 level.updateNeighborsAt(pos.relative(direction), this);
             }
@@ -52,7 +58,7 @@ public class GlowstoneTorchBlock extends BaseTorchBlock implements IBlockLightEm
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean movedByPiston) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean movedByPiston) {
         level.scheduleTick(pos, this, 2);
     }
 

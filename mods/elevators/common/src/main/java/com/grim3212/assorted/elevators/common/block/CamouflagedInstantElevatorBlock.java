@@ -2,9 +2,9 @@ package com.grim3212.assorted.elevators.common.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,12 +24,12 @@ public class CamouflagedInstantElevatorBlock extends InstantElevatorBlock implem
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.has(DataComponents.DYE)) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (dyeOf(stack) != null) {
             return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
         }
-        InteractionResult disguised = CamouflageBlock.tryDisguise(stack, level, pos);
-        return disguised != null ? disguised : InteractionResult.TRY_WITH_EMPTY_HAND;
+        ItemInteractionResult disguised = CamouflageBlock.tryDisguise(stack, level, pos);
+        return disguised != null ? disguised : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

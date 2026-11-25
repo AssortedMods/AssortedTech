@@ -5,19 +5,19 @@ import com.grim3212.assorted.alarm.Constants;
 import com.grim3212.assorted.alarm.common.block.blockentity.AlarmBlockEntity;
 import com.grim3212.assorted.alarm.common.network.AlarmUpdatePacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 
 /**
- * The alarm screen. The panel is drawn in {@code extractBackground} so it stays behind the buttons.
+ * The alarm screen. The panel is drawn in {@code renderBackground} so it stays behind the buttons.
  */
 public class AlarmScreen extends Screen {
 
-    private static final Identifier LOCATION = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/alarm.png");
+    private static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/alarm.png");
     private static final int TEXT_TOP = 30;
 
     private final AlarmBlockEntity alarmBlockEntity;
@@ -62,8 +62,7 @@ public class AlarmScreen extends Screen {
     }
 
     private void close() {
-        // Minecraft#setScreen is gone; the current screen lives on Gui now.
-        this.minecraft.gui.setScreen(null);
+        this.minecraft.setScreen(null);
     }
 
     @Override
@@ -72,29 +71,25 @@ public class AlarmScreen extends Screen {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.renderBackground(graphics, mouseX, mouseY, partialTicks);
 
         int posX = (this.width - 256) / 2;
-        // The texture is 256x230, but the 1.20.1 blit assumed the 256x256 default, so it sampled
-        // 0..230/256 of the sheet into a 230px tall quad. Kept as-is so the panel looks exactly as it
-        // did; passing 256, 230 here would be the fix.
-        graphics.blit(RenderPipelines.GUI_TEXTURED, LOCATION, posX, 5, 0.0F, 0.0F, 256, 230, 256, 256);
+        // The texture is 256x230, but this blit assumes the 256x256 default, so it samples
+        // 0..230/256 of the sheet into a 230px tall quad, as the panel always looked.
+        graphics.blit(LOCATION, posX, 5, 0, 0, 256, 230);
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
 
         int posX = (this.width - 256) / 2;
 
         // The panel texture is a busy pastel swirl. Dark text on it - even on a light plate - stays hard
-        // to read at GUI scale, so the body uses the idiom vanilla reaches for when text has to survive
-        // an arbitrary background (see GuiGraphicsExtractor#textWithBackdrop, used by the HUD title):
-        // an opaque dark backdrop with white, drop-shadowed glyphs.
-        // Font no longer forces the alpha byte, so a colour without one is invisible: 0xFF1010.
+        // to read at GUI scale, so the body is white, drop-shadowed text on an opaque dark backdrop.
         Component title = Component.translatable("alarm.screen");
-        graphics.text(this.font, title, this.width / 2 - this.font.width(title) / 2, 10, 0xFFFF1010, true);
+        graphics.drawString(this.font, title, this.width / 2 - this.font.width(title) / 2, 10, 0xFFFF1010, true);
 
         Component description = Component.translatable("alarm.screen.description");
         int textBorder = 5;
@@ -103,6 +98,11 @@ public class AlarmScreen extends Screen {
         int textHeight = this.font.wordWrapHeight(description, textWidth);
 
         graphics.fill(textX - 3, TEXT_TOP - 3, textX + textWidth + 3, TEXT_TOP + textHeight + 3, 0xF01A1A22);
-        graphics.textWithWordWrap(this.font, description, textX, TEXT_TOP, textWidth, 0xFFFFFFFF, true);
+        // GuiGraphics#drawWordWrap draws without a shadow, so the wrapped lines are drawn one by one.
+        int y = TEXT_TOP;
+        for (FormattedCharSequence line : this.font.split(description, textWidth)) {
+            graphics.drawString(this.font, line, textX, y, 0xFFFFFFFF, true);
+            y += this.font.lineHeight;
+        }
     }
 }

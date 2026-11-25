@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/amethyst",
-    "M": "#assortedextruder:extruders/level_1",
-    "P": "#c:pickaxes/amethyst",
-    "S": "#c:shovels/amethyst"
+    "A": {
+      "tag": "c:axes/amethyst"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_1"
+    },
+    "P": {
+      "tag": "c:pickaxes/amethyst"
+    },
+    "S": {
+      "tag": "c:shovels/amethyst"
+    }
   },
   "pattern": [
     " P ",
     "AMS"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:amethyst_extruder"
   }
 }

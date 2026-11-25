@@ -5,10 +5,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
-/**
- * {@link ParticleType} no longer takes a {@code ParticleOptions.Deserializer}; it takes only the
- * override-limiter flag and requires a {@link MapCodec} and a {@link StreamCodec} instead.
- */
+/** The fan's air particle type, serialized by the {@link MapCodec} and {@link StreamCodec} of {@link AirParticleData}. */
 public class AirParticleType extends ParticleType<AirParticleData> {
 
     public AirParticleType() {

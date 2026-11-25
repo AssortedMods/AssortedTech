@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/steel"
+    "I": {
+      "tag": "c:ingots/steel"
+    }
   },
   "pattern": [
     "I I",

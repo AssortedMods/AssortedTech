@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#c:gems/peridot"
+    "X": {
+      "tag": "c:gems/peridot"
+    }
   },
   "pattern": [
     "X X",

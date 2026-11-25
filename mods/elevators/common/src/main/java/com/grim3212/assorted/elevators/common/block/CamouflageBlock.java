@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +42,7 @@ public interface CamouflageBlock extends EntityBlock, IBlockEffectSupplier, IBlo
     static boolean canDisguiseAs(BlockState state) {
         Object block = state.getBlock();
         return !(block instanceof EntityBlock) && !(block instanceof InstantElevatorBlock) && !(block instanceof ElevatorBlock) && !(block instanceof ElevatorLandingBlock)
-                && state.getRenderShape() == RenderShape.MODEL && state.isSolidRender() && state.isCollisionShapeFullBlock(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+                && state.getRenderShape() == RenderShape.MODEL && state.isSolidRender(EmptyBlockGetter.INSTANCE, BlockPos.ZERO) && state.isCollisionShapeFullBlock(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
     }
 
     /** Safe from the light engine's own thread. */
@@ -49,13 +51,16 @@ public interface CamouflageBlock extends EntityBlock, IBlockEffectSupplier, IBlo
     }
 
     /** For {@code getLightEmission}, declared on each block as NeoForge's block extension has one too: a glowstone disguise glows. */
+    // NeoForge deprecates BlockState#getLightEmission() for its level-aware overload, which only exists
+    // in its patched jar; common builds against vanilla.
+    @SuppressWarnings("deprecation")
     static int lightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         BlockState disguise = getDisguise(level, pos);
         return disguise.isAir() ? state.getLightEmission() : disguise.getLightEmission();
     }
 
     /** Disguises the block as the one {@code stack} places; null if it cannot, so the block's own use goes on. */
-    static @Nullable InteractionResult tryDisguise(ItemStack stack, Level level, BlockPos pos) {
+    static @Nullable ItemInteractionResult tryDisguise(ItemStack stack, Level level, BlockPos pos) {
         if (!(stack.getItem() instanceof BlockItem blockItem) || !(level.getBlockEntity(pos) instanceof CamouflageBlockEntity camouflage)) {
             return null;
         }
@@ -65,14 +70,23 @@ public interface CamouflageBlock extends EntityBlock, IBlockEffectSupplier, IBlo
             return null;
         }
         if (disguise == camouflage.getDisguise()) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
 
         if (!level.isClientSide()) {
             camouflage.setDisguise(disguise);
-            level.playSound(null, pos, disguise.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 0.8F);
+            level.playSound(null, pos, soundOf(disguise).getPlaceSound(), SoundSource.BLOCKS, 1.0F, 0.8F);
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    /**
+     * The sound of a disguise, which is not placed anywhere. NeoForge deprecates this for its
+     * level-aware overload, which only exists in its patched jar, and there is no position to ask.
+     */
+    @SuppressWarnings("deprecation")
+    private static SoundType soundOf(BlockState state) {
+        return state.getSoundType();
     }
 
     /** Takes the disguise off for a sneaking player; null if there is none to take, so the block's own use goes on. */
@@ -85,7 +99,7 @@ public interface CamouflageBlock extends EntityBlock, IBlockEffectSupplier, IBlo
             camouflage.setDisguise(Blocks.AIR.defaultBlockState());
             level.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     @Override

@@ -5,8 +5,8 @@ import com.grim3212.assorted.spikes.common.block.SpikeBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.animal.pig.Pig;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.level.block.Blocks;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
@@ -41,8 +41,8 @@ final class SpikeTests {
         helper.setBlock(weak, spike(SpikeType.WOOD).defaultBlockState().setValue(SpikeBlock.FACING, Direction.UP));
         helper.setBlock(strong, spike(SpikeType.NETHERITE).defaultBlockState().setValue(SpikeBlock.FACING, Direction.UP));
 
-        Pig weakVictim = helper.spawnWithNoFreeWill(EntityTypes.PIG, weak);
-        Pig strongVictim = helper.spawnWithNoFreeWill(EntityTypes.PIG, strong);
+        Pig weakVictim = helper.spawnWithNoFreeWill(EntityType.PIG, weak);
+        Pig strongVictim = helper.spawnWithNoFreeWill(EntityType.PIG, strong);
 
         helper.succeedWhen(() -> {
             helper.assertBlockProperty(weak, SpikeBlock.POWERED, true);
@@ -75,7 +75,7 @@ final class SpikeTests {
         for (int i = 0; i < types.length; i++) {
             BlockPos pos = spikeSlot(i);
             helper.setBlock(pos, spike(types[i]).defaultBlockState().setValue(SpikeBlock.FACING, Direction.UP));
-            victims[i] = helper.spawnWithNoFreeWill(EntityTypes.PIG, pos);
+            victims[i] = helper.spawnWithNoFreeWill(EntityType.PIG, pos);
         }
 
         float[] firstHit = new float[types.length];

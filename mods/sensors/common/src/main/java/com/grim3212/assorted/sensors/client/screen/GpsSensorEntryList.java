@@ -5,24 +5,24 @@ import com.grim3212.assorted.sensors.common.block.blockentity.GpsSensorFilter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ComponentRenderUtils;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.locale.Language;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.IntConsumer;
 
 /**
@@ -58,11 +58,11 @@ public class GpsSensorEntryList extends ContainerObjectSelectionList<GpsSensorEn
     }
 
     @Override
-    protected void extractListBackground(GuiGraphicsExtractor graphics) {
+    protected void renderListBackground(GuiGraphics graphics) {
     }
 
     @Override
-    protected void extractListSeparators(GuiGraphicsExtractor graphics) {
+    protected void renderListSeparators(GuiGraphics graphics) {
     }
 
     @Override
@@ -112,7 +112,7 @@ public class GpsSensorEntryList extends ContainerObjectSelectionList<GpsSensorEn
                 return Component.literal(entry);
             }
             boolean tag = GpsSensorFilter.isTag(entry);
-            Identifier id = Identifier.tryParse(tag ? entry.substring(1) : entry);
+            ResourceLocation id = ResourceLocation.tryParse(tag ? entry.substring(1) : entry);
             if (id == null) {
                 return Component.literal(entry);
             }
@@ -123,6 +123,12 @@ public class GpsSensorEntryList extends ContainerObjectSelectionList<GpsSensorEn
             return mode == GpsSensorMode.MOBS
                     ? BuiltInRegistries.ENTITY_TYPE.getOptional(id).map(EntityType::getDescription).orElse(Component.literal(entry))
                     : BuiltInRegistries.ITEM.getOptional(id).map(item -> new ItemStack(item).getHoverName()).orElse(Component.literal(entry));
+        }
+
+        /** As much of {@code text} as fits in {@code width} with an ellipsis after it. */
+        private static FormattedCharSequence clip(Font font, Component text, int width) {
+            FormattedText kept = font.substrByWidth(text, width - font.width(CommonComponents.ELLIPSIS));
+            return Language.getInstance().getVisualOrder(FormattedText.composite(kept, CommonComponents.ELLIPSIS));
         }
 
         /** {@code logs_that_burn} as {@code Logs That Burn}; a nested path keeps only its last part. */
@@ -137,18 +143,19 @@ public class GpsSensorEntryList extends ContainerObjectSelectionList<GpsSensorEn
         }
 
         @Override
-        public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
+        public void render(GuiGraphics graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovered, float a) {
             Font font = GpsSensorEntryList.this.font;
-            int textWidth = this.getContentWidth() - this.removeButton.getWidth() - 4;
+            int textWidth = width - this.removeButton.getWidth() - 4;
             boolean clipped = font.width(this.shown) > textWidth;
-            FormattedCharSequence text = clipped ? ComponentRenderUtils.clipText(this.shown, font, textWidth) : this.shown.getVisualOrderText();
-            graphics.text(font, text, this.getContentX() + 1, this.getContentYMiddle() - font.lineHeight / 2, !this.valid ? INVALID : this.tag ? TAG : TEXT, true);
+            FormattedCharSequence text = clipped ? clip(font, this.shown, textWidth) : this.shown.getVisualOrderText();
+            graphics.drawString(font, text, left + 1, top + height / 2 - font.lineHeight / 2, !this.valid ? INVALID : this.tag ? TAG : TEXT, true);
 
-            this.removeButton.setPosition(this.getContentRight() - this.removeButton.getWidth(), this.getContentY());
-            this.removeButton.extractRenderState(graphics, mouseX, mouseY, a);
+            this.removeButton.setPosition(left + width - this.removeButton.getWidth(), top);
+            this.removeButton.render(graphics, mouseX, mouseY, a);
 
-            if (hovered && !this.removeButton.isMouseOver(mouseX, mouseY)) {
-                graphics.setTooltipForNextFrame(font, this.tooltip, Optional.empty(), mouseX, mouseY);
+            // Deferred to the screen, which draws it after everything else and outside the list's clipping.
+            if (hovered && !this.removeButton.isMouseOver(mouseX, mouseY) && GpsSensorEntryList.this.minecraft.screen != null) {
+                GpsSensorEntryList.this.minecraft.screen.setTooltipForNextRenderPass(this.tooltip.stream().map(Component::getVisualOrderText).toList());
             }
         }
 

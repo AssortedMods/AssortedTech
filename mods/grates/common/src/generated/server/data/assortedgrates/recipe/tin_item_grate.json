@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/tin"
+    "I": {
+      "tag": "c:ingots/tin"
+    }
   },
   "pattern": [
     "I I",

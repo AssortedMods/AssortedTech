@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedspikes:emerald_spike"
+        "recipe": "assortedspikes:emerald_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

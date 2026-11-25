@@ -32,8 +32,7 @@ final class AlarmTests {
 
         helper.setBlock(alarm, AlarmBlocks.ALARM.get().defaultBlockState().setValue(BlockStateProperties.FACING, Direction.UP));
 
-        // Throws with "wrong_block_entity" if the alarm ever gets anything else.
-        helper.getBlockEntity(alarm, AlarmBlockEntity.class);
+        helper.assertTrue(helper.getBlockEntity(alarm) instanceof AlarmBlockEntity, "the alarm has no AlarmBlockEntity");
 
         helper.assertTrue(AlarmBlockEntityTypes.ALARM.get().isValid(helper.getBlockState(alarm)),
                 "the alarm block entity type is not valid for the alarm block");

@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/platinum"
+    "I": {
+      "tag": "c:ingots/platinum"
+    }
   },
   "pattern": [
     "I I",

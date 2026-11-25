@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/silver"
+    "I": {
+      "tag": "c:ingots/silver"
+    }
   },
   "pattern": [
     "I I",

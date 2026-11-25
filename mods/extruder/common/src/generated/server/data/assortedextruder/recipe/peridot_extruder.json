@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/peridot",
-    "M": "#assortedextruder:extruders/level_1",
-    "P": "#c:pickaxes/peridot",
-    "S": "#c:shovels/peridot"
+    "A": {
+      "tag": "c:axes/peridot"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_1"
+    },
+    "P": {
+      "tag": "c:pickaxes/peridot"
+    },
+    "S": {
+      "tag": "c:shovels/peridot"
+    }
   },
   "pattern": [
     " P ",
     "AMS"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:peridot_extruder"
   }
 }

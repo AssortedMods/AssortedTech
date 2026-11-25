@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#c:ingots/netherite"
+    "X": {
+      "tag": "c:ingots/netherite"
+    }
   },
   "pattern": [
     "X X",

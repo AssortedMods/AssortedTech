@@ -11,7 +11,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -74,7 +74,14 @@ public class GpsSensorMenu extends AbstractContainerMenu {
             }
         });
 
-        this.addStandardInventorySlots(inventory, 8, 150);
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 9; column++) {
+                this.addSlot(new Slot(inventory, column + row * 9 + 9, 8 + column * 18, 150 + row * 18));
+            }
+        }
+        for (int column = 0; column < 9; column++) {
+            this.addSlot(new Slot(inventory, column, 8 + column * 18, 208));
+        }
     }
 
     public GpsSensorBlockEntity getSensor() {
@@ -83,14 +90,14 @@ public class GpsSensorMenu extends AbstractContainerMenu {
 
     /** Every click on the ghost slot except a drag, which {@link #canDragTo} keeps away from it. */
     @Override
-    public void clicked(int slotIndex, int buttonNum, ContainerInput containerInput, Player player) {
-        if (slotIndex == FILTER_SLOT && containerInput != ContainerInput.QUICK_CRAFT) {
-            if (this.slots.get(FILTER_SLOT).isActive() && (containerInput == ContainerInput.PICKUP || containerInput == ContainerInput.QUICK_MOVE)) {
-                this.takeFilterItem(containerInput == ContainerInput.PICKUP ? this.getCarried() : ItemStack.EMPTY);
+    public void clicked(int slotIndex, int buttonNum, ClickType clickType, Player player) {
+        if (slotIndex == FILTER_SLOT && clickType != ClickType.QUICK_CRAFT) {
+            if (this.slots.get(FILTER_SLOT).isActive() && (clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE)) {
+                this.takeFilterItem(clickType == ClickType.PICKUP ? this.getCarried() : ItemStack.EMPTY);
             }
             return;
         }
-        super.clicked(slotIndex, buttonNum, containerInput, player);
+        super.clicked(slotIndex, buttonNum, clickType, player);
     }
 
     /**

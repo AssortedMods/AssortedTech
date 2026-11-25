@@ -10,7 +10,7 @@ import com.grim3212.assorted.sensors.common.item.SensorsDataComponents;
 import com.grim3212.assorted.sensors.common.item.SensorsItems;
 import com.grim3212.assorted.sensors.common.network.SensorsPackets;
 import com.grim3212.assorted.sensors.config.SensorsCommonConfig;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class SensorsCommonMod {
 
@@ -19,7 +19,7 @@ public class SensorsCommonMod {
     public static void init() {
         Constants.LOG.info(Constants.MOD_NAME + " starting up...");
         Families.join(Constants.MOD_ID, Constants.FAMILY_ID)
-                .icon(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "gold_sensor"), 40)
+                .icon(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "gold_sensor"), 40)
                 .manualOrder(100);
 
         SensorsDataComponents.init();

@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -31,21 +32,21 @@ public class GpsItem extends Item {
         context.getItemInHand().set(SensorsDataComponents.GPS_TARGET.get(), new GpsTarget(GlobalPos.of(level.dimension(), target)));
         level.playSound(context.getPlayer(), target, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.PLAYERS, 1.0F, 1.0F);
         if (context.getPlayer() instanceof ServerPlayer player) {
-            player.sendSystemMessage(Component.translatable("message.gps.stored", target.getX(), target.getY(), target.getZ()), true);
+            player.displayClientMessage(Component.translatable("message.gps.stored", target.getX(), target.getY(), target.getZ()), true);
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (player.isShiftKeyDown() && stack.has(SensorsDataComponents.GPS_TARGET.get())) {
             stack.remove(SensorsDataComponents.GPS_TARGET.get());
             if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.sendSystemMessage(Component.translatable("message.gps.cleared"), true);
+                serverPlayer.displayClientMessage(Component.translatable("message.gps.cleared"), true);
             }
-            return InteractionResult.SUCCESS;
+            return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
         }
-        return InteractionResult.PASS;
+        return InteractionResultHolder.pass(stack);
     }
 }

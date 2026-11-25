@@ -5,14 +5,14 @@ import com.grim3212.assorted.lib.migration.MovedIds;
 import com.grim3212.assorted.redstone.common.block.RedstoneBlocks;
 import com.grim3212.assorted.redstone.common.handlers.RedstoneCreativeItems;
 import com.grim3212.assorted.redstone.common.item.RedstoneItems;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class RedstoneCommonMod {
 
     public static void init() {
         Constants.LOG.info(Constants.MOD_NAME + " starting up...");
         Families.join(Constants.MOD_ID, Constants.FAMILY_ID)
-                .icon(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "flip_flop_torch"), 100)
+                .icon(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "flip_flop_torch"), 100)
                 .manualOrder(100);
 
         RedstoneBlocks.init();

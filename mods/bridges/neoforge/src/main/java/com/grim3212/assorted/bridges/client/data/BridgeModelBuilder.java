@@ -4,9 +4,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
 import com.grim3212.assorted.bridges.client.model.BridgeUnbakedModel;
-import net.minecraft.resources.Identifier;
 import com.grim3212.assorted.lib.client.data.LibCustomLoaderBuilder;
-import net.neoforged.neoforge.client.model.generators.template.CustomLoaderBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.client.model.generators.ModelBuilder;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -14,25 +15,26 @@ import java.util.Map;
 /**
  * Writes the {@code assortedbridges:bridge} loader block into a bridge block model json: a
  * {@code parent} and the {@code textures} map {@link BridgeUnbakedModel.Loader} reads. The loader
- * replaces the geometry, so it takes no inline elements.
+ * replaces the geometry, so it takes no inline elements. Used as
+ * {@code builder.customLoader(BridgeModelBuilder::begin)}.
  */
-public class BridgeModelBuilder extends LibCustomLoaderBuilder {
+public class BridgeModelBuilder<T extends ModelBuilder<T>> extends LibCustomLoaderBuilder<T> {
 
-    public static BridgeModelBuilder begin() {
-        return new BridgeModelBuilder();
+    public static <T extends ModelBuilder<T>> BridgeModelBuilder<T> begin(T parent, ExistingFileHelper existingFileHelper) {
+        return new BridgeModelBuilder<>(parent, existingFileHelper);
     }
 
-    private @Nullable Identifier bridge;
-    private final Map<String, Identifier> textures = Maps.newLinkedHashMap();
+    private @Nullable ResourceLocation bridge;
+    private final Map<String, ResourceLocation> textures = Maps.newLinkedHashMap();
 
-    protected BridgeModelBuilder() {
-        super(BridgeUnbakedModel.LOADER_NAME, false);
+    protected BridgeModelBuilder(T parent, ExistingFileHelper existingFileHelper) {
+        super(BridgeUnbakedModel.LOADER_NAME, parent, existingFileHelper, false);
     }
 
     /**
      * The model whose shape and remaining texture slots the bridge inherits.
      */
-    public BridgeModelBuilder bridge(Identifier bridge) {
+    public BridgeModelBuilder<T> bridge(ResourceLocation bridge) {
         Preconditions.checkNotNull(bridge, "bridge must not be null");
         this.bridge = bridge;
         return this;
@@ -40,21 +42,13 @@ public class BridgeModelBuilder extends LibCustomLoaderBuilder {
 
     /**
      * A texture slot filled in on the inherited model. The slot name carries no leading {@code #}:
-     * that marks a reference to another slot, and {@code TextureSlots#getMaterial} strips it before
-     * looking a slot up, so {@code "#stored"} would declare a slot nothing could ever find.
+     * that marks a reference to another slot, so {@code "#stored"} would declare a slot nothing could
+     * ever find.
      */
-    public BridgeModelBuilder addTexture(String name, Identifier texture) {
+    public BridgeModelBuilder<T> addTexture(String name, ResourceLocation texture) {
         Preconditions.checkNotNull(texture, "texture must not be null");
         this.textures.put(name, texture);
         return this;
-    }
-
-    @Override
-    protected CustomLoaderBuilder copyInternal() {
-        BridgeModelBuilder copy = new BridgeModelBuilder();
-        copy.bridge = this.bridge;
-        copy.textures.putAll(this.textures);
-        return copy;
     }
 
     @Override

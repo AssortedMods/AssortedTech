@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#c:ingots/copper"
+    "X": {
+      "tag": "c:ingots/copper"
+    }
   },
   "pattern": [
     "X X",

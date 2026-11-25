@@ -10,11 +10,8 @@
   "license": "${license}",
   "environment": "*",
   "entrypoints": {
-    "main": [
+    "fabric-gametest": [
       "com.grim3212.assorted.redstone.gametest.RedstoneFabricGameTests"
-    ],
-    "fabric-client-gametest": [
-      "com.grim3212.assorted.redstone.gametest.RedstoneClientGameTests"
     ]
   },
   "depends": {

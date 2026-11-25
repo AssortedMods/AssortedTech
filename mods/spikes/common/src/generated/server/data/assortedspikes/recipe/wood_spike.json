@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#minecraft:planks"
+    "X": {
+      "tag": "minecraft:planks"
+    }
   },
   "pattern": [
     "X X",

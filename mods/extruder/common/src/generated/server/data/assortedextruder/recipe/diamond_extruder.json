@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/diamond",
-    "M": "#assortedextruder:extruders/level_2",
-    "P": "#c:pickaxes/diamond",
-    "S": "#c:shovels/diamond"
+    "A": {
+      "tag": "c:axes/diamond"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_2"
+    },
+    "P": {
+      "tag": "c:pickaxes/diamond"
+    },
+    "S": {
+      "tag": "c:shovels/diamond"
+    }
   },
   "pattern": [
     " P ",
     "AMS"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:diamond_extruder"
   }
 }

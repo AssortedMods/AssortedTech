@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#c:gems/ruby"
+    "X": {
+      "tag": "c:gems/ruby"
+    }
   },
   "pattern": [
     "X X",

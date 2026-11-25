@@ -8,7 +8,7 @@ import com.grim3212.assorted.grates.common.block.ItemGrateBlock;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -29,11 +29,11 @@ final class AliasTests {
         ItemGrateBlock iron = GratesBlocks.ITEM_GRATES.get(GrateMaterial.IRON).get();
 
         for (String namespace : List.of(Constants.FAMILY_ID, "assortedgravity")) {
-            Identifier mesh = Identifier.fromNamespaceAndPath(namespace, "metal_mesh");
+            ResourceLocation mesh = ResourceLocation.fromNamespaceAndPath(namespace, "metal_mesh");
             ItemStack stack = ItemStack.CODEC.parse(helper.getLevel().registryAccess().createSerializationContext(JsonOps.INSTANCE),
                     JsonParser.parseString("{\"id\": \"" + mesh + "\", \"count\": 1}")).getOrThrow();
             helper.assertTrue(stack.is(iron.asItem()), "a stack saved as " + mesh + " reads back as " + stack);
-            helper.assertValueEqual(BuiltInRegistries.BLOCK.getValue(mesh), iron, "the block saved as " + mesh);
+            helper.assertValueEqual(BuiltInRegistries.BLOCK.get(mesh), iron, "the block saved as " + mesh);
         }
         helper.succeed();
     }

@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#c:gems/amethyst"
+    "X": {
+      "tag": "c:gems/amethyst"
+    }
   },
   "pattern": [
     "X X",

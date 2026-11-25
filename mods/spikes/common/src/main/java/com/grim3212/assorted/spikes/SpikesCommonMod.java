@@ -5,14 +5,14 @@ import com.grim3212.assorted.lib.migration.MovedIds;
 import com.grim3212.assorted.spikes.common.block.SpikesBlocks;
 import com.grim3212.assorted.spikes.common.handlers.SpikesCreativeItems;
 import com.grim3212.assorted.spikes.common.sounds.SpikesSounds;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class SpikesCommonMod {
 
     public static void init() {
         Constants.LOG.info(Constants.MOD_NAME + " starting up...");
         Families.join(Constants.MOD_ID, Constants.FAMILY_ID)
-                .icon(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "iron_spike"), 30)
+                .icon(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "iron_spike"), 30)
                 .manualOrder(100);
 
         SpikesBlocks.init();

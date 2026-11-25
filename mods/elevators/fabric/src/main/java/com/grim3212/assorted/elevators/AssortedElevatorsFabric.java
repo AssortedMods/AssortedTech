@@ -10,6 +10,6 @@ public class AssortedElevatorsFabric implements ModInitializer {
     public void onInitialize() {
         ElevatorsCommonMod.init();
 
-        ServerTickEvents.END_LEVEL_TICK.register(ElevatorInputHandler::tick);
+        ServerTickEvents.END_WORLD_TICK.register(ElevatorInputHandler::tick);
     }
 }

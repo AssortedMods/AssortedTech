@@ -8,7 +8,6 @@ import com.grim3212.assorted.sensors.common.block.SensorsBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagAppender;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -25,7 +24,7 @@ public class SensorsItemTagProvider extends LibItemTagProvider {
 
     @Override
     public void addCommonTags(Function<TagKey<Item>, TagAppender<Item>> appender, BiConsumer<TagKey<Block>, TagKey<Item>> copier) {
-        // The intrinsic tag appender is gone; TagAppender only accepts ResourceKeys. Wrap it back
+        // The library hands out plain TagAppenders, which take ResourceKeys. Wrap them back
         // into something that takes items so the tag lists below stay readable.
         Function<TagKey<Item>, ItemTagger> tagger = (tag) -> new ItemTagger(appender.apply(tag));
 

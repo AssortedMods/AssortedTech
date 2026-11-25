@@ -14,6 +14,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -28,13 +30,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.InterpolationHandler;
-import net.minecraft.world.entity.LinearInterpolationHandler;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.BlockItem;
@@ -43,10 +42,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BubbleColumnBlock;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -59,8 +60,12 @@ import org.jetbrains.annotations.Nullable;
  * Its {@link ExtruderType} decides what it can mine, by the tools it was made from, and how many of
  * its slots it uses. The container always has room for the largest, so a slot is the same index
  * whatever the material; a smaller extruder just leaves the rest empty and out of its screen.
+ * <p>
+ * It is a plain {@link Entity} carrying a vehicle's hurt time, hurt direction and damage itself:
+ * 1.21.1's {@code VehicleEntity} keeps {@code getDropItem} package private on Fabric, so nothing
+ * outside vanilla's package can extend it there.
  */
-public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<ExtruderType> {
+public class ExtruderEntity extends Entity implements IMenuDataProvider<ExtruderType> {
 
     public static final int FUEL_SLOT = 0;
     public static final int FIRST_EXTRUDE_SLOT = 1;
@@ -72,6 +77,9 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
     /** Menu buttons 0 to 5 are {@link Direction#get3DDataValue()}; this one starts and stops it. */
     public static final int TOGGLE_BUTTON = 6;
 
+    private static final EntityDataAccessor<Integer> DATA_HURT_TIME = SynchedEntityData.defineId(ExtruderEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_HURT_DIR = SynchedEntityData.defineId(ExtruderEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> DATA_DAMAGE = SynchedEntityData.defineId(ExtruderEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Direction> DATA_FACING = SynchedEntityData.defineId(ExtruderEntity.class, EntityDataSerializers.DIRECTION);
     private static final EntityDataAccessor<Boolean> DATA_RUNNING = SynchedEntityData.defineId(ExtruderEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> DATA_FUEL = SynchedEntityData.defineId(ExtruderEntity.class, EntityDataSerializers.INT);
@@ -92,6 +100,12 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
     /** The block just left, laid into once the extruder's box is clear of it so it cannot be trapped. */
     private @Nullable BlockPos pendingExtrude;
 
+    /** The position the server last sent, which the client moves towards over a few ticks, as a boat does. */
+    private int lerpSteps;
+    private double lerpX;
+    private double lerpY;
+    private double lerpZ;
+
     private final ContainerData data = new ContainerData() {
         @Override
         public int get(int index) {
@@ -99,7 +113,7 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
                 case 0 -> ExtruderEntity.this.getFuel();
                 case 1 -> ExtruderEntity.this.isRunning() ? 1 : 0;
                 case 2 -> ExtruderEntity.this.getFacing().get3DDataValue();
-                case 3 -> ExtruderEntity.this.level() instanceof ServerLevel level ? fuelValue(level, ExtruderEntity.this.container.getItem(FUEL_SLOT)) : 0;
+                case 3 -> fuelValue(ExtruderEntity.this.container.getItem(FUEL_SLOT));
                 default -> 0;
             };
         }
@@ -121,11 +135,37 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
+        builder.define(DATA_HURT_TIME, 0);
+        builder.define(DATA_HURT_DIR, 1);
+        builder.define(DATA_DAMAGE, 0.0F);
         builder.define(DATA_FACING, Direction.NORTH);
         builder.define(DATA_RUNNING, false);
         builder.define(DATA_FUEL, 0);
         builder.define(DATA_TYPE, ExtruderType.IRON.ordinal());
+    }
+
+    public int getHurtTime() {
+        return this.entityData.get(DATA_HURT_TIME);
+    }
+
+    public void setHurtTime(int hurtTime) {
+        this.entityData.set(DATA_HURT_TIME, hurtTime);
+    }
+
+    public int getHurtDir() {
+        return this.entityData.get(DATA_HURT_DIR);
+    }
+
+    public void setHurtDir(int hurtDir) {
+        this.entityData.set(DATA_HURT_DIR, hurtDir);
+    }
+
+    public float getDamage() {
+        return this.entityData.get(DATA_DAMAGE);
+    }
+
+    public void setDamage(float damage) {
+        this.entityData.set(DATA_DAMAGE, damage);
     }
 
     public ExtruderType getExtruderType() {
@@ -174,7 +214,7 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
 
     /** Puts the extruder in the middle of {@code pos}, which is how it is placed and where it stops. */
     public void placeAt(BlockPos pos) {
-        this.snapTo(pos.getX() + 0.5D, pos.getY() + (1.0D - this.getBbHeight()) / 2.0D, pos.getZ() + 0.5D, 0.0F, 0.0F);
+        this.moveTo(pos.getX() + 0.5D, pos.getY() + (1.0D - this.getBbHeight()) / 2.0D, pos.getZ() + 0.5D, 0.0F, 0.0F);
         this.lastBlock = pos.immutable();
         this.pendingExtrude = null;
     }
@@ -194,18 +234,47 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
             this.setDamage(this.getDamage() - 1.0F);
         }
 
-        if (this.level() instanceof ServerLevel level && this.isRunning()) {
-            this.run(level);
+        if (this.level() instanceof ServerLevel level) {
+            if (this.isRunning()) {
+                this.run(level);
+            }
+        } else {
+            this.tickLerp();
         }
     }
 
     /**
-     * Without one, the client puts it wherever each position update says the moment it arrives,
+     * Without this, the client puts it wherever each position update says the moment it arrives,
      * out of step with its own ticks, so a moving extruder stutters. Boats and minecarts do the same.
      */
     @Override
-    protected InterpolationHandler createInterpolationHandler() {
-        return LinearInterpolationHandler.create(this);
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
+        this.lerpX = x;
+        this.lerpY = y;
+        this.lerpZ = z;
+        this.lerpSteps = steps;
+    }
+
+    @Override
+    public double lerpTargetX() {
+        return this.lerpSteps > 0 ? this.lerpX : this.getX();
+    }
+
+    @Override
+    public double lerpTargetY() {
+        return this.lerpSteps > 0 ? this.lerpY : this.getY();
+    }
+
+    @Override
+    public double lerpTargetZ() {
+        return this.lerpSteps > 0 ? this.lerpZ : this.getZ();
+    }
+
+    private void tickLerp() {
+        if (this.lerpSteps > 0) {
+            this.lerpPositionAndRotationStep(this.lerpSteps, this.lerpX, this.lerpY, this.lerpZ, this.getYRot(), this.getXRot());
+            this.lerpSteps--;
+        }
     }
 
     private void run(ServerLevel level) {
@@ -214,13 +283,14 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
         }
 
         Direction facing = this.getFacing();
-        Vec3 front = this.getBoundingBox().getCenter().add(Vec3.atLowerCornerOf(facing.getUnitVec3i()).scale(FRONT_REACH));
+        Vec3 front = this.getBoundingBox().getCenter().add(Vec3.atLowerCornerOf(facing.getNormal()).scale(FRONT_REACH));
         BlockPos ahead = BlockPos.containing(front);
         BlockState state = level.getBlockState(ahead);
 
         // Fluids are travelled through; anything else in the way is mined, or stops it, as its Stop
         // button would, rather than leaving it running against a block it will never get through.
-        if (!state.isAir() && !state.liquid()) {
+        // A fluid here is a liquid block or a bubble column, the blocks vanilla flags as liquid.
+        if (!state.isAir() && !(state.getBlock() instanceof LiquidBlock) && !(state.getBlock() instanceof BubbleColumnBlock)) {
             ItemStack tool = this.getExtruderType().toolFor(state);
             if (!canMine(level, ahead, state) || tool.isEmpty()) {
                 this.setRunning(false);
@@ -231,7 +301,7 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
 
         this.setFuel(this.getFuel() - 1);
         double speed = ExtruderCommonMod.COMMON_CONFIG.extruderMoveSpeed.get() * this.getExtruderType().getSpeed();
-        this.move(MoverType.SELF, Vec3.atLowerCornerOf(facing.getUnitVec3i()).scale(speed));
+        this.move(MoverType.SELF, Vec3.atLowerCornerOf(facing.getNormal()).scale(speed));
 
         BlockPos current = this.currentBlock();
         if (this.lastBlock == null) {
@@ -275,7 +345,7 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
         for (ItemStack drop : Block.getDrops(state, level, pos, level.getBlockEntity(pos), this, tool)) {
             ItemStack left = this.addToMined(drop);
             if (!left.isEmpty()) {
-                this.spawnAtLocation(level, left);
+                this.spawnAtLocation(left);
             }
         }
 
@@ -318,13 +388,13 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
 
         stack.shrink(1);
         this.setFuel(this.getFuel() - this.getExtruderType().blockCost(ExtruderCommonMod.COMMON_CONFIG.extruderFuelPerExtrudedBlock.get()));
-        SoundType sound = state.getSoundType();
+        SoundType sound = Services.LEVEL_PROPERTIES.getSoundType(level, pos, this);
         level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
     }
 
     private void refuel(ServerLevel level) {
         ItemStack stack = this.container.getItem(FUEL_SLOT);
-        int burn = fuelValue(level, stack);
+        int burn = fuelValue(stack);
         if (burn <= 0) {
             return;
         }
@@ -338,8 +408,8 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
     }
 
     /** Anything a furnace burns, for as long as a furnace would. */
-    public static int fuelValue(ServerLevel level, ItemStack stack) {
-        return Services.PLATFORM.getFuelTime(stack, level);
+    public static int fuelValue(ItemStack stack) {
+        return Services.PLATFORM.getFuelTime(stack, null);
     }
 
     /**
@@ -405,8 +475,11 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
      * punch straight after the first.
      */
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        if (!this.isRemoved() && source.getDirectEntity() instanceof ServerPlayer player && source.getEntity() == player
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level) || this.isRemoved()) {
+            return true;
+        }
+        if (source.getDirectEntity() instanceof ServerPlayer player && source.getEntity() == player
                 && player.getMainHandItem().isEmpty() && !player.isSecondaryUseActive()) {
             if (player.getAbilities().instabuild) {
                 boolean second = this.tickCount - this.lastCreativePunch <= DOUBLE_PUNCH_TICKS;
@@ -417,20 +490,42 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
                 }
             }
             // With nothing to burn it would only stop itself again on its next tick.
-            boolean fuelless = this.getFuel() <= 0 && fuelValue(level, this.container.getItem(FUEL_SLOT)) <= 0;
+            boolean fuelless = this.getFuel() <= 0 && fuelValue(this.container.getItem(FUEL_SLOT)) <= 0;
             this.setRunning(!this.isRunning() && !fuelless);
             String key = this.isRunning() ? "message.extruder.started" : fuelless ? "message.extruder.no_fuel" : "message.extruder.stopped";
-            // Player#displayClientMessage is gone; the action bar lives on ServerPlayer#sendSystemMessage(Component, boolean).
-            player.sendSystemMessage(Component.translatable(key), true);
+            player.displayClientMessage(Component.translatable(key), true);
             this.setHurtDir(-this.getHurtDir());
             this.setHurtTime(10);
             return true;
         }
-        if (!this.isRemoved() && source.getEntity() instanceof Player player && player.getAbilities().instabuild) {
+        if (source.getEntity() instanceof Player player && player.getAbilities().instabuild) {
             this.breakInCreative();
             return true;
         }
-        return super.hurtServer(level, source, damage);
+        if (this.isInvulnerableTo(source)) {
+            return false;
+        }
+
+        // As a boat or minecart wears down: it breaks into its item once the damage passes 40.
+        this.setHurtDir(-this.getHurtDir());
+        this.setHurtTime(10);
+        this.markHurt();
+        this.setDamage(this.getDamage() + damage * 10.0F);
+        this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
+        if (this.getDamage() > 40.0F) {
+            this.destroy(level);
+        }
+        return true;
+    }
+
+    /** Killed, dropping its item with any name it was given; what it holds spills from {@link #remove}. */
+    private void destroy(ServerLevel level) {
+        this.kill();
+        if (level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+            ItemStack stack = new ItemStack(this.getDropItem());
+            stack.set(DataComponents.CUSTOM_NAME, this.getCustomName());
+            this.spawnAtLocation(stack);
+        }
     }
 
     /**
@@ -447,16 +542,16 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
     private void breakParticles() {
         if (this.level() instanceof ServerLevel level) {
             Vec3 centre = this.getBoundingBox().getCenter();
-            level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, this.getDropItem()), centre.x, centre.y, centre.z, 24, 0.25D, 0.25D, 0.25D, 0.08D);
+            level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(this.getDropItem())), centre.x, centre.y, centre.z, 24, 0.25D, 0.25D, 0.25D, 0.08D);
         }
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+    public InteractionResult interact(Player player, InteractionHand hand) {
         if (player instanceof ServerPlayer serverPlayer) {
             Services.PLATFORM.openMenu(serverPlayer, this);
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(this.level().isClientSide());
     }
 
     /** The client's menu is built for its material, which sets how many slots it shows. */
@@ -486,7 +581,7 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
     }
 
     @Override
-    public boolean canBeCollidedWith(@Nullable Entity other) {
+    public boolean canBeCollidedWith() {
         return true;
     }
 
@@ -495,8 +590,7 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
         return false;
     }
 
-    @Override
-    protected Item getDropItem() {
+    private Item getDropItem() {
         return ExtruderItems.extruder(this.getExtruderType());
     }
 
@@ -518,23 +612,25 @@ public class ExtruderEntity extends VehicleEntity implements IMenuDataProvider<E
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        this.setExtruderType(input.read("Type", ExtruderType.CODEC).orElse(ExtruderType.IRON));
-        this.setFacing(input.read("Facing", Direction.CODEC).orElse(Direction.NORTH));
-        this.entityData.set(DATA_RUNNING, input.getBooleanOr("Running", false));
-        this.setFuel(input.getIntOr("Fuel", 0));
-        this.contentHead = Math.clamp(input.getIntOr("ContentHead", FIRST_EXTRUDE_SLOT), FIRST_EXTRUDE_SLOT, FIRST_EXTRUDE_SLOT + this.getExtruderType().getExtrudeSlots() - 1);
+    protected void readAdditionalSaveData(CompoundTag tag) {
+        this.setExtruderType(ExtruderType.byName(tag.getString("Type"), ExtruderType.IRON));
+        Direction facing = Direction.byName(tag.getString("Facing"));
+        this.setFacing(facing != null ? facing : Direction.NORTH);
+        this.entityData.set(DATA_RUNNING, tag.getBoolean("Running"));
+        this.setFuel(tag.getInt("Fuel"));
+        int head = tag.contains("ContentHead") ? tag.getInt("ContentHead") : FIRST_EXTRUDE_SLOT;
+        this.contentHead = Math.clamp(head, FIRST_EXTRUDE_SLOT, FIRST_EXTRUDE_SLOT + this.getExtruderType().getExtrudeSlots() - 1);
         this.container.clearContent();
-        ContainerHelper.loadAllItems(input, this.container.getItems());
+        ContainerHelper.loadAllItems(tag, this.container.getItems(), this.registryAccess());
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        output.store("Type", ExtruderType.CODEC, this.getExtruderType());
-        output.store("Facing", Direction.CODEC, this.getFacing());
-        output.putBoolean("Running", this.isRunning());
-        output.putInt("Fuel", this.getFuel());
-        output.putInt("ContentHead", this.contentHead);
-        ContainerHelper.saveAllItems(output, this.container.getItems());
+    protected void addAdditionalSaveData(CompoundTag tag) {
+        tag.putString("Type", this.getExtruderType().getSerializedName());
+        tag.putString("Facing", this.getFacing().getSerializedName());
+        tag.putBoolean("Running", this.isRunning());
+        tag.putInt("Fuel", this.getFuel());
+        tag.putInt("ContentHead", this.contentHead);
+        ContainerHelper.saveAllItems(tag, this.container.getItems(), this.registryAccess());
     }
 }

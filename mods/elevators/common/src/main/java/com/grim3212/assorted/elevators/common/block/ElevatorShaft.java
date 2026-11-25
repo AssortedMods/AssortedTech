@@ -34,7 +34,7 @@ public final class ElevatorShaft {
 
     /** What a car can pass through and come to rest in: air, fluids, plants and the like. */
     public static boolean isShaft(LevelReader level, BlockPos pos) {
-        return level.isInsideBuildHeight(pos) && level.getBlockState(pos).canBeReplaced();
+        return !level.isOutsideBuildHeight(pos) && level.getBlockState(pos).canBeReplaced();
     }
 
     public static boolean isShaft(LevelReader level, ElevatorGroup group, int y) {

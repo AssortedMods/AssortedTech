@@ -7,7 +7,7 @@ import com.grim3212.assorted.elevators.common.handlers.ElevatorsCreativeItems;
 import com.grim3212.assorted.elevators.config.ElevatorsCommonConfig;
 import com.grim3212.assorted.lib.family.Families;
 import com.grim3212.assorted.lib.migration.MovedIds;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class ElevatorsCommonMod {
 
@@ -16,7 +16,7 @@ public class ElevatorsCommonMod {
     public static void init() {
         Constants.LOG.info(Constants.MOD_NAME + " starting up...");
         Families.join(Constants.MOD_ID, Constants.FAMILY_ID)
-                .icon(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "elevator"), 80)
+                .icon(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "elevator"), 80)
                 .manualOrder(100);
 
         ElevatorsBlocks.init();

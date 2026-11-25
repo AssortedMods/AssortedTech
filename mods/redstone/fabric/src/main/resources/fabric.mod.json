@@ -16,13 +16,16 @@
   "entrypoints": {
     "main": [
       "com.grim3212.assorted.redstone.AssortedRedstoneFabric"
+    ],
+    "client": [
+      "com.grim3212.assorted.redstone.AssortedRedstoneFabricClient"
     ]
   },
   "depends": {
     "fabricloader": ">=0.19",
     "fabric-api": "*",
     "minecraft": "${fabric_mc_version_range}",
-    "java": ">=25",
+    "java": ">=21",
     "assortedlib": ">=${assortedlib_version}"
   }
 }

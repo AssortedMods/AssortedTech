@@ -14,10 +14,18 @@
     }
   ],
   "key": {
-    "G": "#c:storage_blocks/gold",
-    "P": "assortedsensors:gps",
-    "S": "assortedsensors:gps_sensor",
-    "X": "#c:ingots/gold"
+    "G": {
+      "tag": "c:storage_blocks/gold"
+    },
+    "P": {
+      "item": "assortedsensors:gps"
+    },
+    "S": {
+      "item": "assortedsensors:gps_sensor"
+    },
+    "X": {
+      "tag": "c:ingots/gold"
+    }
   },
   "pattern": [
     "GXG",
@@ -25,6 +33,7 @@
     "GXG"
   ],
   "result": {
+    "count": 1,
     "id": "assortedsensors:upgraded_gps_sensor"
   }
 }

@@ -7,47 +7,34 @@ import com.grim3212.assorted.redstone.client.data.RedstoneLanguageProvider;
 import com.grim3212.assorted.redstone.client.data.RedstoneManualProvider;
 import com.grim3212.assorted.redstone.data.RedstoneBlockLoot;
 import com.grim3212.assorted.redstone.data.RedstoneRecipes;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-
-import java.util.concurrent.CompletableFuture;
 
 @Mod(Constants.MOD_ID)
 public class AssortedRedstoneNeoForge {
 
-    /**
-     * {@code FMLJavaModLoadingContext} is gone; the mod event bus and the mod container are injected
-     * into the {@code @Mod} constructor instead.
-     */
     public AssortedRedstoneNeoForge(IEventBus modBus, ModContainer modContainer) {
-        modBus.addListener(this::gatherServerData);
-        modBus.addListener(this::gatherClientData);
+        modBus.addListener(this::gatherData);
 
         RedstoneCommonMod.init();
     }
 
-    /**
-     * Server datagen. The server and client halves are separate events; if the wrong one runs, the
-     * build still succeeds, with "All providers took: 0 ms".
-     */
-    private void gatherServerData(final GatherDataEvent.Server event) {
-        PackOutput packOutput = event.getGenerator().getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getWorldLookupProvider();
+    /** One event for both halves; each provider is added for the half its output belongs to. */
+    private void gatherData(final GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
+        PackOutput packOutput = generator.getPackOutput();
+        ExistingFileHelper fileHelper = event.getExistingFileHelper();
 
         ForgeRegistryEntries.of(Constants.MOD_ID).recipes(RedstoneRecipes::new).blockLoot(RedstoneBlockLoot::new).addTo(event);
-    }
 
-    /** Client datagen: models, the language file and the manual, written into common for both loaders. */
-    private void gatherClientData(final GatherDataEvent.Client event) {
-        PackOutput packOutput = event.getGenerator().getPackOutput();
-
-        event.addProvider(new RedstoneBlockstateProvider(packOutput));
-        event.addProvider(new RedstoneItemModelProvider(packOutput));
-        event.addProvider(new RedstoneLanguageProvider(packOutput));
-        event.addProvider(new RedstoneManualProvider(packOutput));
+        generator.addProvider(event.includeClient(), new RedstoneBlockstateProvider(packOutput, fileHelper));
+        generator.addProvider(event.includeClient(), new RedstoneItemModelProvider(packOutput, fileHelper));
+        generator.addProvider(event.includeClient(), new RedstoneLanguageProvider(packOutput));
+        generator.addProvider(event.includeClient(), new RedstoneManualProvider(packOutput));
     }
 }

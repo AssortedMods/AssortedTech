@@ -65,7 +65,14 @@ public class ExtruderMenu extends AbstractContainerMenu {
         }
 
         this.playerStart = this.slots.size();
-        this.addStandardInventorySlots(inventory, 8, 162);
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 9; column++) {
+                this.addSlot(new Slot(inventory, column + row * 9 + 9, 8 + column * 18, 162 + row * 18));
+            }
+        }
+        for (int column = 0; column < 9; column++) {
+            this.addSlot(new Slot(inventory, column, 8 + column * 18, 220));
+        }
         this.addDataSlots(data);
     }
 

@@ -3,31 +3,25 @@ package com.grim3212.assorted.redstone.client.data;
 import com.grim3212.assorted.redstone.Constants;
 import com.grim3212.assorted.redstone.common.block.FlipFlopTorchBlock;
 import com.grim3212.assorted.redstone.common.block.RedstoneBlocks;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ItemModelGenerators;
-import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.client.data.models.model.ModelTemplates;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.data.models.model.TextureSlot;
-import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-
-import java.util.stream.Stream;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 /**
  * Block states and block models. The torch items are flat sprites, which {@link RedstoneItemModelProvider}
  * draws, so this models no items.
  */
-public class RedstoneBlockstateProvider extends ModelProvider {
+public class RedstoneBlockstateProvider extends BlockStateProvider {
 
-    public RedstoneBlockstateProvider(PackOutput output) {
-        super(output, Constants.MOD_ID);
+    public RedstoneBlockstateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
+        super(output, Constants.MOD_ID, exFileHelper);
     }
 
     @Override
@@ -36,51 +30,42 @@ public class RedstoneBlockstateProvider extends ModelProvider {
     }
 
     @Override
-    protected Stream<? extends Holder<Item>> getKnownItems() {
-        return Stream.empty();
-    }
-
-    @Override
-    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-        torch(blockModels, RedstoneBlocks.FLIP_FLOP_TORCH.get(), RedstoneBlocks.FLIP_FLOP_WALL_TORCH.get());
-        torch(blockModels, RedstoneBlocks.GLOWSTONE_TORCH.get(), RedstoneBlocks.GLOWSTONE_WALL_TORCH.get());
+    protected void registerStatesAndModels() {
+        torch(RedstoneBlocks.FLIP_FLOP_TORCH.get(), RedstoneBlocks.FLIP_FLOP_WALL_TORCH.get(), FlipFlopTorchBlock.PREV_LIT);
+        torch(RedstoneBlocks.GLOWSTONE_TORCH.get(), RedstoneBlocks.GLOWSTONE_WALL_TORCH.get());
     }
 
     /**
-     * A torch pair. The wall torch's {@code rotationY((toYRot() + 90) % 360)} is
-     * {@link BlockModelGenerators#ROTATION_TORCH}, which is how vanilla's own wall torches are
-     * oriented. {@code PREV_LIT} on the flip flop torch is not dispatched on, as before.
+     * A torch pair, cut out like vanilla's torches. The wall torch turns by
+     * {@code (toYRot() + 90) % 360}, as vanilla's own wall torches do. {@code PREV_LIT} on the flip
+     * flop torch is not dispatched on.
      */
-    private void torch(BlockModelGenerators blockModels, Block torch, Block wallTorch) {
+    private void torch(Block torch, Block wallTorch, Property<?>... ignored) {
         String name = name(torch);
         String wallName = name(wallTorch);
 
-        Identifier lit = ModelTemplates.TORCH.create(resource("block/" + name), torchMapping(texture("block/" + name)), blockModels.modelOutput);
-        Identifier unlit = ModelTemplates.TORCH.create(resource("block/" + name + "_off"), torchMapping(texture("block/" + name + "_off")), blockModels.modelOutput);
-        Identifier litWall = ModelTemplates.WALL_TORCH.create(resource("block/" + wallName), torchMapping(texture("block/" + name)), blockModels.modelOutput);
-        Identifier unlitWall = ModelTemplates.WALL_TORCH.create(resource("block/" + wallName + "_off"), torchMapping(texture("block/" + name + "_off")), blockModels.modelOutput);
+        ModelFile lit = torchModel(name, "block/template_torch", name);
+        ModelFile unlit = torchModel(name + "_off", "block/template_torch", name + "_off");
+        ModelFile litWall = torchModel(wallName, "block/template_torch_wall", name);
+        ModelFile unlitWall = torchModel(wallName + "_off", "block/template_torch_wall", name + "_off");
 
-        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(torch)
-                .with(BlockModelGenerators.createBooleanModelDispatch(FlipFlopTorchBlock.LIT, BlockModelGenerators.plainVariant(lit), BlockModelGenerators.plainVariant(unlit))));
+        this.getVariantBuilder(torch).forAllStatesExcept(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(BlockStateProperties.LIT) ? lit : unlit).build(), ignored);
 
-        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(wallTorch)
-                .with(BlockModelGenerators.createBooleanModelDispatch(FlipFlopTorchBlock.LIT, BlockModelGenerators.plainVariant(litWall), BlockModelGenerators.plainVariant(unlitWall)))
-                .with(BlockModelGenerators.ROTATION_TORCH));
+        this.getVariantBuilder(wallTorch).forAllStatesExcept(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(BlockStateProperties.LIT) ? litWall : unlitWall)
+                .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 90) % 360).build(), ignored);
     }
 
-    private static TextureMapping torchMapping(Material torch) {
-        return new TextureMapping().put(TextureSlot.TORCH, torch);
+    private ModelFile torchModel(String model, String parent, String texture) {
+        return this.models().withExistingParent(model, mcLoc(parent)).texture("torch", resource("block/" + texture)).renderType("cutout");
     }
 
     private static String name(Block b) {
         return BuiltInRegistries.BLOCK.getKey(b).getPath();
     }
 
-    private static Identifier resource(String path) {
-        return Identifier.fromNamespaceAndPath(Constants.MOD_ID, path);
-    }
-
-    private static Material texture(String path) {
-        return new Material(resource(path));
+    private static ResourceLocation resource(String path) {
+        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, path);
     }
 }

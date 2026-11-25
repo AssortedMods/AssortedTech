@@ -13,8 +13,9 @@ import com.grim3212.assorted.spikes.Constants;
 import com.grim3212.assorted.spikes.common.handlers.SpikesCreativeItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ final class AssetTests {
         int items = 0;
 
         for (Map.Entry<ResourceKey<Block>, Block> entry : BuiltInRegistries.BLOCK.entrySet()) {
-            Identifier id = entry.getKey().identifier();
+            ResourceLocation id = entry.getKey().location();
             if (!Constants.MOD_ID.equals(id.getNamespace())) {
                 continue;
             }
@@ -67,13 +68,13 @@ final class AssetTests {
         }
 
         for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
-            Identifier id = entry.getKey().identifier();
+            ResourceLocation id = entry.getKey().location();
             if (!Constants.MOD_ID.equals(id.getNamespace())) {
                 continue;
             }
             items++;
-            if (!resourceExists("/assets/" + id.getNamespace() + "/items/" + id.getPath() + ".json")) {
-                missing.add("items/" + id.getPath() + ".json");
+            if (!resourceExists("/assets/" + id.getNamespace() + "/models/item/" + id.getPath() + ".json")) {
+                missing.add("models/item/" + id.getPath() + ".json");
             }
             String key = entry.getValue().getDescriptionId();
             if (!lang.has(key)) {
@@ -82,7 +83,7 @@ final class AssetTests {
         }
 
         if (!BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(SpikesCreativeItems.TAB)) {
-            missing.add("the " + SpikesCreativeItems.TAB.identifier() + " creative tab");
+            missing.add("the " + SpikesCreativeItems.TAB.location() + " creative tab");
         }
         if (!lang.has("itemGroup." + Constants.FAMILY_ID)) {
             missing.add("lang key itemGroup." + Constants.FAMILY_ID);
@@ -108,8 +109,8 @@ final class AssetTests {
         List<String> failed = new ArrayList<>();
 
         recipes.listMatchingResources(server.getResourceManager()).forEach((file, resource) -> {
-            Identifier id = recipes.fileToId(file);
-            if (!id.getNamespace().equals(Constants.MOD_ID) || server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, id)).isPresent()) {
+            ResourceLocation id = recipes.fileToId(file);
+            if (!id.getNamespace().equals(Constants.MOD_ID) || server.getRecipeManager().byKey(id).isPresent()) {
                 return;
             }
 
@@ -134,8 +135,8 @@ final class AssetTests {
      */
     private static void everyItemTagHasAName(GameTestHelper helper) {
         Language language = Language.getInstance();
-        List<String> missing = helper.getLevel().registryAccess().lookupOrThrow(Registries.ITEM).getTags()
-                .map(tag -> tag.key().location())
+        List<String> missing = BuiltInRegistries.ITEM.getTagNames()
+                .map(TagKey::location)
                 .filter(id -> !"minecraft".equals(id.getNamespace()))
                 .map(id -> "tag.item." + id.getNamespace() + "." + id.getPath().replace('/', '.'))
                 .filter(key -> !language.has(key))

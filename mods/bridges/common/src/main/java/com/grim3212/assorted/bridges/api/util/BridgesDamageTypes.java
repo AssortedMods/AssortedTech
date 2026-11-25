@@ -2,7 +2,7 @@ package com.grim3212.assorted.bridges.api.util;
 
 import com.grim3212.assorted.bridges.Constants;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BridgesDamageTypes {
 
-    public static final ResourceKey<DamageType> LASER = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "laser"));
+    public static final ResourceKey<DamageType> LASER = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "laser"));
 
     /**
      * A damage source for one of this mod's damage types, resolved against the level's damage type

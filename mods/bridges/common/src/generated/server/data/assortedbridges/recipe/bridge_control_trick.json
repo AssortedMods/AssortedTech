@@ -14,9 +14,15 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/iron",
-    "L": "assortedbridges:bridge_control_laser",
-    "R": "#c:feathers"
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "L": {
+      "item": "assortedbridges:bridge_control_laser"
+    },
+    "R": {
+      "tag": "c:feathers"
+    }
   },
   "pattern": [
     "III",
@@ -24,6 +30,7 @@
     "IRI"
   ],
   "result": {
+    "count": 1,
     "id": "assortedbridges:bridge_control_trick"
   }
 }

@@ -7,7 +7,13 @@ import com.grim3212.assorted.elevators.common.block.ElevatorGroup;
 import com.grim3212.assorted.elevators.common.block.ElevatorShaft;
 import com.grim3212.assorted.elevators.common.block.ElevatorsBlocks;
 import com.grim3212.assorted.elevators.common.block.blockentity.CamouflageBlockEntity;
+import com.grim3212.assorted.elevators.mixin.ServerGamePacketListenerImplAccessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -27,11 +33,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -150,7 +153,8 @@ public class ElevatorCarEntity extends Entity {
     }
 
     @Override
-    protected AABB makeBoundingBox(Vec3 position) {
+    protected AABB makeBoundingBox() {
+        Vec3 position = this.position();
         double halfX = this.getSizeX() / 2.0D;
         double halfZ = this.getSizeZ() / 2.0D;
         return new AABB(position.x - halfX, position.y, position.z - halfZ, position.x + halfX, position.y + 1.0D, position.z + halfZ);
@@ -182,6 +186,7 @@ public class ElevatorCarEntity extends Entity {
             }
         } else if (!this.level().isClientSide()) {
             this.entityData.set(DATA_ARRIVED, true);
+            this.holdRiders();
             this.keepRidersGrounded();
             if (++this.settledTicks >= SETTLE_TICKS) {
                 this.arrive();
@@ -219,12 +224,12 @@ public class ElevatorCarEntity extends Entity {
         for (Entity entity : this.level().getEntities(this, zone, ElevatorCarEntity::isCarried)) {
             if (entity instanceof ServerPlayer player) {
                 // The rider's own client moves them; the server only has to stop calling it flying.
-                player.connection.resetFlyingTicks();
+                resetFlyingTicks(player);
                 player.resetFallDistance();
             }
 
             double feet = entity.getY();
-            if (!entity.isLocalInstanceAuthoritative() || feet < oldTop - CARRY_BELOW || feet > highestFeet) {
+            if (!movedHere(entity) || feet < oldTop - CARRY_BELOW || feet > highestFeet) {
                 continue;
             }
 
@@ -245,11 +250,16 @@ public class ElevatorCarEntity extends Entity {
     private void crush(ServerLevel level, double top) {
         DamageSource source = ElevatorsDamageTypes.source(level, ElevatorsDamageTypes.ELEVATOR, this, null);
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox(), entity -> entity.getY() < top - CARRY_BELOW && !entity.isSpectator())) {
-            entity.hurtServer(level, source, CRUSH_DAMAGE);
+            entity.hurt(source, CRUSH_DAMAGE);
         }
     }
 
-    /** Moves each glowing cell's light block to the cell it is mostly in now. */
+    /**
+     * Moves each glowing cell's light block to the cell it is mostly in now. A cell's look is placed
+     * nowhere, so its own state's emission is the one to ask; NeoForge deprecates that for its
+     * level-aware overload, which only exists in its patched jar.
+     */
+    @SuppressWarnings("deprecation")
     private void updateLights(ServerLevel level) {
         Set<BlockPos> wanted = new HashSet<>();
         int y = Mth.floor(this.getY() + 0.5D);
@@ -294,12 +304,50 @@ public class ElevatorCarEntity extends Entity {
         }
     }
 
+    /**
+     * Keeps what the server moves standing on the car while it rests at the end. The car is not
+     * solid on the server (see {@link #canBeCollidedWith()}), so without this a mob riding it would
+     * start to fall through it before it turns back into blocks.
+     */
+    private void holdRiders() {
+        AABB top = this.getBoundingBox();
+        double surface = top.maxY;
+        for (Entity entity : this.level().getEntities(this, new AABB(top.minX, surface - CARRY_BELOW, top.minZ, top.maxX, surface + CARRY_ABOVE, top.maxZ), ElevatorCarEntity::isCarried)) {
+            if (!movedHere(entity) || entity.getY() < surface - CARRY_BELOW || entity.getY() > surface + CARRY_ABOVE) {
+                continue;
+            }
+
+            entity.setPos(entity.getX(), surface, entity.getZ());
+            Vec3 motion = entity.getDeltaMovement();
+            if (motion.y < 0.0D) {
+                entity.setDeltaMovement(motion.x, 0.0D, motion.z);
+            }
+            entity.resetFallDistance();
+        }
+    }
+
     /** Resting at the end still counts as standing on something to the server. */
     private void keepRidersGrounded() {
         AABB top = this.getBoundingBox();
         for (ServerPlayer player : this.level().getEntitiesOfClass(ServerPlayer.class, new AABB(top.minX, top.maxY - CARRY_BELOW, top.minZ, top.maxX, top.maxY + 1.0D, top.maxZ))) {
-            player.connection.resetFlyingTicks();
+            resetFlyingTicks(player);
         }
+    }
+
+    /**
+     * Stops the server counting a rider as floating, which it would otherwise kick them for once a
+     * trip runs past four seconds where flight is not allowed. The car is no block under their feet.
+     */
+    private static void resetFlyingTicks(ServerPlayer player) {
+        ((ServerGamePacketListenerImplAccessor) player.connection).assortedelevators_setAboveGroundTickCount(0);
+    }
+
+    /**
+     * Whether this side moves {@code entity}: a player's own client moves them, and the server moves
+     * everything else.
+     */
+    private static boolean movedHere(Entity entity) {
+        return entity instanceof Player player ? player.isLocalPlayer() : entity.isControlledByLocalInstance();
     }
 
     private static boolean isCarried(Entity entity) {
@@ -316,8 +364,8 @@ public class ElevatorCarEntity extends Entity {
             int z = cell.getZ() - group.minZ();
             BlockState block = this.getCellBlock(x, z);
             if (!ElevatorShaft.isShaft(level, cell)) {
-                if (level instanceof ServerLevel serverLevel) {
-                    this.spawnAtLocation(serverLevel, block.getBlock());
+                if (level instanceof ServerLevel) {
+                    this.spawnAtLocation(block.getBlock());
                 }
                 continue;
             }
@@ -339,22 +387,28 @@ public class ElevatorCarEntity extends Entity {
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if (DATA_SIZE_X.equals(key) || DATA_SIZE_Z.equals(key)) {
-            this.setBoundingBox(this.makeBoundingBox(this.position()));
+            this.setBoundingBox(this.makeBoundingBox());
         } else if (DATA_ARRIVED.equals(key) && this.level().isClientSide() && this.entityData.get(DATA_ARRIVED) && this.getY() != this.getTargetY()) {
             this.moveCar(this.getTargetY() - this.getY());
         }
     }
 
-    /** Each client runs the car from its trip; the server's position updates would only drag it back by the ping. */
+    /**
+     * Each client runs the car from its trip; the server's position updates would only drag it back
+     * by the ping. A client skips the move packets of an entity it controls.
+     */
     @Override
-    protected boolean isLocalClientAuthoritative() {
+    public boolean isControlledByLocalInstance() {
         return true;
     }
 
+    /**
+     * Solid only on a client, where a player is stood on it by their own client; a solid car on the
+     * server would argue with that. What the server moves is held on it by {@link #holdRiders()}.
+     */
     @Override
-    public boolean canBeCollidedWith(@Nullable Entity other) {
-        // A player is stood on it by their own client; a solid car on the server would argue with that.
-        return !(other instanceof ServerPlayer);
+    public boolean canBeCollidedWith() {
+        return this.level().isClientSide();
     }
 
     /** Killed or gone for good, it takes its lights with it; only a chunk unloading keeps them, saved beside it. */
@@ -383,35 +437,43 @@ public class ElevatorCarEntity extends Entity {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+    public boolean hurt(DamageSource source, float damage) {
         return false;
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        this.entityData.set(DATA_SIZE_X, Mth.clamp(input.getIntOr("SizeX", 1), 1, ElevatorGroup.MAX_SIZE));
-        this.entityData.set(DATA_SIZE_Z, Mth.clamp(input.getIntOr("SizeZ", 1), 1, ElevatorGroup.MAX_SIZE));
-        this.entityData.set(DATA_START_Y, input.getIntOr("StartY", Mth.floor(this.getY())));
-        this.entityData.set(DATA_TARGET_Y, input.getIntOr("TargetY", Mth.floor(this.getY())));
-        this.entityData.set(DATA_SPEED, input.getFloatOr("Speed", 0.2F));
+    protected void readAdditionalSaveData(CompoundTag tag) {
+        this.entityData.set(DATA_SIZE_X, Mth.clamp(tag.contains("SizeX", Tag.TAG_INT) ? tag.getInt("SizeX") : 1, 1, ElevatorGroup.MAX_SIZE));
+        this.entityData.set(DATA_SIZE_Z, Mth.clamp(tag.contains("SizeZ", Tag.TAG_INT) ? tag.getInt("SizeZ") : 1, 1, ElevatorGroup.MAX_SIZE));
+        this.entityData.set(DATA_START_Y, tag.contains("StartY", Tag.TAG_INT) ? tag.getInt("StartY") : Mth.floor(this.getY()));
+        this.entityData.set(DATA_TARGET_Y, tag.contains("TargetY", Tag.TAG_INT) ? tag.getInt("TargetY") : Mth.floor(this.getY()));
+        this.entityData.set(DATA_SPEED, tag.contains("Speed", Tag.TAG_FLOAT) ? tag.getFloat("Speed") : 0.2F);
         for (int i = 0; i < DATA_CELLS.size(); i++) {
-            this.entityData.set(DATA_CELLS.get(i), input.read("Cell" + i, BlockState.CODEC));
+            String key = "Cell" + i;
+            this.entityData.set(DATA_CELLS.get(i), tag.contains(key, Tag.TAG_COMPOUND)
+                    ? Optional.of(NbtUtils.readBlockState(this.level().holderLookup(Registries.BLOCK), tag.getCompound(key)))
+                    : Optional.empty());
         }
         this.lights.clear();
-        this.lights.addAll(input.read("Lights", BlockPos.CODEC.listOf()).orElse(List.of()));
-        this.setBoundingBox(this.makeBoundingBox(this.position()));
+        if (tag.contains("Lights")) {
+            this.lights.addAll(BlockPos.CODEC.listOf().parse(NbtOps.INSTANCE, tag.get("Lights")).result().orElse(List.of()));
+        }
+        this.setBoundingBox(this.makeBoundingBox());
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
+    protected void addAdditionalSaveData(CompoundTag tag) {
         for (int i = 0; i < DATA_CELLS.size(); i++) {
-            output.storeNullable("Cell" + i, BlockState.CODEC, this.entityData.get(DATA_CELLS.get(i)).orElse(null));
+            Optional<BlockState> cell = this.entityData.get(DATA_CELLS.get(i));
+            if (cell.isPresent()) {
+                tag.put("Cell" + i, NbtUtils.writeBlockState(cell.get()));
+            }
         }
-        output.store("Lights", BlockPos.CODEC.listOf(), List.copyOf(this.lights));
-        output.putInt("SizeX", this.getSizeX());
-        output.putInt("SizeZ", this.getSizeZ());
-        output.putInt("StartY", this.entityData.get(DATA_START_Y));
-        output.putInt("TargetY", this.getTargetY());
-        output.putFloat("Speed", this.entityData.get(DATA_SPEED));
+        BlockPos.CODEC.listOf().encodeStart(NbtOps.INSTANCE, List.copyOf(this.lights)).result().ifPresent(lights -> tag.put("Lights", lights));
+        tag.putInt("SizeX", this.getSizeX());
+        tag.putInt("SizeZ", this.getSizeZ());
+        tag.putInt("StartY", this.entityData.get(DATA_START_Y));
+        tag.putInt("TargetY", this.getTargetY());
+        tag.putFloat("Speed", this.entityData.get(DATA_SPEED));
     }
 }

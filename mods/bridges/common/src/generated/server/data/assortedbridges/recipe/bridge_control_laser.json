@@ -14,8 +14,12 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/iron",
-    "R": "#c:slime_balls"
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "R": {
+      "tag": "c:slime_balls"
+    }
   },
   "pattern": [
     "III",
@@ -23,6 +27,7 @@
     "III"
   ],
   "result": {
+    "count": 1,
     "id": "assortedbridges:bridge_control_laser"
   }
 }

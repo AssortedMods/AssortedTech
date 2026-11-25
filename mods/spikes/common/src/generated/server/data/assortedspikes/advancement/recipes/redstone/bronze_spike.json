@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedspikes:bronze_spike"
+        "recipe": "assortedspikes:bronze_spike"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

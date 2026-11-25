@@ -10,10 +10,11 @@ import com.grim3212.assorted.lib.platform.Services;
 import java.io.BufferedReader;
 import java.io.IOException;
 import com.grim3212.assorted.elevators.Constants;
+import com.grim3212.assorted.elevators.common.block.CamouflageBlock;
 import com.grim3212.assorted.elevators.common.handlers.ElevatorsCreativeItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -54,7 +55,7 @@ final class AssetTests {
         int items = 0;
 
         for (Map.Entry<ResourceKey<Block>, Block> entry : BuiltInRegistries.BLOCK.entrySet()) {
-            Identifier id = entry.getKey().identifier();
+            ResourceLocation id = entry.getKey().location();
             if (!Constants.MOD_ID.equals(id.getNamespace())) {
                 continue;
             }
@@ -69,13 +70,14 @@ final class AssetTests {
         }
 
         for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
-            Identifier id = entry.getKey().identifier();
+            ResourceLocation id = entry.getKey().location();
             if (!Constants.MOD_ID.equals(id.getNamespace())) {
                 continue;
             }
             items++;
-            if (!resourceExists("/assets/" + id.getNamespace() + "/items/" + id.getPath() + ".json")) {
-                missing.add("items/" + id.getPath() + ".json");
+            // 1.21.1 reads an item's model straight from models/item; the items/ definitions came with 1.21.4.
+            if (!resourceExists("/assets/" + id.getNamespace() + "/models/item/" + id.getPath() + ".json")) {
+                missing.add("models/item/" + id.getPath() + ".json");
             }
             String key = entry.getValue().getDescriptionId();
             if (!lang.has(key)) {
@@ -84,7 +86,7 @@ final class AssetTests {
         }
 
         if (!BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(ElevatorsCreativeItems.TAB)) {
-            missing.add("the " + ElevatorsCreativeItems.TAB.identifier() + " creative tab");
+            missing.add("the " + ElevatorsCreativeItems.TAB.location() + " creative tab");
         }
         if (!lang.has("itemGroup." + Constants.FAMILY_ID)) {
             missing.add("lang key itemGroup." + Constants.FAMILY_ID);
@@ -99,18 +101,23 @@ final class AssetTests {
         helper.succeed();
     }
 
+    /** The loader this mod registers, spelled out: its class is client only. */
+    private static final String CAMOUFLAGE_LOADER = Constants.MOD_ID + ":camouflage";
+
     /**
-     * Every custom blockstate model and loader model carries both loaders' keys: NeoForge reads
-     * {@code "type"} and {@code "loader"}, Fabric only {@code "fabric:type"}. With only NeoForge's
-     * key, Fabric loads a plain static model and nothing warns.
+     * Every variant of a camouflaged block's blockstate reaches a camouflage loader model, named by
+     * the one {@code "loader"} key both loaders read in 1.21.1 (Fabric through AssortedLib). A
+     * blockstate pointing at the plain model draws it whatever the disguise, and the 26.x keys - a
+     * variant {@code "type"}, a model's {@code "fabric:type"} - are read by neither loader here, so a
+     * json still leaning on one is wrong.
      */
     private static void loaderModelsAreReadOnBothLoaders(GameTestHelper helper) {
         List<String> wrong = new ArrayList<>();
         List<String> checkedModels = new ArrayList<>();
-        int customVariants = 0;
+        int loaderModels = 0;
 
         for (Map.Entry<ResourceKey<Block>, Block> entry : BuiltInRegistries.BLOCK.entrySet()) {
-            Identifier id = entry.getKey().identifier();
+            ResourceLocation id = entry.getKey().location();
             if (!Constants.MOD_ID.equals(id.getNamespace())) {
                 continue;
             }
@@ -119,12 +126,10 @@ final class AssetTests {
                 continue;
             }
 
+            boolean camouflaged = entry.getValue() instanceof CamouflageBlock;
             for (JsonObject variant : blockstateVariants(blockstate)) {
-                if (variant.has("type")) {
-                    customVariants++;
-                    if (!variant.get("type").equals(variant.get("fabric:type"))) {
-                        wrong.add("blockstate " + id.getPath() + " has type " + variant.get("type") + " but fabric:type " + variant.get("fabric:type"));
-                    }
+                if (variant.has("type") || variant.has("fabric:type")) {
+                    wrong.add("blockstate " + id.getPath() + " still has the 26.x key " + (variant.has("type") ? "type" : "fabric:type"));
                 }
 
                 String model = variant.has("model") ? variant.get("model").getAsString() : null;
@@ -133,16 +138,28 @@ final class AssetTests {
                 }
                 checkedModels.add(model);
 
-                Identifier modelId = Identifier.parse(model);
+                ResourceLocation modelId = ResourceLocation.parse(model);
                 JsonObject json = readJson("/assets/" + modelId.getNamespace() + "/models/" + modelId.getPath() + ".json");
-                if (json != null && json.has("loader") && !json.get("loader").equals(json.get("fabric:type"))) {
-                    wrong.add("model " + model + " has loader " + json.get("loader") + " but fabric:type " + json.get("fabric:type"));
+                if (json == null) {
+                    wrong.add("blockstate " + id.getPath() + " names " + model + ", which does not exist");
+                    continue;
+                }
+                if (json.has("fabric:type")) {
+                    wrong.add("model " + model + " still has the 26.x key fabric:type");
+                }
+                if (json.has("loader")) {
+                    loaderModels++;
+                    if (!CAMOUFLAGE_LOADER.equals(json.get("loader").getAsString())) {
+                        wrong.add("model " + model + " names loader " + json.get("loader"));
+                    }
+                } else if (camouflaged) {
+                    wrong.add("camouflaged " + id.getPath() + " draws the plain model " + model);
                 }
             }
         }
 
-        helper.assertTrue(customVariants > 0, "no custom blockstate variants were found to check");
-        helper.assertTrue(wrong.isEmpty(), wrong.size() + " json(s) Fabric would read as static: " + String.join("; ", wrong));
+        helper.assertTrue(loaderModels > 0, "no camouflage loader models were found to check");
+        helper.assertTrue(wrong.isEmpty(), wrong.size() + " json(s) would draw a static model: " + String.join("; ", wrong));
         helper.succeed();
     }
 
@@ -157,8 +174,8 @@ final class AssetTests {
         List<String> failed = new ArrayList<>();
 
         recipes.listMatchingResources(server.getResourceManager()).forEach((file, resource) -> {
-            Identifier id = recipes.fileToId(file);
-            if (!id.getNamespace().equals(Constants.MOD_ID) || server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, id)).isPresent()) {
+            ResourceLocation id = recipes.fileToId(file);
+            if (!id.getNamespace().equals(Constants.MOD_ID) || server.getRecipeManager().byKey(id).isPresent()) {
                 return;
             }
 
@@ -183,7 +200,7 @@ final class AssetTests {
      */
     private static void everyItemTagHasAName(GameTestHelper helper) {
         Language language = Language.getInstance();
-        List<String> missing = helper.getLevel().registryAccess().lookupOrThrow(Registries.ITEM).getTags()
+        List<String> missing = helper.getLevel().registryAccess().lookupOrThrow(Registries.ITEM).listTags()
                 .map(tag -> tag.key().location())
                 .filter(id -> !"minecraft".equals(id.getNamespace()))
                 .map(id -> "tag.item." + id.getNamespace() + "." + id.getPath().replace('/', '.'))

@@ -2,7 +2,7 @@ package com.grim3212.assorted.spikes.api.util;
 
 import com.grim3212.assorted.spikes.Constants;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SpikesDamageTypes {
 
-    public static final ResourceKey<DamageType> SPIKE = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "spike"));
+    public static final ResourceKey<DamageType> SPIKE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "spike"));
 
     /**
      * A damage source for one of this mod's damage types, resolved against the level's damage type

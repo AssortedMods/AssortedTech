@@ -12,7 +12,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -65,13 +64,13 @@ final class ExtruderTests {
     }
 
     private static ExtruderEntity extruder(GameTestHelper helper, BlockPos rel, Direction facing, ExtruderType type) {
-        ExtruderEntity extruder = ExtruderEntities.EXTRUDER.get().create(helper.getLevel(), EntitySpawnReason.MOB_SUMMONED);
+        ExtruderEntity extruder = ExtruderEntities.EXTRUDER.get().create(helper.getLevel());
         extruder.setExtruderType(type);
         extruder.placeAt(helper.absolutePos(rel));
         extruder.setFacing(facing);
         helper.getLevel().addFreshEntity(extruder);
         // A running extruder would drive out of the test box and through its neighbours.
-        helper.runBeforeTestEnd(() -> {
+        whenTestEnds(helper, () -> {
             extruder.getContainer().clearContent();
             extruder.discard();
         });
@@ -184,18 +183,18 @@ final class ExtruderTests {
         ServerPlayer player = survivalPlayer(helper);
         stand(helper, player, new BlockPos(4, 1, 2));
 
-        extruder.hurtServer(helper.getLevel(), helper.getLevel().damageSources().playerAttack(player), 1.0F);
+        extruder.hurt(helper.getLevel().damageSources().playerAttack(player), 1.0F);
         helper.assertFalse(extruder.isRunning(), "a punch started an extruder with no fuel");
         extruder.getContainer().setItem(ExtruderEntity.FUEL_SLOT, new ItemStack(Items.COAL));
 
         for (int punch = 0; punch < 10; punch++) {
-            extruder.hurtServer(helper.getLevel(), helper.getLevel().damageSources().playerAttack(player), 1.0F);
+            extruder.hurt(helper.getLevel().damageSources().playerAttack(player), 1.0F);
             helper.assertValueEqual(extruder.isRunning(), punch % 2 == 0, "running after punch " + (punch + 1));
         }
         helper.assertTrue(extruder.isAlive() && extruder.getDamage() == 0.0F, "empty handed punches damaged the extruder");
 
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STICK));
-        extruder.hurtServer(helper.getLevel(), helper.getLevel().damageSources().playerAttack(player), 1.0F);
+        extruder.hurt(helper.getLevel().damageSources().playerAttack(player), 1.0F);
         helper.assertTrue(extruder.getDamage() > 0.0F, "a punch holding a stick did no damage");
         helper.assertFalse(extruder.isRunning(), "a punch holding a stick started the extruder");
 
@@ -214,7 +213,7 @@ final class ExtruderTests {
         ServerPlayer player = survivalPlayer(helper);
         player.setGameMode(GameType.CREATIVE);
         stand(helper, player, new BlockPos(4, 1, 2));
-        Runnable punch = () -> extruder.hurtServer(helper.getLevel(), helper.getLevel().damageSources().playerAttack(player), 1.0F);
+        Runnable punch = () -> extruder.hurt(helper.getLevel().damageSources().playerAttack(player), 1.0F);
 
         punch.run();
         helper.assertTrue(extruder.isAlive() && extruder.isRunning(), "one creative punch did not just start the extruder");
@@ -243,7 +242,7 @@ final class ExtruderTests {
             helper.setBlock(start.east(x), Blocks.STONE);
         }
         ItemStack coal = new ItemStack(Items.COAL);
-        int expected = ExtruderEntity.blocksFor(0, ExtruderEntity.fuelValue(helper.getLevel(), coal), 1, ExtruderType.IRON.getSpeed(),
+        int expected = ExtruderEntity.blocksFor(0, ExtruderEntity.fuelValue(coal), 1, ExtruderType.IRON.getSpeed(),
                 ExtruderType.IRON.blockCost(ExtruderCommonMod.COMMON_CONFIG.extruderFuelPerMinedBlock.get()), false);
         helper.assertTrue(expected > 0 && expected < 8, "one coal should mine part of the row, but the estimate is " + expected);
         helper.assertValueEqual(ExtruderEntity.blocksFor(0, 0, 0, 1.0F, 0, false), 0, "blocks for no fuel");
@@ -340,7 +339,7 @@ final class ExtruderTests {
 
     private static ItemStack craft(GameTestHelper helper, int width, int height, ItemStack... grid) {
         CraftingInput input = CraftingInput.of(width, height, List.of(grid));
-        return helper.getLevel().recipeAccess().getRecipeFor(RecipeType.CRAFTING, input, helper.getLevel()).map(recipe -> recipe.value().assemble(input)).orElse(ItemStack.EMPTY);
+        return helper.getLevel().getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, helper.getLevel()).map(recipe -> recipe.value().assemble(input, helper.getLevel().registryAccess())).orElse(ItemStack.EMPTY);
     }
 
     /** Punched enough while sneaking, it drops as an item along with everything it was holding. */
@@ -352,7 +351,7 @@ final class ExtruderTests {
         player.setShiftKeyDown(true);
 
         for (int hit = 0; hit < 10 && extruder.isAlive(); hit++) {
-            extruder.hurtServer(helper.getLevel(), helper.getLevel().damageSources().playerAttack(player), 1.0F);
+            extruder.hurt(helper.getLevel().damageSources().playerAttack(player), 1.0F);
         }
 
         helper.assertFalse(extruder.isAlive(), "the extruder survived ten punches");

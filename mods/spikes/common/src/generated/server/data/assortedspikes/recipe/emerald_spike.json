@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "X": "#c:gems/emerald"
+    "X": {
+      "tag": "c:gems/emerald"
+    }
   },
   "pattern": [
     "X X",

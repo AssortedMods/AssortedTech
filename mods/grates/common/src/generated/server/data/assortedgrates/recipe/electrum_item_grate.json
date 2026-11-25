@@ -25,7 +25,9 @@
     }
   ],
   "key": {
-    "I": "#c:ingots/electrum"
+    "I": {
+      "tag": "c:ingots/electrum"
+    }
   },
   "pattern": [
     "I I",

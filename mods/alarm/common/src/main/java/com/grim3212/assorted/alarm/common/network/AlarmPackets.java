@@ -3,7 +3,7 @@ package com.grim3212.assorted.alarm.common.network;
 import com.grim3212.assorted.alarm.Constants;
 import com.grim3212.assorted.lib.platform.Services;
 import com.grim3212.assorted.lib.platform.services.INetworkHelper;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class AlarmPackets {
 
@@ -12,8 +12,8 @@ public class AlarmPackets {
         Services.NETWORK.register(new INetworkHelper.MessageHandler<>(resource("alarm_update"), AlarmUpdatePacket.class, AlarmUpdatePacket::encode, AlarmUpdatePacket::decode, AlarmUpdatePacket::handle, INetworkHelper.MessageBoundSide.SERVER));
     }
 
-    private static Identifier resource(String name) {
-        return Identifier.fromNamespaceAndPath(Constants.MOD_ID, name);
+    private static ResourceLocation resource(String name) {
+        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name);
     }
 
 }

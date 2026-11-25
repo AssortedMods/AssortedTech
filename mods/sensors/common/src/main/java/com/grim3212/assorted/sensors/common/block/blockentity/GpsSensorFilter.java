@@ -6,7 +6,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.entity.EntityType;
@@ -30,7 +30,7 @@ public final class GpsSensorFilter {
     public static final GpsSensorFilter ANY = new GpsSensorFilter(List.of(), false);
 
     private final Set<String> names = new HashSet<>();
-    private final Set<Identifier> ids = new HashSet<>();
+    private final Set<ResourceLocation> ids = new HashSet<>();
     private final List<TagKey<EntityType<?>>> entityTags = new ArrayList<>();
     private final List<TagKey<Item>> itemTags = new ArrayList<>();
     private final boolean empty;
@@ -39,14 +39,14 @@ public final class GpsSensorFilter {
         this.empty = entries.isEmpty();
         for (String entry : entries) {
             if (isTag(entry)) {
-                Identifier tag = Identifier.tryParse(entry.substring(1));
+                ResourceLocation tag = ResourceLocation.tryParse(entry.substring(1));
                 if (allowTags && tag != null) {
                     this.entityTags.add(TagKey.create(Registries.ENTITY_TYPE, tag));
                     this.itemTags.add(TagKey.create(Registries.ITEM, tag));
                 }
             } else {
                 this.names.add(entry.toLowerCase(Locale.ROOT));
-                Identifier id = Identifier.tryParse(entry);
+                ResourceLocation id = ResourceLocation.tryParse(entry);
                 if (id != null) {
                     this.ids.add(id);
                 }
@@ -77,7 +77,7 @@ public final class GpsSensorFilter {
             return stripped;
         }
         boolean tag = isTag(stripped);
-        Identifier id = Identifier.tryParse(tag ? stripped.substring(1) : stripped);
+        ResourceLocation id = ResourceLocation.tryParse(tag ? stripped.substring(1) : stripped);
         return id == null ? stripped : (tag ? "#" : "") + id;
     }
 
@@ -113,10 +113,10 @@ public final class GpsSensorFilter {
             if (!upgraded) {
                 return Component.translatable("gps_sensor.screen.problem.tag");
             }
-            Identifier tag = Identifier.tryParse(entry.substring(1));
+            ResourceLocation tag = ResourceLocation.tryParse(entry.substring(1));
             boolean known = tag != null && (mode == GpsSensorMode.MOBS
-                    ? BuiltInRegistries.ENTITY_TYPE.get(TagKey.create(Registries.ENTITY_TYPE, tag)).isPresent()
-                    : BuiltInRegistries.ITEM.get(TagKey.create(Registries.ITEM, tag)).isPresent());
+                    ? BuiltInRegistries.ENTITY_TYPE.getTag(TagKey.create(Registries.ENTITY_TYPE, tag)).isPresent()
+                    : BuiltInRegistries.ITEM.getTag(TagKey.create(Registries.ITEM, tag)).isPresent());
             return known ? null : Component.translatable("gps_sensor.screen.problem.unknown_tag", entry);
         }
         boolean known = switch (mode) {
@@ -128,7 +128,7 @@ public final class GpsSensorFilter {
     }
 
     private static boolean isKnown(Registry<?> registry, String entry) {
-        Identifier id = Identifier.tryParse(entry);
+        ResourceLocation id = ResourceLocation.tryParse(entry);
         return id != null && registry.containsKey(id);
     }
 }

@@ -36,7 +36,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedextruder:gold_extruder_alt"
+        "recipe": "assortedextruder:gold_extruder_alt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

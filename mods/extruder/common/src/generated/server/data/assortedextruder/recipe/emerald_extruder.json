@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/emerald",
-    "M": "#assortedextruder:extruders/level_2",
-    "P": "#c:pickaxes/emerald",
-    "S": "#c:shovels/emerald"
+    "A": {
+      "tag": "c:axes/emerald"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_2"
+    },
+    "P": {
+      "tag": "c:pickaxes/emerald"
+    },
+    "S": {
+      "tag": "c:shovels/emerald"
+    }
   },
   "pattern": [
     " P ",
     "AMS"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:emerald_extruder"
   }
 }

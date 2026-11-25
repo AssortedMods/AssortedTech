@@ -14,7 +14,9 @@
     }
   ],
   "key": {
-    "B": "minecraft:exposed_copper_bars"
+    "B": {
+      "item": "minecraft:exposed_copper_grate"
+    }
   },
   "pattern": [
     "BB",

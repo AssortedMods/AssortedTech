@@ -57,16 +57,25 @@
     }
   ],
   "key": {
-    "A": "#c:axes/netherite",
-    "M": "#assortedextruder:extruders/level_3",
-    "P": "#c:pickaxes/netherite",
-    "S": "#c:shovels/netherite"
+    "A": {
+      "tag": "c:axes/netherite"
+    },
+    "M": {
+      "tag": "assortedextruder:extruders/level_3"
+    },
+    "P": {
+      "tag": "c:pickaxes/netherite"
+    },
+    "S": {
+      "tag": "c:shovels/netherite"
+    }
   },
   "pattern": [
     " P ",
     "AMS"
   ],
   "result": {
+    "count": 1,
     "id": "assortedextruder:netherite_extruder"
   }
 }

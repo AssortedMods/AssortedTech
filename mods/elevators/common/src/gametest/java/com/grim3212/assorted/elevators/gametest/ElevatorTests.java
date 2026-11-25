@@ -10,9 +10,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.animal.pig.Pig;
-import net.minecraft.world.entity.player.Input;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -109,7 +108,7 @@ final class ElevatorTests {
 
     private static void elevatorCarriesAMobUp(GameTestHelper helper) {
         shaft(helper, BOTTOM);
-        Pig pig = helper.spawnWithNoFreeWill(EntityTypes.PIG, BOTTOM.above());
+        Pig pig = helper.spawnWithNoFreeWill(EntityType.PIG, BOTTOM.above());
         helper.runAfterDelay(5, () -> helper.assertTrue(send(helper, BOTTOM), "the elevator did not set off"));
 
         helper.succeedWhen(() -> {
@@ -172,13 +171,13 @@ final class ElevatorTests {
 
     private static int signal(GameTestHelper helper, BlockPos rel) {
         BlockState state = helper.getBlockState(rel);
-        return state.getAnalogOutputSignal(helper.getLevel(), helper.absolutePos(rel), Direction.EAST);
+        return state.getAnalogOutputSignal(helper.getLevel(), helper.absolutePos(rel));
     }
 
     private static void elevatorCrushesWhatIsUnderIt(GameTestHelper helper) {
         shaft(helper, TOP);
         helper.setBlock(TOP, ElevatorsBlocks.ELEVATOR.get().defaultBlockState().setValue(ElevatorBlock.GOING_UP, false));
-        Pig pig = helper.spawnWithNoFreeWill(EntityTypes.PIG, BOTTOM);
+        Pig pig = helper.spawnWithNoFreeWill(EntityType.PIG, BOTTOM);
         helper.assertTrue(send(helper, TOP), "the elevator did not set off");
         helper.succeedWhen(() -> {
             helper.assertBlockPresent(ElevatorsBlocks.ELEVATOR.get(), BOTTOM);
@@ -231,9 +230,9 @@ final class ElevatorTests {
         ServerPlayer player = stand(helper, survivalPlayer(helper), TOP);
         // The test player is never ticked, so nothing else would find it standing.
         player.setOnGround(true);
-        player.setLastClientInput(Input.EMPTY);
+        player.setShiftKeyDown(false);
         ElevatorInputHandler.tick(player);
-        player.setLastClientInput(new Input(false, false, false, false, false, true, false));
+        player.setShiftKeyDown(true);
         ElevatorInputHandler.tick(player);
         helper.assertBlockNotPresent(ElevatorsBlocks.ELEVATOR.get(), TOP);
         helper.succeedWhen(() -> helper.assertBlockPresent(ElevatorsBlocks.ELEVATOR.get(), BOTTOM));

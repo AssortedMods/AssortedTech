@@ -31,7 +31,7 @@ public class GpsSensorBlock extends Block implements EntityBlock {
     private final boolean upgraded;
 
     public GpsSensorBlock(Properties props, boolean upgraded) {
-        super(props.pushReaction(PushReaction.IMMOVEABLE));
+        super(props.pushReaction(PushReaction.BLOCK));
         this.upgraded = upgraded;
         this.registerDefaultState(this.stateDefinition.any().setValue(ACTIVE, false));
     }
@@ -50,7 +50,16 @@ public class GpsSensorBlock extends Block implements EntityBlock {
         if (player instanceof ServerPlayer serverPlayer && level.getBlockEntity(pos) instanceof GpsSensorBlockEntity sensor) {
             Services.PLATFORM.openMenu(serverPlayer, sensor);
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    /** The GPS is the sensor's to hold, not to keep, so it comes back out when the sensor is broken. */
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof GpsSensorBlockEntity sensor) {
+            sensor.onBlockRemoved(level, pos);
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override

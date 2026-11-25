@@ -7,8 +7,8 @@ import com.grim3212.assorted.fan.common.block.blockentity.FanBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.animal.pig.Pig;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.function.BiConsumer;
@@ -36,7 +36,7 @@ final class FanTests {
     private static void blockEntityDataSurvivesReload(GameTestHelper helper) {
         BlockPos fan = new BlockPos(7, 1, 1);
         helper.setBlock(fan, FanBlocks.FAN.get().defaultBlockState().setValue(FanBlock.FACING, Direction.EAST));
-        FanBlockEntity fanEntity = helper.getBlockEntity(fan, FanBlockEntity.class);
+        FanBlockEntity fanEntity = helper.<FanBlockEntity>getBlockEntity(fan);
         fanEntity.setRange(7);
         fanEntity.setMode(FanMode.SUCK);
 
@@ -58,18 +58,18 @@ final class FanTests {
 
         helper.setBlock(blower, FanBlocks.FAN.get().defaultBlockState()
                 .setValue(FanBlock.FACING, Direction.EAST).setValue(FanBlock.MODE, FanMode.BLOW));
-        FanBlockEntity blowing = helper.getBlockEntity(blower, FanBlockEntity.class);
+        FanBlockEntity blowing = helper.<FanBlockEntity>getBlockEntity(blower);
         blowing.setMode(FanMode.BLOW);
         blowing.setRange(4);
 
         helper.setBlock(sucker, FanBlocks.FAN.get().defaultBlockState()
                 .setValue(FanBlock.FACING, Direction.WEST).setValue(FanBlock.MODE, FanMode.SUCK));
-        FanBlockEntity sucking = helper.getBlockEntity(sucker, FanBlockEntity.class);
+        FanBlockEntity sucking = helper.<FanBlockEntity>getBlockEntity(sucker);
         sucking.setMode(FanMode.SUCK);
         sucking.setRange(4);
 
-        Pig blown = helper.spawnWithNoFreeWill(EntityTypes.PIG, new BlockPos(2, 1, 1));
-        Pig drawn = helper.spawnWithNoFreeWill(EntityTypes.PIG, new BlockPos(4, 1, 6));
+        Pig blown = helper.spawnWithNoFreeWill(EntityType.PIG, new BlockPos(2, 1, 1));
+        Pig drawn = helper.spawnWithNoFreeWill(EntityType.PIG, new BlockPos(4, 1, 6));
 
         Vec3 blowerCorner = Vec3.atLowerCornerOf(helper.absolutePos(blower));
         Vec3 suckerCorner = Vec3.atLowerCornerOf(helper.absolutePos(sucker));

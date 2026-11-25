@@ -11,14 +11,14 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.PositionMoveRotation;
-import net.minecraft.world.entity.Relative;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -45,7 +45,7 @@ public final class ElevatorInputHandler {
 
     public static void tick(ServerPlayer player) {
         int jumps = player.getStats().getValue(Stats.CUSTOM, Stats.JUMP);
-        boolean shift = player.getLastClientInput().shift();
+        boolean shift = player.isShiftKeyDown();
         Integer lastJumps = LAST_JUMPS.put(player, jumps);
         Boolean lastShift = LAST_SHIFT.put(player, shift);
         if (lastJumps == null || lastShift == null) {
@@ -63,7 +63,7 @@ public final class ElevatorInputHandler {
             return;
         }
 
-        ServerLevel level = player.level();
+        ServerLevel level = player.serverLevel();
         if (level.getBlockState(from).getBlock() instanceof ElevatorBlock) {
             ElevatorShaft.send(level, from, up);
             return;
@@ -93,7 +93,7 @@ public final class ElevatorInputHandler {
         DyeColor color = level.getBlockState(from).getValue(InstantElevatorBlock.COLOR);
         for (int i = 1; i <= range; i++) {
             BlockPos pos = up ? from.above(i) : from.below(i);
-            if (!level.isInsideBuildHeight(pos)) {
+            if (level.isOutsideBuildHeight(pos)) {
                 return null;
             }
 
@@ -107,12 +107,13 @@ public final class ElevatorInputHandler {
     }
 
     private static void teleport(ServerPlayer player, BlockPos from, BlockPos to) {
-        Vec3 destination = new Vec3(player.getX(), to.getY() + 1, player.getZ());
-        // Absolute zero motion, so the jump that got them here does not carry on past the floor.
-        player.connection.teleport(new PositionMoveRotation(destination, Vec3.ZERO, 0.0F, 0.0F), Relative.ROTATION);
+        // An absolute position zeroes the motion along it on the client, so the jump that got them
+        // here does not carry on past the floor; only the rotation is kept, as a relative nothing.
+        player.connection.teleport(player.getX(), to.getY() + 1, player.getZ(), 0.0F, 0.0F, EnumSet.of(RelativeMovement.Y_ROT, RelativeMovement.X_ROT));
+        player.setDeltaMovement(Vec3.ZERO);
         player.resetFallDistance();
 
-        ServerLevel level = player.level();
+        ServerLevel level = player.serverLevel();
         level.playSound(null, from, SoundEvents.PLAYER_TELEPORT, SoundSource.BLOCKS, 0.4F, 1.4F);
         level.playSound(null, to, SoundEvents.PLAYER_TELEPORT, SoundSource.BLOCKS, 0.4F, 1.4F);
     }

@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedgravity:gravitor"
+        "recipe": "assortedgravity:gravitor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

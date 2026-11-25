@@ -46,7 +46,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "assortedextruder:electrum_extruder"
+        "recipe": "assortedextruder:electrum_extruder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
