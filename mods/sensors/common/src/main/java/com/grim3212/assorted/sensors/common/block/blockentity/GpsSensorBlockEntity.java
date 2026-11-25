@@ -159,6 +159,11 @@ public class GpsSensorBlockEntity extends BlockEntity implements IMenuDataProvid
         return new AABB(target == null ? this.getBlockPos() : target).inflate(this.radius);
     }
 
+    /** The sensor and the box it watches, in world space. The client draws the outline while any of this is in view. */
+    public AABB outlineBounds() {
+        return new AABB(this.getBlockPos()).minmax(this.senseBox());
+    }
+
     /** A plain sensor's items are narrowed by the ghost item; an upgraded one's by its entries alone. */
     public boolean matches(Entity entity) {
         GpsSensorFilter typed = this.parsedFilter();

@@ -19,6 +19,7 @@ public final class SensorsGameTests {
     public static void forEach(BiConsumer<String, Consumer<GameTestHelper>> out) {
         SensorTests.register(out);
         GpsSensorTests.register(out);
+        RenderBoundsTests.register(out);
         TooltipTests.register(out);
         AssetTests.register(out);
         AliasTests.register(out);

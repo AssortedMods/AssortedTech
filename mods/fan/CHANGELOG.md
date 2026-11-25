@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1
+
+- A fan placed next to a redstone signal that is already on stays off until the signal goes, instead of blowing
+
 ## 2.0.0
 
 Updated to Minecraft 26.3, for NeoForge and Fabric.

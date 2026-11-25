@@ -10,6 +10,7 @@ import com.grim3212.assorted.lib.platform.Services;
 import java.io.BufferedReader;
 import java.io.IOException;
 import com.grim3212.assorted.elevators.Constants;
+import com.grim3212.assorted.elevators.common.block.CamouflageBlock;
 import com.grim3212.assorted.elevators.common.handlers.ElevatorsCreativeItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -99,15 +100,22 @@ final class AssetTests {
         helper.succeed();
     }
 
+    /** The loader this mod registers, spelled out: its class is client only. */
+    private static final String CAMOUFLAGE_LOADER = Constants.MOD_ID + ":camouflage";
+
+    /** AssortedLib's blockstate model type, which bakes a loader model whole rather than flattening it. */
+    private static final String SPECIFICATION = "assortedlib:specification";
+
     /**
-     * Every custom blockstate model and loader model carries both loaders' keys: NeoForge reads
-     * {@code "type"} and {@code "loader"}, Fabric only {@code "fabric:type"}. With only NeoForge's
-     * key, Fabric loads a plain static model and nothing warns.
+     * Every variant of a camouflaged block's blockstate reaches a camouflage loader model, on both
+     * loaders. NeoForge reads a variant's {@code "type"} and a model's {@code "loader"}, Fabric only
+     * {@code "fabric:type"} for either, and the variant has to be AssortedLib's specification type to
+     * bake the loader model whole. A blockstate pointing at the plain model, a plain variant, or a json
+     * with only one loader's key draws the plain block whatever the disguise, and nothing warns.
      */
     private static void loaderModelsAreReadOnBothLoaders(GameTestHelper helper) {
         List<String> wrong = new ArrayList<>();
-        List<String> checkedModels = new ArrayList<>();
-        int customVariants = 0;
+        int loaderModels = 0;
 
         for (Map.Entry<ResourceKey<Block>, Block> entry : BuiltInRegistries.BLOCK.entrySet()) {
             Identifier id = entry.getKey().identifier();
@@ -118,32 +126,52 @@ final class AssetTests {
             if (blockstate == null) {
                 continue;
             }
+            boolean custom = entry.getValue() instanceof CamouflageBlock;
 
             for (JsonObject variant : blockstateVariants(blockstate)) {
-                if (variant.has("type")) {
-                    customVariants++;
-                    if (!variant.get("type").equals(variant.get("fabric:type"))) {
-                        wrong.add("blockstate " + id.getPath() + " has type " + variant.get("type") + " but fabric:type " + variant.get("fabric:type"));
-                    }
+                String type = stringOf(variant, "type");
+                String fabricType = stringOf(variant, "fabric:type");
+                if ((type != null || fabricType != null) && !String.valueOf(type).equals(fabricType)) {
+                    wrong.add("blockstate " + id.getPath() + " has type " + type + " but fabric:type " + fabricType);
                 }
 
-                String model = variant.has("model") ? variant.get("model").getAsString() : null;
-                if (model == null || checkedModels.contains(model) || !model.startsWith(Constants.MOD_ID + ":")) {
+                String model = stringOf(variant, "model");
+                if (model == null || !model.startsWith(Constants.MOD_ID + ":")) {
+                    if (custom) {
+                        wrong.add("blockstate " + id.getPath() + " has a variant naming no model of this mod: " + model);
+                    }
                     continue;
                 }
-                checkedModels.add(model);
 
                 Identifier modelId = Identifier.parse(model);
                 JsonObject json = readJson("/assets/" + modelId.getNamespace() + "/models/" + modelId.getPath() + ".json");
-                if (json != null && json.has("loader") && !json.get("loader").equals(json.get("fabric:type"))) {
-                    wrong.add("model " + model + " has loader " + json.get("loader") + " but fabric:type " + json.get("fabric:type"));
+                if (json == null) {
+                    wrong.add("blockstate " + id.getPath() + " names " + model + ", which does not exist");
+                    continue;
+                }
+                String neoForgeLoader = stringOf(json, "loader");
+                String fabricLoader = stringOf(json, "fabric:type");
+                if (neoForgeLoader != null || fabricLoader != null) {
+                    loaderModels++;
+                    if (!CAMOUFLAGE_LOADER.equals(neoForgeLoader) || !CAMOUFLAGE_LOADER.equals(fabricLoader)) {
+                        wrong.add("model " + model + " has loader " + neoForgeLoader + " and fabric:type " + fabricLoader + ", not " + CAMOUFLAGE_LOADER);
+                    }
+                    if (!SPECIFICATION.equals(type) || !SPECIFICATION.equals(fabricType)) {
+                        wrong.add("blockstate " + id.getPath() + " reaches " + model + " through type " + type + " and fabric:type " + fabricType + ", not " + SPECIFICATION);
+                    }
+                } else if (custom) {
+                    wrong.add("camouflaged " + id.getPath() + " draws the plain model " + model);
                 }
             }
         }
 
-        helper.assertTrue(customVariants > 0, "no custom blockstate variants were found to check");
-        helper.assertTrue(wrong.isEmpty(), wrong.size() + " json(s) Fabric would read as static: " + String.join("; ", wrong));
+        helper.assertTrue(loaderModels > 0, "no camouflage loader models were found to check");
+        helper.assertTrue(wrong.isEmpty(), wrong.size() + " json(s) would draw a static model: " + String.join("; ", wrong));
         helper.succeed();
+    }
+
+    private static String stringOf(JsonObject json, String key) {
+        return json.has(key) ? json.get(key).getAsString() : null;
     }
 
     /**
